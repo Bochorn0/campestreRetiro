@@ -35,4 +35,4 @@ app.post('*', (req, res) => {
     res.end();
 });
 app.listen(config.PORT);
-console.log('Corriendo');
+console.log('Corriendo en el puerto: ', config.PORT);
