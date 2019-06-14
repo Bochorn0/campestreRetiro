@@ -1,6 +1,6 @@
 back/node_modules
 back/shared/uploads
-back/shared/config/*
 Front/node_modules
 Front/dist
 Publicar.sh
+Front/environments/*
