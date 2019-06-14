@@ -1,8 +1,7 @@
 back/node_modules
 back/shared/uploads
-back/shared/config/*
 Front/node_modules
 Front/dist
 Front/enviromments/*
 Publicar.sh
-Respaldos/*
+Respaldos
