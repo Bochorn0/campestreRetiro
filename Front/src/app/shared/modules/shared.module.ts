@@ -11,10 +11,11 @@ import { MantenimientoVentasModule} from './ventas/mantenimiento/mantenimiento.m
 import { IngresosExtraModule} from './ventas/ingresos-extra/ingresos-extra.module';
 import { FinanciamientoVentasModule} from './ventas/venta/venta.module';
 import { FormularioClientesModule } from './formularios/formulario-clientes/formulario-clientes.module';
+import { FormularioClientesSeparadoModule } from './formularios/formulario-clientes-separado/formulario-clientes-separado.module';
 import { StatModule} from './stat/stat.module';
 import { PageHeaderModule } from './page-header/page-header.module';
 import { ChartsModule as Ng2Charts } from 'ng2-charts';
-import { NgbCarouselModule, NgbAlertModule, NgbTypeaheadModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselModule, NgbAlertModule, NgbTypeaheadModule,NgbTabsetModule } from '@ng-bootstrap/ng-bootstrap';
 import { AuthGuard } from '../guard/auth.guard';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 //import { AngularPrint} from 'angular-print';
@@ -45,6 +46,7 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     FinanciamientoVentasModule,
     IngresosExtraModule,
     FormularioClientesModule,
+    FormularioClientesSeparadoModule,
     DatatableModule,
     HttpModule,
     StatModule,
@@ -55,7 +57,8 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     NgbAlertModule.forRoot(),
     NgbTypeaheadModule.forRoot(),
     FroalaEditorModule.forRoot(), 
-    FroalaViewModule.forRoot()
+    FroalaViewModule.forRoot(),
+    NgbTabsetModule.forRoot()
    // AngularPrint
   ],
   exports: [
@@ -69,6 +72,7 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     FinanciamientoVentasModule,
     IngresosExtraModule,
     FormularioClientesModule,
+    FormularioClientesSeparadoModule,
     DatatableModule,
     HttpModule,
     StatModule,
@@ -79,7 +83,8 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     NgbAlertModule, 
     NgbTypeaheadModule,
     FroalaEditorModule,
-    FroalaViewModule
+    FroalaViewModule,
+    NgbTabsetModule
    // AngularPrint
   ],
   providers:[AuthGuard]

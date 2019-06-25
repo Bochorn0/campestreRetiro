@@ -533,8 +533,8 @@ module.exports = class Catalogos {
                 str += `${d.Id},`;
             });
             str = (str.indexOf(',') > -1 )?str.slice(0,-1):str;
-            console.log('QUERY SUPER INSERT 3',`UPDATE Datos_todos SET ACTIVO = 0 WHERE Id IN (${str});`);
-            this._ordenarQuery(conexion,`UPDATE Datos_todos SET ACTIVO = 0 WHERE Id IN (${str});`).then((res)=>{
+            console.log('QUERY SUPER INSERT 3',`UPDATE Datos_todos SET ACTIVO = 0 WHERE Id = ${str};`);
+            this._ordenarQuery(conexion,`UPDATE Datos_todos SET ACTIVO = 0 WHERE Id =${str};`).then((res)=>{
                 return resolve({});
             }).catch(err => { console.log('err',err); return reject({Data: false, err })});
         });
@@ -694,8 +694,12 @@ module.exports = class Catalogos {
     }
     Ediar_cliente(conexion,datos,Cliente){
         return new Promise((resolve, reject)=>{
+            console.log('datos ACTUALI',datos);
+            console.log('datos ACTUALI',Cliente);
             let today = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
-            let valores = `Nombre = '${datos.Nombre}', Correo = '${datos.Correo}'`;
+            let valores = `Nombre = '${datos.Nombre}'`;
+            valores += `,Correo = '${datos.Correo}'`;
+//            valores += (datos.)`,Correo = '${datos.Correo}'`;
             this._ordenarQuery(conexion,`UPDATE Clientes SET ${valores} WHERE IdCliente = ${Cliente[0].IdCliente};`).then((res)=>{
             //mysql.ejecutar(`UPDATE Clientes SET ${valores} WHERE IdCliente = ${Cliente[0].IdCliente};`).then((res)=>{
                 return resolve({Procesado: true, Operacion: 'El cliente fue Editado correctamente', Tipo: 'success', Cliente:datos});

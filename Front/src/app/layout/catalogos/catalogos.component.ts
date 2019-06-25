@@ -18,7 +18,7 @@ export class CatalogosComponent implements OnInit {
     @ViewChild('datatableDatosTodos')datatableDatosTodos;
     @ViewChild('datatableClientes')datatableClientes;
     @ViewChild('datatableDetalles')datatableDetalles;
-    checksTerrenos = [];
+    checksTerrenos = [];textoBuscar;
     constructor(private fb: FormBuilder, private catalogosService: CatalogosService) { 
 
         this.frmCliente = fb.group({
@@ -52,6 +52,39 @@ export class CatalogosComponent implements OnInit {
     }
 
     ngOnInit() {}
+    buscarEn(){
+        let dataFiltrada;
+        if((this.textoBuscar) && this.datosTodosTotales){
+            let datosCoincidencia = [];
+            this.datosTodosTotales.forEach((dat)=>{
+                let validado = false;
+                if(this.textoBuscar){
+                if(dat.Nombre.toString().toUpperCase().indexOf(this.textoBuscar.toUpperCase()) > -1){
+                    validado = true;
+                }
+                if(dat.Estatus.toString().toUpperCase().indexOf(this.textoBuscar.toUpperCase()) > -1){
+                    validado = true;
+                }
+/*                if(dat.Partidas[0]){
+                    dat.Partidas.forEach(dp=>{
+                    let producto = (dp.Producto)?dp.Producto:(dp.Articulo)?dp.Articulo:``;
+                    if(producto.toString().toUpperCase().indexOf(this.textoBuscar.toUpperCase()) > -1){
+                        validado = true;
+                    }
+                    });
+                }*/
+                }
+                if(validado){
+                    datosCoincidencia.push(dat);
+                }
+            });
+            dataFiltrada = datosCoincidencia;
+        }else{
+            dataFiltrada = this.datosTodosTotales;            
+        }
+        this.datosTodos.Datos = dataFiltrada;
+    }
+
     verCatalogoTerrenos(event){
         this._limpiarVistas();
         this.catalogoTerrenos = true;
@@ -66,10 +99,11 @@ export class CatalogosComponent implements OnInit {
             let datos = this._ordenarDatosTodos(res['Datos']);
             console.log('datos',datos);
             this.datosTodosTotales  = datos;
-            this.datosTodos = { Datos: datos, Ordenes : {Saldo_credito:'',Saldo_certificado: '', Saldo_mantenimiento: '', Saldo_agua: ''}};
-            if(this.datatableDatosTodos != null){
+            this.datosTodos  =  { Datos: datos, Ordenes : {Saldo_credito:'',Saldo_certificado: '', Saldo_mantenimiento: '', Saldo_agua: ''}};
+            
+            /*if(this.datatableDatosTodos != null){
                 this.datatableDatosTodos._reiniciarRegistros(this.datosTodos);
-            }
+            }*/
             //console.log('datosTodos',this.datosTodos);
         }).catch(err=>{
             console.log('err',err);
@@ -151,8 +185,18 @@ export class CatalogosComponent implements OnInit {
                             Num_anualidades: this._datoNumerico(t['NUMERO DE ANUALIDADES']),
                             Num_anualidades_pagadas: this._datoNumerico(t['CANTIDAD DE ANUALIDADES PAGADAS']),
                             Anualidad: this._datoNumerico(t['CANTIDAD ANUALIDADES']),
-                            Fecha_cotizacion: `${moment().format('YYYY-MM-DD')}`
+                            Fecha_cotizacion: `${moment().format('YYYY-MM-DD')}`,
+                            //Extras
+                            Saldo_agua : (this._datoNumerico(t['CONTRATO DEL AGUA']) - this._datoNumerico(t['CANTIDAD ABONADA A CONTRATO AGUA'])),
+                            ImporteMantenimiento : this._datoNumerico(t['CUOTA MANTENIMIENTO']),
+                            PeriodoCobro: (t['MODO DE COBRO DE MANTEMIENTO (MENSUAL O SEMESTRAL)'].indexOf('6') > -1)?6:(t['MODO DE COBRO DE MANTEMIENTO (MENSUAL O SEMESTRAL)'].indexOf('1') > -1)?1:0,
+                            FechaMantenimiento:(t['FECHA DE COBRO PRIMER MANTENIMIENTO'] && t['FECHA DE COBRO PRIMER MANTENIMIENTO'] != '-')?(moment(t['FECHA DE COBRO PRIMER MANTENIMIENTO']).isValid())?`${moment(t['FECHA DE COBRO PRIMER MANTENIMIENTO']).format('YYYY-MM-DD')}`:'':'',
+                            SaldoCertificado : (this._datoNumerico(t['DEUDA CERTIFICADO']) - this._datoNumerico(t['CANTIDAD ABONADA A CERTIFICADP'])),
+                            Estado: `${t['ESTADO']}`,
                         }
+                        t.Cotizacion.Enganche_Actual = (t.Cotizacion.Enganche - t.Cotizacion.EnganchePagado);
+                        t.Cotizacion.Num_pagos_Actual = (t.Cotizacion.Num_pagos - t.Cotizacion.Num_pagos_pagados);
+                        t.Cotizacion.Num_pagos_anualidad_Actual = (t.Cotizacion.Num_anualidades - t.Cotizacion.Num_anualidades_pagadas);
                         //DATOS DE SALDOS DE AGUA 
                         SaldoAgua += (this._datoNumerico(t['CONTRATO DEL AGUA']) - this._datoNumerico(t['CANTIDAD ABONADA A CONTRATO AGUA']));
                         //DATOS INFORMACION TERRENOS
@@ -168,7 +212,7 @@ export class CatalogosComponent implements OnInit {
                         }
                         //DATOS CREDITO Y ADEUDOS
                         SaldoAdeudo += (t.Cotizacion.Enganche - t.Cotizacion.EnganchePagado);
-                        CreditoOriginal += (t.Cotizacion.Credito - t.Cotizacion.Credito);
+                        CreditoOriginal += (t.Cotizacion.Credito);
                         SaldoCertificado += (this._datoNumerico(t['DEUDA CERTIFICADO']) - this._datoNumerico(t['CANTIDAD ABONADA A CERTIFICADP']));
                         SaldoCredito += (t.Cotizacion.Num_pagos*t.Cotizacion.Mensualidad)-(t.Cotizacion.Num_pagos_pagados*t.Cotizacion.Mensualidad); 
                         SaldoAnualidad += (t.Cotizacion.Num_anualidades*t.Cotizacion.Anualidad)-(t.Cotizacion.Num_anualidades_pagadas*t.Cotizacion.Anualidad);

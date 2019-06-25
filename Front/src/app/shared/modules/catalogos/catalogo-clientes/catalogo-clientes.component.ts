@@ -18,7 +18,7 @@ export class CatalogoClientesComponent implements OnInit {
     clienteDetalles;nombresClientes;detallesClienteVista;mantenimientoVista;
     clientesTodosVista;nombreCliente;mensualidadesVista;contenidoContrato;anualidadesVista;
     diaMantenimiento;importeMantenimiento;IdTerrenoMantenimiento;IdTerrenoContrato;mantenimientosTodos;
-    idTerrenoMensualidad;
+    idTerrenoMensualidad;datosDetalle;
     @Output() public nuevaOperacion = new EventEmitter();
     constructor(private catalogosService : CatalogosService, private ventasService: VentasService) {
         this.obtenerClientesActivos();
@@ -81,13 +81,23 @@ export class CatalogoClientesComponent implements OnInit {
     detalleCliente(cliente){
         this._limpiarPantallas();
         this.clienteDetalles = cliente;
+        if(this.clienteDetalles){
+            if(this.clienteDetalles.Terrenos[0]){
+                this.mensualidades();
+                this.anualidades();
+            }
+            this.mantenimientos();
+        }
+        console.log('clientes',this.clienteDetalles);
         this.detallesClienteVista = true;
     }
     estadosCuenta(nombre){
         this._limpiarPantallas();
         let coincidencias = (nombre)?this.clientesTodos.filter(ob=> ob.Nombre == nombre)[0]:{};
         this.clienteDetalles = (this.clienteDetalles && !nombre)?this.clienteDetalles:coincidencias;
-        this.detallesClienteVista = true;
+        this.mensualidades();
+        console.log('clientes',this.clienteDetalles);
+//        this.detallesClienteVista = true;
     }
     filtrarTerrenosMensualidad(){
         this.clienteDetalles.Terrenos.forEach(t=>{
@@ -156,9 +166,10 @@ export class CatalogoClientesComponent implements OnInit {
         return datosOrdenados;
     }
     mantenimientos(){
-        this._limpiarPantallas();
-        if(this.clienteDetalles.IdCliente){
-            this.ventasService.obtenerMantenimientosCliente(this.clienteDetalles).then(man=>{
+        let cliente = this.clienteDetalles;
+        //this._limpiarPantallas();
+        if(cliente.IdCliente){
+            this.ventasService.obtenerMantenimientosCliente(cliente).then(man=>{
                 if(man['Data']){
                     this.mantenimientosTodos = {Datos: this._ordenarDatosMensualidad(man['Data'])};
                     this.clienteDetalles.Mantenimientos = man['Data'];
@@ -265,6 +276,28 @@ export class CatalogoClientesComponent implements OnInit {
         this._confirmarModal({},datosAlert).then(res=>{
             this.nuevaOperacion.emit({Operacion:3});
         });
+    }
+    EditarCliente(){
+        console.log('detalle',this.clienteDetalles);
+        let totalTerrenos =  this.clienteDetalles.Terrenos.length;
+        this.clienteDetalles.Terrenos.forEach(t=>{
+            t.Estado = (t.Activo)?'ACTIVO':'SIN ESTATUS';
+            t.Cotizacion = t;
+            let Mensualidad = (this.clienteDetalles.Mensualidades)?this.clienteDetalles.Mensualidades.filter(o=>o.Pagado != 1):[];
+            let Anualidad = (this.clienteDetalles.Anualidades)?this.clienteDetalles.Anualidades.filter(o=>o.Pagado != 1):[];
+            t.Cotizacion.Enganche_Actual = this.clienteDetalles.Saldo_adeudo/totalTerrenos;
+            t.Cotizacion.Importe_mantenimiento = this.clienteDetalles.Monto_mantenimiento/totalTerrenos;
+            t.Cotizacion.Num_pagos_Actual = (Mensualidad[0])?Mensualidad.length:0;
+            t.Cotizacion.Mensualidad = (Mensualidad[0])?Mensualidad[0].Importe:0;
+            t.Cotizacion.Anualidad = (Anualidad[0])?Anualidad[0].Importe:0;
+            t.Cotizacion.Num_pagos_anualidad_Actual = (Anualidad[0])?Anualidad.length:0;
+            t.Cotizacion.Fecha_inicio = (Mensualidad[0])?Mensualidad[0].Fecha:'-';
+            t.Cotizacion.Fecha_inicio_anualidad = (Anualidad[0])?Anualidad[0].Fecha:'-';
+        })
+        this.clienteDetalles.Importe_mantenimiento = this.clienteDetalles.Monto_mantenimiento;
+        this.clienteDetalles.Fecha_mantenimiento = this.clienteDetalles.Fecha_primer_mantenimiento;
+        this.clienteDetalles.Periodo_cobro = this.clienteDetalles.Periodo_mantenimiento;
+        this.datosDetalle =  this.clienteDetalles;
     }
     enviarContratoCorreo(){
         return new Promise ((resolve,reject)=>{

@@ -1,4 +1,18 @@
 <div class="row">
+    <div class="col-xs-12">
+        <!--<ngb-tabset>
+            <ngb-tab title="Simple">
+                <ng-template ngbTabTitle><b>Fancy</b> title</ng-template>
+                <ng-template ngbTabContent>
+                </ng-template>
+            </ngb-tab>
+            <ngb-tab title="Disabled" [disabled]="true">
+                <ng-template ngbTabContent>
+                <p>Sed commodo, leo at suscipit dictum, quam est porttitor sapien, eget sodales nibh elit id diam. Nulla facilisi. Donec egestas ligula vitae odio interdum aliquet. Duis lectus turpis, luctus eget tincidunt eu, congue et odio. Duis pharetra et nisl at faucibus. Quisque luctus pulvinar arcu, et molestie lectus ultrices et. Sed diam urna, egestas ut ipsum vel, volutpat volutpat neque. Praesent fringilla tortor arcu. Vivamus faucibus nisl enim, nec tristique ipsum euismod facilisis. Morbi ut bibendum est, eu tincidunt odio. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Mauris aliquet odio ac lorem aliquet ultricies in eget neque. Phasellus nec tortor vel tellus pulvinar feugiat.</p>
+                </ng-template>
+            </ngb-tab>
+        </ngb-tabset>        -->
+    </div>
     <div class="col-xl-12 col-lg-12 col-xs-12" >
         <div class="card mb-3">
             <div class="card-header bg-secondary" >
@@ -6,6 +20,278 @@
             </div>
             <div class="card-body">
                 <div class="row text-center" *ngIf="terrenos">
+                    <div class="col-lg-2">
+                        <div class="form-group">
+                            <button (click)="obtenerClientesActivos();" class="btn btn-dark"><i class="fa fa-users"></i> Ver Todos  </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="form-group"> 
+                            <input id="typeahead-format" (keyup)="campoNombre();"  placeholder="Encontrar por nombre del cliente:" type="text" class="form-control" [(ngModel)]="nombreCliente" [ngbTypeahead]="filtrarCliente" (selectItem)="estadosCuenta($event.item);" [resultFormatter]="formatter" />
+                        </div>
+                        <br>
+                    </div>
+                    <div class="col-xs-12" *ngIf="clienteDetalles.IdCliente || datosDetalle">
+                        <ngb-tabset>
+                            <ngb-tab>
+                                <ng-template ngbTabTitle ><b>Datos Cliente</b> </ng-template>
+                                <ng-template ngbTabContent>
+                                    <div class="row" >
+<!--                                        <div class="col-lg-12">                                        
+                                            <button (click)="estadosCuenta();" class="btn btn-success" ><i class="fa fa-credit-card"></i> Detalle Cliente</button>
+                                        </div>-->
+                                        <div class="col-lg-12" *ngIf="!datosDetalle">
+                                            <div class="card-body">
+                                                <div class="row" *ngIf="clienteDetalles.IdCliente">
+                                                    <div class="col-lg-12">
+                                                            <button class="btn btn-warning pull-right" (click)="EditarCliente();"><i class="fa fa-pencil"></i> | Editar Cliente</button>                                                        
+                                                    </div>
+                                                    <div class="col-lg-12"><h3 class="text-center text-dark "> Saldos </h3><hr></div>
+                                                    <div class="col-lg-2 text-center"> 
+                                                        <!-- <button class="btn btn-primary" (click)="nuevaVenta(clienteDetalles)"> -->
+                                                            Adeudo Enganche: <br><b> $ {{clienteDetalles.Saldo_adeudo | number}} 
+                                                                <!-- <i class="fa fa-arrow-circle-right"></i> -->
+                                                            </b>
+                                                        <!-- </button><br> -->
+                                                    </div>
+                                                    <div class="col-lg-2 text-center"> 
+                                                        <!-- <button class="btn btn-secondary" (click)="nuevaVenta(clienteDetalles)">  -->
+                                                            Contrato Agua: <br><b> $ {{clienteDetalles.Saldo_agua | number}} 
+                                                                <!-- <i class="fa fa-arrow-circle-right"></i> -->
+                                                            </b>
+                                                        <!-- </button><br> -->
+                                                    </div>
+                                                    <div class="col-lg-2 text-center">
+                                                        <!-- <button class="btn btn-success" (click)="nuevaVenta(clienteDetalles)"> -->
+                                                            Terreno: <br><b> $ {{clienteDetalles.Saldo_credito | number}} 
+                                                                <!-- <i class="fa fa-arrow-circle-right"></i> -->
+                                                            </b>
+                                                        <!-- </button><br> -->
+                                                    </div>
+                                                    <div class="col-lg-2 text-center">
+                                                        <!-- <button class="btn btn-danger" (click)="nuevoMantenimiento(clienteDetalles)"> -->
+                                                            Mantenimiento: <br><b> $ {{clienteDetalles.Saldo_mantenimiento | number}} 
+                                                                <!-- <i class="fa fa-arrow-circle-right"></i> -->
+                                                            </b>
+                                                        <!-- </button><br> -->
+                                                    </div>
+                                                    <div class="col-lg-2 text-center text-info">
+                                                            <b>Crédito Original: <br><b> $ {{clienteDetalles.Credito_original | number}} </b></b> 
+                                                    </div>
+                                                    <div class="col-lg-2 text-center text-success">
+                                                        <b>Saldo TOTAL: <br><b> $ {{(clienteDetalles.Saldo_credito + clienteDetalles.Saldo_adeudo + clienteDetalles.Saldo_agua + clienteDetalles.Saldo_mantenimiento) | number}} </b></b>
+                                                    </div>
+                                                    <div class="col-lg-12"><hr></div>
+                                                </div>
+                                                <!-- *ngIf="clienteDetalles.IdCliente" -->
+                                                <div class="row" >
+                                                    <div class="col-lg-12"><h3 class="text-center text-dark "> Datos Basicos </h3><hr></div>
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label class="label-form"> Nombre : </label>
+                                                            {{ clienteDetalles.Nombre}}
+<!--                                                            <input type="text" [(ngModel)]="clienteDetalles.Nombre" class="form-control" required/>-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <div class="form-group">
+                                                            <label class="label-form"> Correo : </label>
+                                                            {{ clienteDetalles.Correo}}
+<!--                                                            <input type="text" [(ngModel)]="clienteDetalles.Correo" class="form-control" required/>-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="form-group">
+                                                            <label class="label-form"> IFE :</label>
+                                                            {{ clienteDetalles.IFE}}
+<!--                                                            <input type="text"  [(ngModel)]="clienteDetalles.Num_ife" class="form-control" required />-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+<!--                                                        <div class="form-group">
+                                                            <label class="label-form"> Comprobante domicilio </label>
+                                                            <div class="input-group">
+                                                                <label class="input-group-btn" style="margin:0;">
+                                                                    <span class="btn btn-success" >
+                                                                        <i class="fa fa-upload"> </i> Cargar comprobante
+                                                                        <input type="file" style="display: none;" accept="image/*" (change)="nombreArchivo($event,'Domicilio');" required>
+                                                                    </span>
+                                                                </label>
+                                                                <input type="text" class="form-control" [(ngModel)]="comprobante">
+                                                            </div>
+                                                        </div>-->
+                                                    </div>
+                                                    <div class="col-lg-4">
+<!--                                                        <div class="form-group">
+                                                            <label class="label-form"> Foto IFE </label>
+                                                            <div class="input-group">
+                                                                <label class="input-group-btn" style="margin:0;">
+                                                                    <span class="btn btn-success">
+                                                                        <i class="fa fa-upload"> </i> Cargar foto IFE
+                                                                        <input type="file" style="display: none;" accept="image/*" (change)="nombreArchivo($event,'Ife');" required >
+                                                                    </span>
+                                                                </label>
+                                                                <input type="text" class="form-control" name="nombreArchivo" [(ngModel)]="fotoIfe">
+                                                            </div>
+                                                        </div>-->
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="form-group">
+                                                            <label class="label-form"> Origen :</label>
+                                                            {{ clienteDetalles.Origen}}
+<!--                                                            <input type="text" [(ngModel)]="clienteDetalles.Origen" class="form-control" required/>-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="form-group">
+                                                            <label class="label-form"> Teléfono :</label>
+                                                            {{ clienteDetalles.Telefono}}
+<!--                                                            <input type="text" [(ngModel)]="clienteDetalles.Telefono" class="form-control" required />-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="form-group">
+                                                            <label class="label-form"> Fecha Nacimiento :</label>
+                                                            {{ clienteDetalles.Fecha_nacimiento}}
+<!--                                                            <input type="date" [(ngModel)]="clienteDetalles.Fecha_nacimiento" class="form-control" required/>-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                            <label class="label-form"> Direccion :</label>
+                                                            {{ clienteDetalles.Direccion}}
+<!--                                                            <textarea [(ngModel)]="clienteDetalles.Direccion" class="form-control"> </textarea>-->
+                                                        </div>
+                                                    </div>
+<!--                                                    <div class="col-lg-12">
+                                                        <div class="form-group">
+                                                                <label class="label-form"> &nbsp;</label><br>
+                                                            <button class="btn btn-primary pull-right" (click)="actualizarDatosCliente();">Actualizar Cliente</button>
+                                                        </div>
+                                                    </div>-->
+                                                    <div class="col-lg-12">
+                                                        <div class="row">
+                                                            <div class="col-lg-12"><h3 class="text-center text-dark "> Contratos</h3><hr></div>
+                                                            <div class="col-lg-6">
+                                                                <div class="form-group">
+                                                                    <label class="label-form"> Selecciona Terreno </label>
+                                                                    <select *ngIf="clienteDetalles.Terrenos" class="form-control" (change)="obtenerContratoTerreno();" [(ngModel)]="IdTerrenoContrato" >
+                                                                        <option value="0">Selecciona el terreno</option>
+                                                                        <option  *ngFor=" let ter of clienteDetalles.Terrenos" value="{{ter.IdTerreno}}" > Lote: {{ter.lote}} - Etapa: {{ter.etapa}} - Parcela: {{ter.parcela}}</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6"><br><button *ngIf="contenidoContrato" class="btn btn-warning" (click)="enviarContratoCorreo();">Enviar por correo</button></div>
+                                                            <div class="col-xl-12 col-lg-12 col-xs-12" *ngIf="contenidoContrato">
+                                                                <div class="card mb-3">
+                                                                    <div class="card-header " >
+                                                                        Contrato de nuevo cliente
+                                                                    </div>
+                                                                    <div class="card-body" *ngIf="contenidoContrato" [froalaEditor] [(froalaModel)]="contenidoContrato"></div>
+                                                                    <div class="col-lg-12">
+                                                                        <div class="form-group">
+                                                                                <label class="label-form"> &nbsp;</label><br>
+                                                                            <button class="btn btn-primary pull-right" (click)="guardarContrato();">Guardar Contrato</button>
+                                                                            </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </ng-template>
+                            </ngb-tab>
+                            <ngb-tab>
+                                <ng-template ngbTabTitle><b>Financiamiento</b> </ng-template>
+                                <ng-template ngbTabContent>
+                                    <div class="row" >
+<!--                                        <div class="col-lg-12">
+                                            <button class="btn btn-danger pull-right" (click)="confirmarModificacionCotizacion();">Modificar Cotización</button>
+                                            <hr><br>
+                                        </div>-->
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="label-form"> Selecciona Terreno </label>
+                                                <select *ngIf="clienteDetalles.Terrenos" class="form-control" (change)="filtrarTerrenosMensualidad();" [(ngModel)]="idTerrenoMensualidad" >
+                                                    <option value="0">Selecciona el terreno</option>
+                                                    <option  *ngFor=" let ter of clienteDetalles.Terrenos" value="{{ter.IdTerreno}}" > Lote: {{ter.lote}} - Etapa: {{ter.etapa}} - Terreno: {{ter.parcela}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6"></div>
+                                        <div class="col-lg-6" *ngFor=" let ter of clienteDetalles.Terrenos" > 
+                                            <div class="card mb-3" *ngIf="!ter.TerrenoMostrar">
+                                                <div class="card-header bg-warning">
+                                                    Abonos Lote: {{ter.lote}}, Etapa: {{ter.etapa}}, Parcela: {{ter.parcela}}
+                                                </div>
+                                                <div class="card-body ">
+                                                    <app-datatables-general  *ngIf="ter.Mensualidades" [datosDatatable]="ter.Mensualidades" ></app-datatables-general>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" *ngIf="anualidadesVista">
+                                        <div class="col-lg-6" *ngFor=" let ter of clienteDetalles.Terrenos"> 
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-info">
+                                                    Abonos Lote: {{ter.lote}}, Etapa: {{ter.etapa}}, Parcela: {{ter.parcela}}
+                                                </div>
+                                                <div class="card-body ">
+                                                    <app-datatables-general  *ngIf="ter.Anualidades" [datosDatatable]="ter.Anualidades" ></app-datatables-general>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </ng-template>
+                            </ngb-tab>
+                            <ngb-tab>
+                                <ng-template ngbTabTitle><b>Mantenimientos</b> </ng-template>
+                                <ng-template ngbTabContent>
+                                    <div class="row" >
+<!--                                        <div class="col-lg-12"><h3 class="text-center"> Actualizar Datos Mantenimiento </h3><hr></div>
+                                        <div class="col-lg-4">
+                                            <div class="form-group">
+                                                <label class="label-form"> Selecciona Terreno </label>
+                                                <select *ngIf="clienteDetalles.Terrenos" class="form-control" (change)="cambiarTazasMantenimiento();" [(ngModel)]="IdTerrenoMantenimiento" >
+                                                    <option value="0">Selecciona el terreno</option>
+                                                    <option  *ngFor=" let ter of clienteDetalles.Terrenos" value="{{ter.IdTerreno}}" > Lote: {{ter.lote}} - Etapa: {{ter.etapa}} - Terreno: {{ter.parcela}}</option>
+                                                </select>
+                                            </div>
+                                        </div>-->
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-12"><h3 class="text-center"> Mantenimientos abonados </h3><hr></div>
+                                        </div>
+                                        <div class="col-lg-6" > 
+                                            <div class="card mb-3">
+                                                <div class="card-header bg-danger">
+                                                    Mantenimientos Detalle
+                                                </div>
+                                                <div class="card-body ">
+                                                    <app-datatables-general  *ngIf="mantenimientosTodos" [datosDatatable]="mantenimientosTodos" ></app-datatables-general>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </ng-template>
+                            </ngb-tab>
+<!--                            <ngb-tab>
+                                <ng-template ngbTabTitle><b>Adeudos</b> </ng-template>
+                                <ng-template ngbTabContent>
+                                </ng-template>
+                            </ngb-tab>                            -->
+                        </ngb-tabset>    
+                    </div>
+                    <div class="col-lg-12" *ngIf="datosDetalle">
+                        <br>
+                        <button class="btn btn-warning pull-right" (click)="this.clienteDetalles = datosDetalle; this.datosDetalle = false;"> Regresar </button>
+                        <br>
+                        <br>
+                        <app-formulario-clientes-separado [datosCliente]="datosDetalle" ></app-formulario-clientes-separado>
+                    </div>
+                        <!--                        
                     <div class="col-lg-2">
                         <div class="form-group">
                             <button (click)="obtenerClientesActivos();" class="btn btn-dark"><i class="fa fa-users"></i> Ver Todos  </button>
@@ -35,9 +321,9 @@
                         <div class="form-group">
                             <button (click)="ingresosExtra();" class="btn btn-primary" ><i class="fa fa-home"></i> Certificados</button>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
-                <div class="row" *ngIf="clientesTodosVista">
+<!--                <div class="row" *ngIf="clientesTodosVista">
                     <div class="col-lg-12">
                         <div class="form-group"> 
                             <label class="label-form"> Nombre </label>
@@ -45,7 +331,7 @@
                         </div>
                         <br>
                     </div>
-                </div>
+                </div>-->
                 <div class="row" *ngIf="clientesTodosVista">
                     <div class="col-lg-12">
                         <table class="table table-hover table-stripped" *ngIf="clientesTodos">
@@ -76,205 +362,6 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
-                <div class="row" *ngIf="detallesClienteVista">
-                    <div class="col-lg-12">
-                        <div class="card-body">
-                            <div class="row" *ngIf="clienteDetalles.IdCliente">
-                                <div class="col-lg-12"><h3 class="text-center text-dark "> Detalle {{clienteDetalles.Nombre}} </h3><hr></div>
-                                <div class="col-lg-3 text-center"> 
-                                    <button class="btn btn-primary" (click)="nuevaVenta(clienteDetalles)">Adeudo Enganche: <b> $ {{clienteDetalles.Saldo_adeudo | number}} <i class="fa fa-arrow-circle-right"></i></b></button><br>
-                                </div>
-                                <div class="col-lg-3 text-center"> 
-                                    <button class="btn btn-secondary" (click)="nuevaVenta(clienteDetalles)"> Contrato Agua: <b> $ {{clienteDetalles.Saldo_agua | number}} <i class="fa fa-arrow-circle-right"></i></b></button><br>
-                                </div>
-                                <div class="col-lg-3 text-center">
-                                    <button class="btn btn-success" (click)="nuevaVenta(clienteDetalles)">Terreno: <b> $ {{clienteDetalles.Saldo_credito | number}} <i class="fa fa-arrow-circle-right"></i></b></button><br>
-                                </div>
-                                <div class="col-lg-3 text-center">
-                                    <button class="btn btn-danger" (click)="nuevoMantenimiento(clienteDetalles)">Mantenimiento: <b> $ {{clienteDetalles.Saldo_mantenimiento | number}} <i class="fa fa-arrow-circle-right"></i></b></button><br>
-                                </div>
-                                <div class="col-lg-12"><hr></div>
-                                <div class="col-lg-6 text-center">
-                                        <b>Crédito Original: <b> $ {{clienteDetalles.Credito_original | number}} </b></b> 
-                                </div>
-                                <div class="col-lg-6 text-center">
-                                    <b>Saldo TOTAL: <b> $ {{(clienteDetalles.Saldo_credito + clienteDetalles.Saldo_adeudo + clienteDetalles.Saldo_agua + clienteDetalles.Saldo_mantenimiento) | number}} </b></b>
-                                </div>
-                                <div class="col-lg-12"><hr></div>
-                            </div>
-                            <div class="row" *ngIf="clienteDetalles.IdCliente">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="label-form"> Nombre </label>
-                                        <input type="text" [(ngModel)]="clienteDetalles.Nombre" class="form-control" required/>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="label-form"> Correo </label>
-                                        <input type="text" [(ngModel)]="clienteDetalles.Correo" class="form-control" required/>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="label-form"> IFE </label>
-                                        <input type="text"  [(ngModel)]="clienteDetalles.Num_ife" class="form-control" required />
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="label-form"> Comprobante domicilio </label>
-                                        <div class="input-group">
-                                            <label class="input-group-btn" style="margin:0;">
-                                                <span class="btn btn-success" >
-                                                    <i class="fa fa-upload"> </i> Cargar comprobante
-                                                    <input type="file" style="display: none;" accept="image/*" (change)="nombreArchivo($event,'Domicilio');" required>
-                                                </span>
-                                            </label>
-                                            <input type="text" class="form-control" [(ngModel)]="comprobante">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="label-form"> Foto IFE </label>
-                                        <div class="input-group">
-                                            <label class="input-group-btn" style="margin:0;">
-                                                <span class="btn btn-success">
-                                                    <i class="fa fa-upload"> </i> Cargar foto IFE
-                                                    <input type="file" style="display: none;" accept="image/*" (change)="nombreArchivo($event,'Ife');" required >
-                                                </span>
-                                            </label>
-                                            <input type="text" class="form-control" name="nombreArchivo" [(ngModel)]="fotoIfe">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="label-form"> Origen </label>
-                                        <input type="text" [(ngModel)]="clienteDetalles.Origen" class="form-control" required/>
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="label-form"> Teléfono </label>
-                                        <input type="text" [(ngModel)]="clienteDetalles.Telefono" class="form-control" required />
-                                    </div>
-                                </div>
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="label-form"> Fecha Nacimiento </label>
-                                        <input type="date" [(ngModel)]="clienteDetalles.Fecha_nacimiento" class="form-control" required/>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                        <label class="label-form"> Direccion </label>
-                                        <textarea [(ngModel)]="clienteDetalles.Direccion" class="form-control"> </textarea>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="form-group">
-                                            <label class="label-form"> &nbsp;</label><br>
-                                        <button class="btn btn-primary pull-right" (click)="actualizarDatosCliente();">Actualizar Cliente</button>
-                                    </div>
-                                </div>
-                                <div class="col-lg-12">
-                                    <div class="row">
-                                        <div class="col-lg-12"><h3 class="text-center text-dark "> Verificar contratos</h3><hr></div>
-                                        <div class="col-lg-6">
-                                            <div class="form-group">
-                                                <label class="label-form"> Selecciona Terreno </label>
-                                                <select *ngIf="clienteDetalles.Terrenos" class="form-control" (change)="obtenerContratoTerreno();" [(ngModel)]="IdTerrenoContrato" >
-                                                    <option value="0">Selecciona el terreno</option>
-                                                    <option  *ngFor=" let ter of clienteDetalles.Terrenos" value="{{ter.IdTerreno}}" > Lote: {{ter.lote}} - Etapa: {{ter.etapa}} - Parcela: {{ter.parcela}}</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6"><br><button *ngIf="contenidoContrato" class="btn btn-warning" (click)="enviarContratoCorreo();">Enviar por correo</button></div>
-                                        <div class="col-xl-12 col-lg-12 col-xs-12" *ngIf="contenidoContrato">
-                                            <div class="card mb-3">
-                                                <div class="card-header " >
-                                                    Contrato de nuevo cliente
-                                                </div>
-                                                <div class="card-body" *ngIf="contenidoContrato" [froalaEditor] [(froalaModel)]="contenidoContrato"></div>
-                                                <div class="col-lg-12">
-                                                    <div class="form-group">
-                                                            <label class="label-form"> &nbsp;</label><br>
-                                                        <button class="btn btn-primary pull-right" (click)="guardarContrato();">Guardar Contrato</button>
-                                                        </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" *ngIf="mensualidadesVista">
-                    <div class="col-lg-12">
-                        <button class="btn btn-danger pull-right" (click)="confirmarModificacionCotizacion();">Modificar Cotización</button>
-                        <hr><br>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="form-group">
-                            <label class="label-form"> Selecciona Terreno </label>
-                            <select *ngIf="clienteDetalles.Terrenos" class="form-control" (change)="filtrarTerrenosMensualidad();" [(ngModel)]="idTerrenoMensualidad" >
-                                <option value="0">Selecciona el terreno</option>
-                                <option  *ngFor=" let ter of clienteDetalles.Terrenos" value="{{ter.IdTerreno}}" > Lote: {{ter.lote}} - Etapa: {{ter.etapa}} - Terreno: {{ter.parcela}}</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-lg-6"></div>
-                    <div class="col-lg-6" *ngFor=" let ter of clienteDetalles.Terrenos" > 
-                        <div class="card mb-3" *ngIf="!ter.TerrenoMostrar">
-                            <div class="card-header bg-warning">
-                                Abonos Lote: {{ter.lote}}, Etapa: {{ter.etapa}}, Parcela: {{ter.parcela}}
-                            </div>
-                            <div class="card-body ">
-                                <app-datatables-general  *ngIf="ter.Mensualidades" [datosDatatable]="ter.Mensualidades" ></app-datatables-general>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" *ngIf="anualidadesVista">
-                    <div class="col-lg-6" *ngFor=" let ter of clienteDetalles.Terrenos"> 
-                        <div class="card mb-3">
-                            <div class="card-header bg-info">
-                                Abonos Lote: {{ter.lote}}, Etapa: {{ter.etapa}}, Parcela: {{ter.parcela}}
-                            </div>
-                            <div class="card-body ">
-                                <app-datatables-general  *ngIf="ter.Anualidades" [datosDatatable]="ter.Anualidades" ></app-datatables-general>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" *ngIf="mantenimientoVista">
-                    <div class="col-lg-12"><h3 class="text-center"> Actualizar Datos Mantenimiento </h3><hr></div>
-                    <div class="col-lg-4">
-    <!--                    <div class="form-group">
-                            <label class="label-form"> Selecciona Terreno </label>
-                            <select *ngIf="clienteDetalles.Terrenos" class="form-control" (change)="cambiarTazasMantenimiento();" [(ngModel)]="IdTerrenoMantenimiento" >
-                                <option value="0">Selecciona el terreno</option>
-                                <option  *ngFor=" let ter of clienteDetalles.Terrenos" value="{{ter.IdTerreno}}" > Lote: {{ter.lote}} - Etapa: {{ter.etapa}} - Terreno: {{ter.parcela}}</option>
-                            </select>
-                        </div>-->
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="col-lg-12"><h3 class="text-center"> Mantenimientos abonados </h3><hr></div>
-                    </div>
-                    <div class="col-lg-6" > 
-                        <div class="card mb-3">
-                            <div class="card-header bg-danger">
-                                Mantenimientos Detalle
-                            </div>
-                            <div class="card-body ">
-                                <app-datatables-general  *ngIf="mantenimientosTodos" [datosDatatable]="mantenimientosTodos" ></app-datatables-general>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
