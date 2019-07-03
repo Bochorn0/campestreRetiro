@@ -149,6 +149,7 @@ module.exports = class Usuarios {
         });
     }
     Actualizar_datos_usuario(datos){
+        console.log('datos',datos);
         return new Promise((resolve, reject)=>{            
             let update = (datos.Nombre || datos.Correo || datos.Password)?`SET`:``;
             update += (datos.Nombre || datos.Nombre)?` Nombre = '${datos.Nombre}',`:``;
@@ -172,6 +173,7 @@ module.exports = class Usuarios {
             update += (datos.Gastos != null)?` Gastos = ${datos.Gastos},`:``;
             update += (datos.Usuarios != null)?` Usuarios = ${datos.Usuarios},`:``;
             update += (datos.Empleados != null)?` Empleados = ${datos.Empleados},`:``;
+            update += (datos.Catalogos != null)?` Catalogos = ${datos.Catalogos},`:``;
             update += (datos.Reportes != null)?` Reportes = ${datos.Reportes},`:``;
             update += (datos.Carga != null)?` Carga = ${datos.Carga},`:``;
             update = update.slice(0,-1);

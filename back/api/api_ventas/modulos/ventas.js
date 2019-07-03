@@ -435,9 +435,10 @@ module.exports = class Catalogos {
         return new Promise((resolve, reject)=>{
             this._verificarUsuario(conexion,datos).then(cliente =>{
                 if(cliente){
-                    return this.Ediar_cliente(conexion, datos, cliente);
+                    return this.Editar_cliente(conexion, datos, cliente);
                 }else{
-                    return this.Insertar_cliente(conexion,datos);
+                    console.log('cliente',cliente);
+                    //return this.Insertar_cliente(conexion,datos);
                 }
             }).then(res =>{
                 conexion.end();
@@ -692,17 +693,89 @@ module.exports = class Catalogos {
 
         });
     }
-    Ediar_cliente(conexion,datos,Cliente){
+    Editar_cliente(conexion,datos,Cliente){
         return new Promise((resolve, reject)=>{
-            console.log('datos ACTUALI',datos);
-            console.log('datos ACTUALI',Cliente);
+//            console.log('datos ACTUALI',datos);
+//            console.log('datos ACTUALI',Cliente);
             let today = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
             let valores = `Nombre = '${datos.Nombre}'`;
             valores += `,Correo = '${datos.Correo}'`;
 //            valores += (datos.)`,Correo = '${datos.Correo}'`;
             this._ordenarQuery(conexion,`UPDATE Clientes SET ${valores} WHERE IdCliente = ${Cliente[0].IdCliente};`).then((res)=>{
             //mysql.ejecutar(`UPDATE Clientes SET ${valores} WHERE IdCliente = ${Cliente[0].IdCliente};`).then((res)=>{
+//                return resolve({Procesado: true, Operacion: 'El cliente fue Editado correctamente', Tipo: 'success', Cliente:datos});
+//            }).catch(err => { console.log('err',err); return reject({Data: false, err })});
+
+                //GUARDA REGISTRO DEL CLIENTE
+//            }).then((res)=>{
+                let condiciones =  `Nombre = '${datos.Nombre}' AND Codigo = 'CLI' `;
+                //console.log('query',`SELECT * FROM Clientes WHERE ${condiciones} LIMIT 1;`);
+                return this._ordenarQuery(conexion,`SELECT * FROM Clientes WHERE ${condiciones} LIMIT 1;`);
+                //OBTIENE LOS DATOS COMPLETOS DEL CLIENTE
+            }).then(cliente=>{
+                //console.log('cliente',cliente);
+                datos.ClienteCompleto = cliente[0];
+                datos.ClienteCompleto.Codigo += `${datos.ClienteCompleto.IdCliente}`;
+                console.log('datos',datos);
+                this._eliminarAdeudosPendientes(conexion,datos);
+/*                return this._guardarRelacionesTerrenos(conexion,datos);
+                //GUARDA LA RELACION CON LOS TERRENOS
+            }).then(relacionesGuardadas =>{
+                return new Promise((resO, rejE)=>{
+                    let cotizacionesGuardadas = [];
+                    datos.Terrenos.forEach(dat=>{
+                        console.log('dat antes',dat);
+                        dat.Cotizacion = (datos.FuenteDatos)?this._modificarMensualidades(dat.Cotizacion):dat.Cotizacion;
+                        console.log('dat despues',dat);
+                        cotizacionesGuardadas.push(this._guardarAdeudosCliente(conexion,datos,dat));
+                    });
+                    Promise.all(cotizacionesGuardadas).then(resultados=>{
+                        return resO(resultados);
+                    }).catch(err=>{
+                        return rejE(err);
+                    })
+                });
+                //GUARDA LAS COTIZACIONES EN MENUSUALIDADES
+            }).then(terminaCotizacion =>{
+                return new Promise((resO, rejE)=>{
+                    let anualidadesGuardadas = [];
+                    datos.Terrenos.forEach(dat=>{
+                        anualidadesGuardadas.push(this._guardarAnualidadesCliente(conexion,datos,dat));
+                    });
+                    Promise.all(anualidadesGuardadas).then(resultados=>{
+                        return resO(resultados);
+                    }).catch(err=>{
+                        return rejE(err);
+                    })
+                });
+                //console.log('cotizaciones',terminaCotizacion);
+
+                //return this._guardarMantenimientoBasico(conexion,datos);
+                //GUARDA EL PRIMER MANTENIMIENTO BASICOS
+            }).then(terminaCotizacion =>{
+                return this._guardarMantenimientoBasico(conexion,datos);
+            }).then(terminaAnualidad =>{
+                if(datos.FuenteDatos){
+                    return this._actualizarDatosTodosOrigen(conexion,datos);
+                }else{
+                    return Promise.resolve({});
+                }*/
+            }).then(terminaTodo=>{
                 return resolve({Procesado: true, Operacion: 'El cliente fue Editado correctamente', Tipo: 'success', Cliente:datos});
+                //conexion.end();
+                //console.log('mantenimientos',terminaMantenimiento);
+//                return resolve({Procesado: true, Operacion: 'El cliente fue guardado correctamente', Tipo: 'success', Cliente:datos});
+            }).catch(err => { console.log('err',err); return reject({Data: false, err })});
+
+
+
+        });
+    }
+    _eliminarAdeudosPendientes(conexion,datos){
+        return new Promise((resolve, reject)=>{
+            let condiciones =  ` IdCliente =  ${datos.ClienteCompleto.IdCliente} AND Pagado = 0 AND Pendiente = 0`;
+            return this._ordenarQuery(conexion,`SELECT * FROM Adeudos_clientes WHERE ${condiciones} ;`).then(re=>{
+                console.log('re',re);
             }).catch(err => { console.log('err',err); return reject({Data: false, err })});
         });
     }
@@ -742,7 +815,8 @@ module.exports = class Catalogos {
     }
     _verificarUsuario(conexion,datos){
         return new Promise((resolve, reject)=>{
-            let condiciones =  `Nombre ='${datos.Nombre}' AND  Correo = '${datos.Correo}' AND Num_ife = '${datos.NumIfe}'`;
+//            let condiciones =  `Nombre ='${datos.Nombre}' AND  Correo = '${datos.Correo}' AND Num_ife = '${datos.NumIfe}'`;
+            let condiciones =  `Nombre ='${datos.Nombre}' AND  Correo = '${datos.Correo}' `;
             this._ordenarQuery(conexion,`SELECT IdCliente FROM Clientes WHERE ${condiciones} LIMIT 1;`).then((res)=>{
             //mysql.ejecutar(`SELECT IdCliente FROM Clientes WHERE ${condiciones} LIMIT 1;`).then((res)=>{
                 return resolve(res);

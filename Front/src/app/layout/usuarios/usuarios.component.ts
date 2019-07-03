@@ -85,12 +85,14 @@ export class UsuariosComponent implements OnInit {
                 Correo: d.Correo,
                 Perfil: d.Nombre_perfil,
                 Password: d.Password,
-                "Fecha de Creación": d.Fecha_creacion
+                "Fecha de Creación": d.Fecha_creacion,
+                ObjCompleto: d
             });
         });
         return datosOrdenados;
     }
     editarUsuario(obj){
+        console.log('obj',obj);
         let datosActualizar = {IdUsuario: obj['Obj'].IdUsuario, Nombre: obj['Nombre'], Correo: obj['Correo'], Password: obj['Password']};
         console.log('datos_actualizar',datosActualizar);
         this.usuariosService.actualizarDatosUsuario(datosActualizar).then(res=>{
@@ -99,6 +101,7 @@ export class UsuariosComponent implements OnInit {
             }).catch(err=>{console.log('err',err);});
     }
     editarPuestos(obj){
+        console.log('obj',obj);
         let datosActualizar = {
             IdPerfil: obj['Obj'].IdPerfil,
             Nombre_perfil : obj['Nombre del Perfil'],
@@ -109,7 +112,7 @@ export class UsuariosComponent implements OnInit {
             Gastos : (obj['Gastos'] == '1')?1:0,
             Usuarios : (obj['Usuarios'] == '1')?1:0,
             Empleados : (obj['Empleados'] == '1')?1:0,
-            Catalogos : (obj['Catalogos'] == '1')?1:0,
+            Catalogos : (`${obj['Catalogos']}` == '1')?1:0,
             Reportes : (obj['Reportes'] == '1')?1:0,
             Carga : (obj['Carga'] == '1')?1:0
         };
@@ -174,18 +177,20 @@ export class UsuariosComponent implements OnInit {
     _ordenarPerfiles(datos){
         let datosOrdenados = [];
         datos.forEach(d=>{
+            console.log('d',d);
             datosOrdenados.push({
                 "Nombre del Perfil": d.Nombre_perfil,
                 "Fecha de Creación": d.Fecha_insert,
                 "Ventas": d.Ventas,
                 "Cobranza": d.Cobranza, 
                 "Finanzas": d.Finanzas,
+                "Catalogos": d.Catalogos,
                 "Cotizaciones": d.Cotizaciones,
                 "Gastos": d.Gastos,
-                "Usuarios": d.Usuarios,
                 "Empleados": d.Empleados,
-                "Reportes": d.Reportes,
+                "Usuarios": d.Usuarios,
                 "Carga": d.Carga,
+                "Reportes": d.Reportes,
                 "ObjCompleto": d
             });
         })

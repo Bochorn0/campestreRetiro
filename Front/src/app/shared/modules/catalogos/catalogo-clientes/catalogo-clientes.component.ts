@@ -280,23 +280,33 @@ export class CatalogoClientesComponent implements OnInit {
     EditarCliente(){
         console.log('detalle',this.clienteDetalles);
         let totalTerrenos =  this.clienteDetalles.Terrenos.length;
+        console.log('totalTerrenos',totalTerrenos);
         this.clienteDetalles.Terrenos.forEach(t=>{
             t.Estado = (t.Activo)?'ACTIVO':'SIN ESTATUS';
-            t.Cotizacion = t;
-            let Mensualidad = (this.clienteDetalles.Mensualidades)?this.clienteDetalles.Mensualidades.filter(o=>o.Pagado != 1):[];
+            console.log('tCOT',t);
+//            t.Cotizacion = t;
+            t.Cotizacion = {};
+            let Mensualidad = (this.clienteDetalles.Mensualidades)?this.clienteDetalles.Mensualidades.filter(o=>o.Pagado != 1 && o.Pendiente == 0):[];
             let Anualidad = (this.clienteDetalles.Anualidades)?this.clienteDetalles.Anualidades.filter(o=>o.Pagado != 1):[];
             t.Cotizacion.Enganche_Actual = this.clienteDetalles.Saldo_adeudo/totalTerrenos;
-            t.Cotizacion.Importe_mantenimiento = this.clienteDetalles.Monto_mantenimiento/totalTerrenos;
+            t.Cotizacion.ImporteMantenimiento = this.clienteDetalles.Monto_mantenimiento/totalTerrenos;
             t.Cotizacion.Num_pagos_Actual = (Mensualidad[0])?Mensualidad.length:0;
             t.Cotizacion.Mensualidad = (Mensualidad[0])?Mensualidad[0].Importe:0;
             t.Cotizacion.Anualidad = (Anualidad[0])?Anualidad[0].Importe:0;
             t.Cotizacion.Num_pagos_anualidad_Actual = (Anualidad[0])?Anualidad.length:0;
-            t.Cotizacion.Fecha_inicio = (Mensualidad[0])?Mensualidad[0].Fecha:'-';
-            t.Cotizacion.Fecha_inicio_anualidad = (Anualidad[0])?Anualidad[0].Fecha:'-';
+            t.Cotizacion.Fecha_inicio = (Mensualidad[0])?Mensualidad[0].Fecha.split('T')[0]:'-';
+            t.Cotizacion.Fecha_inicio_anualidad = (Anualidad[0])?Anualidad[0].Fecha.split('T')[0]:'-';
+            t.Cotizacion.Periodo_cobro = (t.Cotizacion.Periodo_cobro)?t.Cotizacion.Periodo_cobro:(this.clienteDetalles.Periodo_mantenimiento)?this.clienteDetalles.Periodo_mantenimiento:'-';
+            t.Cotizacion.PeriodoCobro = (t.Cotizacion.Periodo_cobro)?t.Cotizacion.Periodo_cobro:(this.clienteDetalles.Periodo_mantenimiento)?this.clienteDetalles.Periodo_mantenimiento:'-';
+            t.Cotizacion.Saldo_agua = this.clienteDetalles.Saldo_agua;
+            t.Cotizacion.SaldoCertificado = this.clienteDetalles.Saldo_certificado/totalTerrenos;
+            t.Cotizacion.FechaMantenimiento = this.clienteDetalles.Fecha_primer_mantenimiento.split('T')[0]
+//            t.Cotizacion.ImporteMantenimiento = this.clienteDetalles.Saldo_agua;
         })
-        this.clienteDetalles.Importe_mantenimiento = this.clienteDetalles.Monto_mantenimiento;
+        this.clienteDetalles.ImporteMantenimiento = this.clienteDetalles.Monto_mantenimiento;
         this.clienteDetalles.Fecha_mantenimiento = this.clienteDetalles.Fecha_primer_mantenimiento;
         this.clienteDetalles.Periodo_cobro = this.clienteDetalles.Periodo_mantenimiento;
+        
         this.datosDetalle =  this.clienteDetalles;
     }
     enviarContratoCorreo(){

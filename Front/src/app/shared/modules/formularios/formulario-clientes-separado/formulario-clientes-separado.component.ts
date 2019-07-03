@@ -215,10 +215,11 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                     if(res['Data']['Operacion'] && res['Data']['Tipo']){
                         let tipo = res['Data']['Tipo'];
                         swal('Exito', `${res['Data']['Operacion']}`, tipo);
-                        console.log('procesarContratos',JSON.stringify({Activa : 'Contrato', Cliente: res['Data']['Cliente'], Terrenos: this.terrenosCliente }));
+//                        console.log('procesarContratos',JSON.stringify({Activa : 'Contrato', Cliente: res['Data']['Cliente'], Terrenos: this.terrenosCliente }));
                         this.vista.emit({Activa : 'Contrato', Cliente: res['Data']['Cliente'], Terrenos: this.terrenosCliente });
                     }
                 }).catch(err=>{
+                    console.log('err',err);
                     swal('Error',`${err}`,'error');
                 })
             }else{
@@ -333,19 +334,24 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     }
     _validarDatosCliente(obj){
         let error = ``;
+        console.log('obj.Periodo_cobro',obj);
         if(!obj.Nombre || obj.Nombre == '-'){
             error = `Debes introducir un nombre valido para continuar`;
         }else if(obj.Fecha_nacimiento == '-' && !moment(obj.Fecha_nacimiento).isValid()){
             error = `Debes introducir una Fecha de nacimiento valida para continuar`;
 /*        }else if(!obj.Importe_mantenimiento || obj.Importe_mantenimiento == '-'){
             error = `Debes introducir una cuota de mantenimiento para continuar`;*/
-        }else if(!obj.Periodo_cobro || obj.Periodo_cobro == '-'){
-            error = `Debes introducir un periodo de cobro  valido para continuar`;
-        }else if(obj.Fecha_mantenimiento == '-' && !moment(obj.Fecha_mantenimiento).isValid()){
-            error = `Debes introducir una fecha de primer mantenimiento valida para continuar`;
         }else if(!obj.Terrenos){
             error = `Debes introducir al menos un terreno para continuar`;
         }
+        obj.Terrenos.forEach(t=>{
+            if((!t.Cotizacion[0].PeriodoCobro || t.Cotizacion[0].PeriodoCobro == '-') && error != ''){
+                error = `Debes introducir un periodo de cobro valido para continuar`;
+            }else if((t.Cotizacion[0].Fecha_mantenimiento == '-' && !moment(t.Cotizacion[0].Fecha_mantenimiento).isValid()) && error != ''){
+                error = `Debes introducir una fecha de primer mantenimiento valida para continuar`;
+            }
+        });
+        console.log('error',error);
         return error;
     }
     borrarTerreno(indice){
