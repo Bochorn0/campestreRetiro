@@ -190,8 +190,10 @@ export class CatalogoClientesComponent implements OnInit {
         this._confirmarModal(datosClientes,datosAlert).then(res=>{
             return this.catalogosService.actualizarDatosCliente(datosClientes);
         }).then(resu=>{
+            this.obtenerClientesActivos();
             let tipo = resu['Tipo'];
             swal('Exito', `${resu['Operacion']}`, tipo);
+
         }).catch(err=>{console.log('err',err);})
     }
     cambiarTazasMantenimiento(){

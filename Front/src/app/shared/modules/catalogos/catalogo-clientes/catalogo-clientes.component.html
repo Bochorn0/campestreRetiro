@@ -206,7 +206,7 @@
                                             <button class="btn btn-warning pull-right" (click)="this.clienteDetalles = datosDetalle; this.datosDetalle = false;"> Regresar </button>
                                             <br>
                                             <br>
-                                            <app-formulario-clientes-separado [datosCliente]="datosDetalle" ></app-formulario-clientes-separado>
+                                            <app-formulario-clientes-separado [datosCliente]="datosDetalle" (vista)=" this.clienteDetalles = this.datosDetalle = false; obtenerClientesActivos();" ></app-formulario-clientes-separado>
                                         </div>   
                                     </div>                                 
                                 </ng-template>

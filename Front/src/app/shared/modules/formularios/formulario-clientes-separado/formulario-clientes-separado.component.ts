@@ -214,6 +214,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 this.ventasService.guardarNuevoCliente(this.dataCli).then(res=>{
                     if(res['Data']['Operacion'] && res['Data']['Tipo']){
                         let tipo = res['Data']['Tipo'];
+                        this.datosCliente = false;
                         swal('Exito', `${res['Data']['Operacion']}`, tipo);
 //                        console.log('procesarContratos',JSON.stringify({Activa : 'Contrato', Cliente: res['Data']['Cliente'], Terrenos: this.terrenosCliente }));
                         this.vista.emit({Activa : 'Contrato', Cliente: res['Data']['Cliente'], Terrenos: this.terrenosCliente });

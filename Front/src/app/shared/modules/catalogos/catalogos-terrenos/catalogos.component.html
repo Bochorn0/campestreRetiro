@@ -17,6 +17,29 @@
                         Terrenos Activos
                     </div>
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <select  class="form-control" [(ngModel)]="parcelaFiltro" (change)="filtrarTerrenos();" >
+                                    <option value="0">Todas</option>
+                                    <option  *ngFor="let e of parcelas;" value="{{e.parcela}}">{{e.parcela}}</option>
+                                </select>
+                            </div>                                    
+                            <div class="col-lg-4">
+                                <select  class="form-control" [(ngModel)]="loteFiltro" (change)="filtrarTerrenos();" >
+                                    <option value="0">Todos</option>
+                                    <option  *ngFor="let e of lotes;" value="{{e.lote}}">{{e.lote}}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-4"> 
+                                <select  class="form-control" [(ngModel)]="etapaFiltro" (change)="filtrarTerrenos();" >
+                                    <option value="0">Todas</option>
+                                    <option  *ngFor="let e of etapas;" value="{{e.etapa}}">{{e.etapa}}</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-12">
+                                <br>
+                            </div>  
+                        </div>              
                         <app-datatables-general #datatableTerrenos *ngIf="datosTerrenos" [datosDatatable]="datosTerrenos" (delete)="borrarTerreno($event);" (edit)="editarTerreno($event);" (checks)="this.chksTerrenos = $event"></app-datatables-general>
                     </div>
                 </div>

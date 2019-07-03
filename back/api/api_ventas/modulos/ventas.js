@@ -517,6 +517,12 @@ module.exports = class Catalogos {
             }).catch(err => { console.log('err',err); return reject({Data: false, err })});
         });
     }
+    _modificarCotizacon(dat){
+        dat[0].Enganche = dat[0].Enganche_Actual;
+        dat[0].Num_pagos = dat[0].Num_pagos_Actual;
+        dat[0].Num_anualidades = dat[0].Num_pagos_anualidad_Actual;
+        return dat;
+    }
     _modificarMensualidades(dat){
         dat[0].Enganche = (dat[0].Enganche - dat[0].EnganchePagado);
         dat[0].Num_pagos = (dat[0].Num_pagos - dat[0].Num_pagos_pagados);
@@ -716,17 +722,17 @@ module.exports = class Catalogos {
                 //console.log('cliente',cliente);
                 datos.ClienteCompleto = cliente[0];
                 datos.ClienteCompleto.Codigo += `${datos.ClienteCompleto.IdCliente}`;
-                console.log('datos',datos);
-                this._eliminarAdeudosPendientes(conexion,datos);
-/*                return this._guardarRelacionesTerrenos(conexion,datos);
+                return this._eliminarAdeudosPendientes(conexion,datos);
+            }).then(datosEliminados =>{    
+                console.log('Eliminados',datosEliminados);        
+                return this._guardarRelacionesTerrenos(conexion,datos);
                 //GUARDA LA RELACION CON LOS TERRENOS
             }).then(relacionesGuardadas =>{
                 return new Promise((resO, rejE)=>{
                     let cotizacionesGuardadas = [];
                     datos.Terrenos.forEach(dat=>{
-                        console.log('dat antes',dat);
-                        dat.Cotizacion = (datos.FuenteDatos)?this._modificarMensualidades(dat.Cotizacion):dat.Cotizacion;
-                        console.log('dat despues',dat);
+                        dat.Cotizacion = this._modificarCotizacon(dat.Cotizacion);
+//                        dat.Cotizacion = (datos.FuenteDatos)?this._modificarMensualidades(dat.Cotizacion):dat.Cotizacion;
                         cotizacionesGuardadas.push(this._guardarAdeudosCliente(conexion,datos,dat));
                     });
                     Promise.all(cotizacionesGuardadas).then(resultados=>{
@@ -754,7 +760,7 @@ module.exports = class Catalogos {
                 //GUARDA EL PRIMER MANTENIMIENTO BASICOS
             }).then(terminaCotizacion =>{
                 return this._guardarMantenimientoBasico(conexion,datos);
-            }).then(terminaAnualidad =>{
+/*            }).then(terminaAnualidad =>{
                 if(datos.FuenteDatos){
                     return this._actualizarDatosTodosOrigen(conexion,datos);
                 }else{
@@ -775,7 +781,34 @@ module.exports = class Catalogos {
         return new Promise((resolve, reject)=>{
             let condiciones =  ` IdCliente =  ${datos.ClienteCompleto.IdCliente} AND Pagado = 0 AND Pendiente = 0`;
             return this._ordenarQuery(conexion,`SELECT * FROM Adeudos_clientes WHERE ${condiciones} ;`).then(re=>{
-                console.log('re',re);
+                if(re[0]){
+                    let str = ``;
+                    re.forEach(d=>{
+                        str += `${d.IdAdeudo},`;
+                    });
+                    str = (str.indexOf(',') > -1 )?str.slice(0,-1):str;
+                    return this._ordenarQuery(conexion,`DELETE FROM Adeudos_clientes WHERE IdAdeudo IN (${str});`);
+                }else{
+                    return Promise.resolve({});
+                }
+            }).then(res=>{
+                let condiciones =  ` IdCliente =  ${datos.ClienteCompleto.IdCliente} AND Pagado = 0 AND Pendiente = 0`;
+                return this._ordenarQuery(conexion,`SELECT * FROM Adeudos_anualidades WHERE ${condiciones} ;`);
+            }).then(anu=>{
+                if(anu[0]){
+                    let str2 = ``;
+                    anu.forEach(d=>{
+                        str2 += `${d.IdAnualidad},`;
+                    });
+                    str2 = (str2.indexOf(',') > -1 )?str2.slice(0,-1):str2;
+                    return this._ordenarQuery(conexion,`DELETE FROM Adeudos_anualidades WHERE IdAnualidad IN (${str2});`);                    
+                }else{
+                    return Promise.resolve({});
+                }
+            }).then(terrenos=>{
+                return this._ordenarQuery(conexion,`DELETE FROM Clientes_terrenos WHERE  IdCliente =  ${datos.ClienteCompleto.IdCliente} ;`);
+            }).then(resol=>{
+                return resolve({});
             }).catch(err => { console.log('err',err); return reject({Data: false, err })});
         });
     }

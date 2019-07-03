@@ -15,13 +15,15 @@ import * as moment from 'moment';
 export class CatalogosTerrenosComponent implements OnInit {
     contenidoReportes;contratosActivos;
     terrenosTodos;datosTerrenos;vistaCentro;
-    chksTerrenos = [];
+    chksTerrenos = [];parcelas = []; etapas=[]; lotes = [];
+    parcelaFiltro;loteFiltro;etapaFiltro;
     @ViewChild('datatableTerrenos')datatableTerrenos;
     frmSolicitud: FormGroup; // Formulario de solicitud
     constructor(private catalogosService : CatalogosService,private fb: FormBuilder) {
         this.frmSolicitud = fb.group({
             'File': [null]
         });
+        this.parcelaFiltro = this.loteFiltro =this.etapaFiltro = '0';
         this.verCatalogoTerrenos({});
     }
 
@@ -29,15 +31,36 @@ export class CatalogosTerrenosComponent implements OnInit {
     obtenerContratosActivos(event){
         this._limpiarVariables();
         this.catalogosService.obtenerContratos().then(res =>{
-            console.log('res',res['Data']);
+            //console.log('res',res['Data']);
             this.contenidoReportes = true;
             this.contratosActivos =  { Datos : res['Data']};
         }).catch(err=>{this._limpiarVariables();});
+    }
+    filtrarTerrenos(){
+        let filtrados = this.terrenosTodos;
+        //console.log('filtrados',filtrados);
+        filtrados = (this.parcelaFiltro != '0')?filtrados.filter(f=>f.Parcela == this.parcelaFiltro):filtrados;
+        filtrados = (this.loteFiltro != '0')?filtrados.filter(f=>f.Lote == this.loteFiltro):filtrados;
+        filtrados = (this.etapaFiltro != '0')?filtrados.filter(f=>f.Etapa == this.etapaFiltro):filtrados;
+        //console.log('filtrados',filtrados);
+        let datosOrdenados = {Opciones:{Eliminar:true,Seleccionar: true,Editar:true,Detalles:true},Datos:filtrados};
+
+        this.datosTerrenos = datosOrdenados;
+        if(this.datatableTerrenos != null){
+            this.datatableTerrenos._reiniciarRegistros(datosOrdenados);
+        }
+        this.datosTerrenos = datosOrdenados;
+        this._recorrerFiltros(filtrados);
+
     }
     verCatalogoTerrenos(event){
         console.log('entro',event);
         this.catalogosService.obtenerTerrenos().then(res=>{
             let datos = this._ordenarDatosTerrenos(res['Data']);
+            this._recorrerFiltros(datos);
+            console.log('par',this.parcelas);
+            console.log('lot',this.lotes);
+            console.log('eta',this.etapas);
             this.vistaCentro = true;
             this.terrenosTodos =  datos;
             let datosOrdenados = {Opciones:{Eliminar:true,Seleccionar: true,Editar:true,Detalles:true},Datos:datos};
@@ -155,6 +178,26 @@ export class CatalogosTerrenosComponent implements OnInit {
                 return reject({ errorMessage: "No se pudo cargar el archivo", error });
             }
         });
+    }
+    _recorrerFiltros(datos){
+        this.parcelas = []; this.lotes = []; this.etapas = [];
+        console.log('dat para fil',datos);
+        if(datos){
+            datos.forEach(d=>{        
+                let existePar = this.parcelas.find(pa=>pa.parcela == d.Parcela);
+                if(!existePar){
+                    this.parcelas.push({parcela:d.Parcela});
+                }
+                let existeEta = this.etapas.find(pa=>pa.etapa == d.Etapa);
+                if(!existeEta){
+                    this.etapas.push({etapa:d.Etapa});
+                }
+                let existeLot = this.lotes.find(pa=>pa.lote == d.Lote);
+                if(!existeLot){
+                    this.lotes.push({lote:d.Lote});
+                }
+            });
+        }
     }
     _ordenarDatosTerrenos(datos){
         let datosOrdenados = [];
