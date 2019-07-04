@@ -123,7 +123,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                     //console.log('existe',existeTerreno);
                     existeTerreno.IdCotizacion = 0;
                     existeTerreno.Cotizacion = [t.Cotizacion];
-                    existeTerreno.Estado = [t.Cotizacion.Estado];
+                    existeTerreno.Estado = t.Estado;
                     this.terrenosCliente.push(existeTerreno);
                 }else{
                     this.terrenosCliente.push({
@@ -211,6 +211,8 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             if(!error){
                 this.dataCli.FuenteDatos = true;
                 this.dataCli.Terrenos =  this.terrenosCliente;
+                this.dataCli.Fecha_mantenimiento = this.terrenosCliente[0].Cotizacion[0].FechaMantenimiento;
+                this.dataCli.Periodo_cobro = this.terrenosCliente[0].Cotizacion[0].PeriodoCobro;
                 this.dataCli.ObjCompletos = this.datosCliente.Terrenos;
                 this.dataCli.Usuario = JSON.parse(localStorage.getItem('Datos'));
                 console.log('formObj',this.dataCli);
@@ -354,7 +356,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         obj.Terrenos.forEach(t=>{
             if((!t.Cotizacion[0].PeriodoCobro || t.Cotizacion[0].PeriodoCobro == '-') && error != ''){
                 error = `Debes introducir un periodo de cobro valido para continuar`;
-            }else if((t.Cotizacion[0].Fecha_mantenimiento == '-' && !moment(t.Cotizacion[0].Fecha_mantenimiento).isValid()) && error != ''){
+            }else if((t.Cotizacion[0].FechaMantenimiento == '-' || !moment(t.Cotizacion[0].FechaMantenimiento).isValid()) && error != ''){
                 error = `Debes introducir una fecha de primer mantenimiento valida para continuar`;
             }
         });

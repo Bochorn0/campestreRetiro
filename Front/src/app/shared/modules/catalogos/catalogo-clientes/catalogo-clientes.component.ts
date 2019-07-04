@@ -284,7 +284,7 @@ export class CatalogoClientesComponent implements OnInit {
         let totalTerrenos =  this.clienteDetalles.Terrenos.length;
         console.log('totalTerrenos',totalTerrenos);
         this.clienteDetalles.Terrenos.forEach(t=>{
-            t.Estado = (t.Activo)?'ACTIVO':'SIN ESTATUS';
+            t.Estado = (t.Estado)?t.Estado:'SIN ESTADO';
             console.log('tCOT',t);
 //            t.Cotizacion = t;
             t.Cotizacion = {};
