@@ -437,8 +437,8 @@ module.exports = class Catalogos {
                 if(cliente){
                     return this.Editar_cliente(conexion, datos, cliente);
                 }else{
-                    console.log('cliente',cliente);
-                    //return this.Insertar_cliente(conexion,datos);
+//                    console.log('cliente',cliente);
+                    return this.Insertar_cliente(conexion,datos);
                 }
             }).then(res =>{
                 conexion.end();
@@ -477,7 +477,11 @@ module.exports = class Catalogos {
                         console.log('dat antes',dat);
                         dat.Cotizacion = (datos.FuenteDatos)?this._modificarMensualidades(dat.Cotizacion):dat.Cotizacion;
                         console.log('dat despues',dat);
-                        cotizacionesGuardadas.push(this._guardarAdeudosCliente(conexion,datos,dat));
+                        if(dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
+                            cotizacionesGuardadas.push(Promise.resolve({}));
+                        }else{
+                            cotizacionesGuardadas.push(this._guardarAdeudosCliente(conexion,datos,dat));
+                        }
                     });
                     Promise.all(cotizacionesGuardadas).then(resultados=>{
                         return resO(resultados);
@@ -490,7 +494,11 @@ module.exports = class Catalogos {
                 return new Promise((resO, rejE)=>{
                     let anualidadesGuardadas = [];
                     datos.Terrenos.forEach(dat=>{
-                        anualidadesGuardadas.push(this._guardarAnualidadesCliente(conexion,datos,dat));
+                        if(dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
+                            anualidadesGuardadas.push(Promise.resolve({}));
+                        }else{
+                            anualidadesGuardadas.push(this._guardarAnualidadesCliente(conexion,datos,dat));
+                        }
                     });
                     Promise.all(anualidadesGuardadas).then(resultados=>{
                         return resO(resultados);
@@ -624,7 +632,8 @@ module.exports = class Catalogos {
             datos.Terrenos.forEach(ter=>{
                 let campos_terreno = `IdCliente, IdUsuario, IdTerreno, IdCotizacion,Fecha_insercion,Folio,Quien_guardo`;
                 let valores_terreno = `${datos.ClienteCompleto.IdCliente},${datos.Usuario.Datos.IdUsuario},${ter.IdTerreno},${ter.IdCotizacion}, '${today}',${(ter.Folio)?ter.Folio:0},'${datos.Usuario.Datos.Nombre}'`;
-                let updateTerrenos = `Update Terrenos Set Asignado = 1 WHERE IdTerreno = ${ter.IdTerreno}`;
+                let auxUp = (ter.Estado)?` ,Estado='${ter.Estado}' `:'  ';
+                let updateTerrenos = `Update Terrenos Set Asignado = 1 ${auxUp} WHERE IdTerreno = ${ter.IdTerreno}`;
                 //console.log('rela',`INSERT INTO Clientes_terrenos (${campos_terreno}) VALUES (${valores_terreno});`);
                 terrenosGuardados.push(this._ordenarQuery(conexion,`INSERT INTO Clientes_terrenos (${campos_terreno}) VALUES (${valores_terreno});`));
                 terrenosGuardados.push(this._ordenarQuery(conexion,updateTerrenos));
@@ -723,8 +732,8 @@ module.exports = class Catalogos {
                 datos.ClienteCompleto = cliente[0];
                 datos.ClienteCompleto.Codigo += `${datos.ClienteCompleto.IdCliente}`;
                 return this._eliminarAdeudosPendientes(conexion,datos);
-            }).then(datosEliminados =>{    
-                console.log('Eliminados',datosEliminados);        
+            }).then(datosEliminados =>{
+                console.log('Eliminados',datosEliminados);
                 return this._guardarRelacionesTerrenos(conexion,datos);
                 //GUARDA LA RELACION CON LOS TERRENOS
             }).then(relacionesGuardadas =>{
@@ -732,8 +741,13 @@ module.exports = class Catalogos {
                     let cotizacionesGuardadas = [];
                     datos.Terrenos.forEach(dat=>{
                         dat.Cotizacion = this._modificarCotizacon(dat.Cotizacion);
-//                        dat.Cotizacion = (datos.FuenteDatos)?this._modificarMensualidades(dat.Cotizacion):dat.Cotizacion;
-                        cotizacionesGuardadas.push(this._guardarAdeudosCliente(conexion,datos,dat));
+                        if(dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
+                            cotizacionesGuardadas.push(Promise.resolve({}));
+                        }else{
+    //                        dat.Cotizacion = (datos.FuenteDatos)?this._modificarMensualidades(dat.Cotizacion):dat.Cotizacion;
+                            cotizacionesGuardadas.push(this._guardarAdeudosCliente(conexion,datos,dat));
+                        }
+
                     });
                     Promise.all(cotizacionesGuardadas).then(resultados=>{
                         return resO(resultados);
@@ -746,7 +760,11 @@ module.exports = class Catalogos {
                 return new Promise((resO, rejE)=>{
                     let anualidadesGuardadas = [];
                     datos.Terrenos.forEach(dat=>{
-                        anualidadesGuardadas.push(this._guardarAnualidadesCliente(conexion,datos,dat));
+                        if(dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
+                            anualidadesGuardadas.push(Promise.resolve({}));
+                        }else{
+                            anualidadesGuardadas.push(this._guardarAnualidadesCliente(conexion,datos,dat));
+                        }
                     });
                     Promise.all(anualidadesGuardadas).then(resultados=>{
                         return resO(resultados);
