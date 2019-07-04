@@ -19,8 +19,10 @@ export class CatalogosComponent implements OnInit {
     @ViewChild('datatableClientes')datatableClientes;
     @ViewChild('datatableDetalles')datatableDetalles;
     checksTerrenos = [];textoBuscar;
+    parcelas=[];lotes=[];etapas=[];estatusTodos=[]
+    parcelaFiltro;loteFiltro;etapaFiltro;estatusFiltro;
     constructor(private fb: FormBuilder, private catalogosService: CatalogosService) { 
-
+        this.parcelaFiltro = this.loteFiltro = this.etapaFiltro = this.estatusFiltro = '0';
         this.frmCliente = fb.group({
             'Nombre': null,
             'Correo':  null,
@@ -80,9 +82,24 @@ export class CatalogosComponent implements OnInit {
             });
             dataFiltrada = datosCoincidencia;
         }else{
-            dataFiltrada = this.datosTodosTotales;            
+            dataFiltrada = this.datosTodosTotales;
         }
-        this.datosTodos.Datos = dataFiltrada;
+//        console.log('datafiltrada',dataFiltrada);
+        let datosF = [];
+        dataFiltrada.forEach(d=>{
+            d.Terrenos.forEach(t=>{
+                datosF.push(t);
+            });
+        });
+//        console.log('datosF',datosF);
+        datosF = (this.parcelaFiltro != '0')?datosF.filter(f=>f['PARCELA'] == this.parcelaFiltro):datosF;
+        datosF = (this.loteFiltro != '0')?datosF.filter(f=>f['LOTE'] == this.loteFiltro):datosF;
+        datosF = (this.etapaFiltro != '0')?datosF.filter(f=>f['ETAPA'] == this.etapaFiltro):datosF;
+        datosF = (this.estatusFiltro != '0')?datosF.filter(f=>f['ESTADO'] == this.estatusFiltro):datosF;
+        let datosOrd = this._ordenarDatosTodos(datosF);
+//        console.log('datosF',datosF);
+        this._recorrerFiltros(datosOrd);
+        this.datosTodos.Datos = datosOrd;
     }
 
     verCatalogoTerrenos(event){
@@ -97,8 +114,9 @@ export class CatalogosComponent implements OnInit {
         this._limpiarVistas();
         this.catalogosService.obtenerDatosTodos().then(res=>{
             let datos = this._ordenarDatosTodos(res['Datos']);
-            console.log('datos',datos);
+//            console.log('datos',datos);
             this.datosTodosTotales  = datos;
+            this._recorrerFiltros(datos);
             this.datosTodos  =  { Datos: datos, Ordenes : {Saldo_credito:'',Saldo_certificado: '', Saldo_mantenimiento: '', Saldo_agua: ''}};
             
             /*if(this.datatableDatosTodos != null){
@@ -108,6 +126,32 @@ export class CatalogosComponent implements OnInit {
         }).catch(err=>{
             console.log('err',err);
         });
+    }
+    _recorrerFiltros(datos){
+//        console.log('dat para fil',datos);
+        this.parcelas = []; this.lotes = []; this.etapas = []; this.estatusTodos = [];
+        if(datos){
+            datos.forEach(d=>{
+                d.Terrenos.forEach(t=>{
+                    let existePar = this.parcelas.find(pa=>pa.parcela == t['PARCELA']);
+                    if(!existePar){
+                        this.parcelas.push({parcela:t['PARCELA']});
+                    }
+                    let existeEta = this.etapas.find(pa=>pa.etapa == t['ETAPA']);
+                    if(!existeEta){
+                        this.etapas.push({etapa:t['ETAPA']});
+                    }
+                    let existeLot = this.lotes.find(pa=>pa.lote == t['LOTE']);
+                    if(!existeLot){
+                        this.lotes.push({lote:t['LOTE']});
+                    }
+                    let existeEst = this.estatusTodos.find(pa=>pa.Estatus == t['ESTADO']);
+                    if(!existeEst){
+                        this.estatusTodos.push({Estatus:t['ESTADO']});
+                    }
+                })
+            });
+        }
     }
     asignarChecks(event){
         //console.log('even',event);

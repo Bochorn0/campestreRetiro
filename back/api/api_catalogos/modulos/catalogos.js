@@ -464,6 +464,7 @@ module.exports = class Catalogos {
             update += (datos.Parcela )?` parcela = '${datos.Parcela}',`:``;
             update += (datos.Superficie )?` superficie = '${datos.Superficie}',`:``;
             update += (datos.Pertenece )?` Pertenece = '${datos.Pertenece}',`:``;
+            update += (datos.Estado )?` Estado = '${datos.Estado}',`:``;
             update += (datos.Asignado && datos.Asignado == '0' )?` Asignado = 0,`:(datos.Asignado != '')?` Asignado = 1,`:``;
             update += (datos.Activo && datos.Activo == '0' )?` Activo = 0,`:(datos.Activo != '')?` Activo = 1,`:``;
             update = update.slice(0,-1);
@@ -566,7 +567,8 @@ module.exports = class Catalogos {
     Catalogo_datos(data){
 //        console.log('datos',data);
         return new Promise((resolve, reject)=>{
-            return mysql.ejecutar(`SELECT * from Datos_todos WHERE ACTIVO = 1`).then((res)=>{
+            let condiciones = ` ACTIVO = 1 AND `+"`"+`NOMBRE DEL CLIENTE`+"`"+` NOT LIKE '%DUARTE%MEDRANO%' `;
+            return mysql.ejecutar(`SELECT * from Datos_todos WHERE ${condiciones}`).then((res)=>{
                 return resolve({Datos:res});
             }).catch(err => { console.log('err',err); return reject({Data: false, err })});
         });        

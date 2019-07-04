@@ -198,10 +198,13 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             //this.frmCliente.controls['Pagina'].setValue( (!error)?2:1 );
         }else if(this.pagina == 2){
             error =this._validarFormularioParte2();
-            this.frmCliente.controls['Terrenos'].setValue( (!error)?this.terrenosCliente:this.frmCliente.controls['Terrenos'].value );
-            this.dataCli = this.frmCliente.getRawValue();
-            this._datosTerrenoGeneral();
-            this.pagina = (!error)?3:2 ;
+            if(!error){
+                console.log('terren',this.terrenosCliente);
+                this.frmCliente.controls['Terrenos'].setValue( (!error)?this.terrenosCliente:this.frmCliente.controls['Terrenos'].value );
+                this.dataCli = this.frmCliente.getRawValue();
+                this._datosTerrenoGeneral();
+                this.pagina = (!error)?3:2 ;
+            }
         }else if(this.pagina == 3){
             //console.log('data',this.dataCli);
             let error = this._validarDatosCliente(this.dataCli);
@@ -255,11 +258,13 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             if(t.etapa == ''){
                 error = `etapa no puede estar vacio `;
             }
-            if(t.Cotizacion[0].Mensualidad == 0){
-                error = `Debes espeficificar un monto de mensualidad `;
-            }
-            if(t.Cotizacion[0].Num_pagos_Actual == 0){
-                error = `Debes espeficicar un total de pagos actuales `;
+            if(t.Estado != 'CEDIDO' && t.Estado != 'POR CEDER'){
+                if(t.Cotizacion[0].Mensualidad == 0){
+                    error = `Debes espeficificar un monto de mensualidad para el terreno ${t.parcela}`;
+                }
+                if(t.Cotizacion[0].Num_pagos_Actual == 0){
+                    error = `Debes espeficicar un total de pagos actuales para el terreno ${t.parcela}`;
+                }
             }
 /*            if(t.Cotizacion[0].Fecha_inicio){
                 error = `Debes de especificar una fecha de inicio`;
@@ -277,6 +282,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         let SaldoCertificado = 0;
         let SaldoCredito = 0;
         let SaldoAnualidad = 0;
+        console.log('datos',this.dataCli);
         this.dataCli.Terrenos.forEach(t=>{
             //DATOS DE SALDOS DE AGUA
             SaldoAgua += t.Cotizacion[0].Saldo_agua;

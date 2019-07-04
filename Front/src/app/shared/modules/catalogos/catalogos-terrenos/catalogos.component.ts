@@ -15,15 +15,15 @@ import * as moment from 'moment';
 export class CatalogosTerrenosComponent implements OnInit {
     contenidoReportes;contratosActivos;
     terrenosTodos;datosTerrenos;vistaCentro;
-    chksTerrenos = [];parcelas = []; etapas=[]; lotes = [];
-    parcelaFiltro;loteFiltro;etapaFiltro;
+    chksTerrenos = [];parcelas = []; etapas=[]; lotes = []; estatusTodos = [];
+    parcelaFiltro;loteFiltro;etapaFiltro;estatusFiltro;
     @ViewChild('datatableTerrenos')datatableTerrenos;
     frmSolicitud: FormGroup; // Formulario de solicitud
     constructor(private catalogosService : CatalogosService,private fb: FormBuilder) {
         this.frmSolicitud = fb.group({
             'File': [null]
         });
-        this.parcelaFiltro = this.loteFiltro =this.etapaFiltro = '0';
+        this.parcelaFiltro = this.loteFiltro =this.etapaFiltro = this.estatusFiltro = '0';
         this.verCatalogoTerrenos({});
     }
 
@@ -42,6 +42,7 @@ export class CatalogosTerrenosComponent implements OnInit {
         filtrados = (this.parcelaFiltro != '0')?filtrados.filter(f=>f.Parcela == this.parcelaFiltro):filtrados;
         filtrados = (this.loteFiltro != '0')?filtrados.filter(f=>f.Lote == this.loteFiltro):filtrados;
         filtrados = (this.etapaFiltro != '0')?filtrados.filter(f=>f.Etapa == this.etapaFiltro):filtrados;
+        filtrados = (this.estatusFiltro != '0')?filtrados.filter(f=>f.Estado == this.estatusFiltro):filtrados;
         //console.log('filtrados',filtrados);
         let datosOrdenados = {Opciones:{Eliminar:true,Seleccionar: true,Editar:true,Detalles:true},Datos:filtrados};
 
@@ -96,8 +97,7 @@ export class CatalogosTerrenosComponent implements OnInit {
         });
     }
     editarTerreno(obj){
-        let datosActualizar =  {IdTerreno: obj['Obj'].IdTerreno,Lote: `${obj['Lote']}`,Parcela: `${obj['Parcela']}`,Estapa: `${obj['Lote']}`,Propietario: obj['Lote'],Superficie: `${obj['Superficie']}`,
-    Asignado : `${obj['Asignado']}`, Activo: `${obj['Activo']}`};
+        let datosActualizar =  {IdTerreno: obj['Obj'].IdTerreno,Lote: `${obj['Lote']}`,Parcela: `${obj['Parcela']}`,Estapa: `${obj['Lote']}`,Propietario: obj['Lote'],Superficie: `${obj['Superficie']}`, Estado: `${obj['Estado']}`, Asignado : `${obj['Asignado']}`, Activo: `${obj['Activo']}`};
         console.log('datosActualizar',datosActualizar); 
         this.catalogosService.actualizarDatosTerreno(datosActualizar).then(res=>{
             let tipo = res['Tipo'];
@@ -180,7 +180,7 @@ export class CatalogosTerrenosComponent implements OnInit {
         });
     }
     _recorrerFiltros(datos){
-        this.parcelas = []; this.lotes = []; this.etapas = [];
+        this.parcelas = []; this.lotes = []; this.etapas = []; this.estatusTodos = [];
         console.log('dat para fil',datos);
         if(datos){
             datos.forEach(d=>{        
@@ -196,6 +196,10 @@ export class CatalogosTerrenosComponent implements OnInit {
                 if(!existeLot){
                     this.lotes.push({lote:d.Lote});
                 }
+                let existeEst = this.estatusTodos.find(pa=>pa.Estatus == d.Estado);
+                if(!existeEst){
+                    this.estatusTodos.push({Estatus:d.Estado});
+                }                
             });
         }
     }
@@ -204,7 +208,7 @@ export class CatalogosTerrenosComponent implements OnInit {
         if(datos){
             datos.forEach(d=>{
                 datosOrdenados.push({Etapa :d.etapa, Lote: d.lote, Parcela: d.parcela, Superficie:d.Superficie,
-                Pertenece:d.Pertenece, Asignado: d.Asignado, Activo: d.Activo, ObjCompleto:d});
+                Pertenece:d.Pertenece, Estado: d.Estado, Asignado: d.Asignado, Activo: d.Activo, ObjCompleto:d});
             });
         }
         return datosOrdenados;

@@ -18,24 +18,34 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
+                                <h4> Parcela </h4>                                
                                 <select  class="form-control" [(ngModel)]="parcelaFiltro" (change)="filtrarTerrenos();" >
                                     <option value="0">Todas</option>
                                     <option  *ngFor="let e of parcelas;" value="{{e.parcela}}">{{e.parcela}}</option>
                                 </select>
                             </div>                                    
-                            <div class="col-lg-4">
+                            <div class="col-lg-3">
+                                <h4> Lote </h4>                                
                                 <select  class="form-control" [(ngModel)]="loteFiltro" (change)="filtrarTerrenos();" >
                                     <option value="0">Todos</option>
                                     <option  *ngFor="let e of lotes;" value="{{e.lote}}">{{e.lote}}</option>
                                 </select>
                             </div>
-                            <div class="col-lg-4"> 
+                            <div class="col-lg-3"> 
+                                <h4> Estapa </h4>
                                 <select  class="form-control" [(ngModel)]="etapaFiltro" (change)="filtrarTerrenos();" >
                                     <option value="0">Todas</option>
                                     <option  *ngFor="let e of etapas;" value="{{e.etapa}}">{{e.etapa}}</option>
                                 </select>
                             </div>
+                            <div class="col-lg-3">
+                                <h4> Estatus </h4>
+                                <select  class="form-control" [(ngModel)]="estatusFiltro" (change)="filtrarTerrenos();" >
+                                    <option value="0">Todos</option>
+                                    <option  *ngFor="let e of estatusTodos;" value="{{e.Estatus}}">{{e.Estatus}}</option>
+                                </select>            
+                            </div>                            
                             <div class="col-lg-12">
                                 <br>
                             </div>  
