@@ -277,7 +277,7 @@ export class CatalogosComponent implements OnInit {
                     TelRef_1:d["TELEFONO REFERENCIA 1"].trim(),
                     TelRef_2:d["TELEFONO REFERENCIA 2"].trim(),
                     TelRef_3:d["TELEFONO REFERENCIA 3"].trim(),
-                    Estatus:(d["ESTADO"] != '-')?d["ESTADO"]:'SIN ESTADO',
+                    Estado:(d["ESTADO"] != '-')?d["ESTADO"]:'SIN ESTADO',
                     Saldo_agua:SaldoAgua,
                     Importe_mantenimiento:ImporteMantenimiento,
                     Fecha_mantenimiento:FechaMantenimiento,

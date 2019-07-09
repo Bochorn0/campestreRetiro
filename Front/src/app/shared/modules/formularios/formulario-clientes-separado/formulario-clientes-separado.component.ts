@@ -43,9 +43,9 @@ export class FormularioClientesSeparadoComponent implements OnInit {
  //       this.correo = 'prueba@prueba.com';
  //       this.fNacimiento = '1991-08-24';
  //       this.fechaParaCobro = 0;
-        this.importeMantenimiento = 1500;
-        this.contratoAgua = 500;
-        this.fechaPrimerMantenimiento =  `${moment().add('6','month').format('YYYY-MM')}-15`;
+        //this.importeMantenimiento = 1500;
+        //this.contratoAgua = 500;
+        //this.fechaPrimerMantenimiento =  `${moment().add('6','month').format('YYYY-MM')}-15`;
         this.frmCliente = fb.group({
             'Nombre': null,
             'Correo':  null,
@@ -103,12 +103,12 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         });
     }
     ngOnInit() {
+        console.log('datosCliente',this.datosCliente);
 //        this._obtenerTerrenos();
         if(this.datosCliente){
             this._asignarFormulario();
             this.clienteDatosTodos = true;
         }
-        console.log('datosCliente',this.datosCliente);
     }
     _asignarFormulario(){
         this.terrenosCliente = [];
@@ -116,7 +116,6 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             this.datosCliente.Terrenos.forEach(t=>{
                 t.Cotizacion.Fecha_inicio = (moment(t.Cotizacion.Fecha_inicio).isValid())?t.Cotizacion.Fecha_inicio:moment().add('1','month').format('YYYY-MM-DD');
                 t.Cotizacion.Fecha_inicio_anualidad = (moment(t.Cotizacion.Fecha_inicio_anualidad).isValid())?t.Cotizacion.Fecha_inicio_anualidad:`${moment().format('YYYY')}-12-01`;
-                console.log('t',t);
                 let existeTerreno = this.terrenos.find(tt=>tt.parcela == t['PARCELA']);
                 existeTerreno = ((t.Superficie && t.etapa && t.parcela))?t:existeTerreno;
                 if(existeTerreno){
@@ -142,25 +141,24 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 }
                 
             });
-            console.log('this.datosCliente',this.terrenosCliente);
-//            console.log('this.datosCliente',this.datosCliente);
             this.frmCliente =  this.fb.group({
                 'Nombre': this.datosCliente.Nombre,
                 'Correo': this.datosCliente.Correo,
-                'NumIfe': (this.datosCliente.NumIfe != '-')?parseFloat(this.datosCliente.NumIfe):'-',
+                'NumIfe': (this.datosCliente.NumIfe)?parseFloat(this.datosCliente.NumIfe):(this.datosCliente.Num_ife)?this.datosCliente.Num_ife:'-',
+//                'NumIfe': (this.datosCliente.NumIfe != '-')?parseFloat(this.datosCliente.NumIfe):(this.datosCliente.Num_ife)?this.datosCliente.Num_ife:'-',
                 'Origen':this.datosCliente.Origen,
                 'Direccion': this.datosCliente.Direccion,
                 'Telefono': (this.datosCliente.Telefono != '-')?parseFloat(this.datosCliente.Telefono):'-',
                 'Fecha_nacimiento': this.datosCliente.Fecha_nacimiento,
-                'Ref1':this.datosCliente.Ref1,
-                'Ref2':this.datosCliente.Ref2,
-                'Ref3':this.datosCliente.Ref3,
+                'Ref1':(this.datosCliente.Ref1)?this.datosCliente.Ref1:this.datosCliente.Referencia_1,
+                'Ref2':(this.datosCliente.Ref2)?this.datosCliente.Ref2:this.datosCliente.Referencia_2,
+                'Ref3':(this.datosCliente.Ref3)?this.datosCliente.Ref3:this.datosCliente.Referencia_3,
                 'TelRef_1': this.datosCliente.TelRef_1,
                 'TelRef_2': this.datosCliente.TelRef_2,
                 'TelRef_3': this.datosCliente.TelRef_3,
                 'Saldo_agua':this.datosCliente.Saldo_agua,
-                'Importe_mantenimiento':this.datosCliente.Importe_mantenimiento,
-                'Fecha_mantenimiento': this.datosCliente.Fecha_mantenimiento,
+                'Importe_mantenimiento':(this.datosCliente.Importe_mantenimiento)?this.datosCliente.Importe_mantenimiento:this.datosCliente.Monto_mantenimiento,
+                'Fecha_mantenimiento': (moment(this.datosCliente.Fecha_mantenimiento).isValid())?moment(this.datosCliente.Fecha_mantenimiento).format('YYYY-MM-DD'):this.datosCliente.Fecha_mantenimiento,
                 'Saldo_mantenimiento': this.datosCliente.Saldo_mantenimiento,
                 'Saldo_adeudo': this.datosCliente.Saldo_adeudo,
                 'Saldo_anualidad':this.datosCliente.Saldo_anualidad,
@@ -211,11 +209,12 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             if(!error){
                 this.dataCli.FuenteDatos = true;
                 this.dataCli.Terrenos =  this.terrenosCliente;
-                this.dataCli.Fecha_mantenimiento = this.terrenosCliente[0].Cotizacion[0].FechaMantenimiento;
-                this.dataCli.Periodo_cobro = this.terrenosCliente[0].Cotizacion[0].PeriodoCobro;
+//                this.dataCli.Monto_mantenimiento =  this.dataCli.Importe_mantenimiento;
+                //this.dataCli.Fecha_mantenimiento = this.terrenosCliente[0].Cotizacion[0].FechaMantenimiento;
+                //this.dataCli.Periodo_cobro = this.terrenosCliente[0].Cotizacion[0].PeriodoCobro;
                 this.dataCli.ObjCompletos = this.datosCliente.Terrenos;
                 this.dataCli.Usuario = JSON.parse(localStorage.getItem('Datos'));
-                console.log('formObj',this.dataCli);
+                console.log('dataCli',this.dataCli);
                 this.ventasService.guardarNuevoCliente(this.dataCli).then(res=>{
                     if(res['Data']['Operacion'] && res['Data']['Tipo']){
                         let tipo = res['Data']['Tipo'];
@@ -275,9 +274,9 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         return error;
     }
     _datosTerrenoGeneral(){
-        let SaldoMantenimiento = 0;
-        let PeriodoCobro = 0;
-        let FechaMantenimiento = '';
+//        let SaldoMantenimiento = 0;
+//        let PeriodoCobro = 0;
+//        let FechaMantenimiento = '';
         let SaldoAgua = 0;
         let SaldoAdeudo = 0;
         let CreditoOriginal = 0;
@@ -289,13 +288,13 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             //DATOS DE SALDOS DE AGUA
             SaldoAgua += t.Cotizacion[0].Saldo_agua;
             //DATOS MANTENIMIENTO
-            SaldoMantenimiento += t.Cotizacion[0].ImporteMantenimiento;
-            if(PeriodoCobro == 0){
-                PeriodoCobro = (`${t.Cotizacion[0].PeriodoCobro}`.indexOf('6') > -1)?6:(`${t.Cotizacion[0].PeriodoCobro}`.indexOf('1') > -1)?1:0;
-            }
-            if(FechaMantenimiento == ''){
-                FechaMantenimiento = (t.Cotizacion[0].FechaMantenimiento && t.Cotizacion[0].FechaMantenimiento != '-')?(moment(t.Cotizacion[0].FechaMantenimiento).isValid())?`${moment(t.Cotizacion[0].FechaMantenimiento).format('YYYY-MM-DD')}`:'':'';
-            }
+            // SaldoMantenimiento += t.Cotizacion[0].ImporteMantenimiento;
+            // if(PeriodoCobro == 0){
+            //     PeriodoCobro = (`${t.Cotizacion[0].PeriodoCobro}`.indexOf('6') > -1)?6:(`${t.Cotizacion[0].PeriodoCobro}`.indexOf('1') > -1)?1:0;
+            // }
+            // if(FechaMantenimiento == ''){
+            //     FechaMantenimiento = (t.Cotizacion[0].FechaMantenimiento && t.Cotizacion[0].FechaMantenimiento != '-')?(moment(t.Cotizacion[0].FechaMantenimiento).isValid())?`${moment(t.Cotizacion[0].FechaMantenimiento).format('YYYY-MM-DD')}`:'':'';
+            // }
             //DATOS CREDITO Y ADEUDOS
             SaldoAdeudo += t.Cotizacion[0].Enganche_Actual;
             CreditoOriginal += (t.Cotizacion[0].Num_pagos_Actual * t.Cotizacion[0].Mensualidad);
@@ -305,15 +304,16 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         })
         this.dataCli.SaldoAgua;
         this.dataCli.Saldo_agua=SaldoAgua;
-        this.dataCli.Importe_mantenimiento=SaldoMantenimiento;
-        this.dataCli.Fecha_mantenimiento=FechaMantenimiento;
-        this.dataCli.Saldo_mantenimiento= SaldoMantenimiento;
+        //this.dataCli.Importe_mantenimiento=(this.dataCli.Monto_mantenimiento)?this.dataCli.Monto_mantenimiento:SaldoMantenimiento;
+        // this.dataCli.Fecha_mantenimiento = FechaMantenimiento;
+        // this.dataCli.Saldo_mantenimiento= SaldoMantenimiento;
+        // this.dataCli.Periodo_cobro = PeriodoCobro;
         this.dataCli.Saldo_adeudo =  SaldoAdeudo;
         this.dataCli.Saldo_anualidad =  SaldoAnualidad;
         this.dataCli.Credito_original =  CreditoOriginal;
         this.dataCli.Saldo_credito = SaldoCredito;
         this.dataCli.Saldo_certificado =  SaldoCertificado;
-        this.dataCli.Periodo_cobro = PeriodoCobro;
+
     }
     procesarClienteActivo(){
         let formObj = this.frmCliente.getRawValue();
@@ -323,12 +323,12 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             formObj.Terrenos =  this.terrenosCliente;
             formObj.ObjCompletos = this.datosCliente.Terrenos;
             formObj.Usuario = JSON.parse(localStorage.getItem('Datos'));
-            console.log('formObj',formObj);
+//            console.log('formObj',formObj);
             this.ventasService.guardarNuevoCliente(formObj).then(res=>{
                 if(res['Data']['Operacion'] && res['Data']['Tipo']){
                     let tipo = res['Data']['Tipo'];
                     swal('Exito', `${res['Data']['Operacion']}`, tipo);
-                    console.log('procesarContratos',JSON.stringify({Activa : 'Contrato', Cliente: res['Data']['Cliente'], Terrenos: this.terrenosCliente }));
+ //                   console.log('procesarContratos',JSON.stringify({Activa : 'Contrato', Cliente: res['Data']['Cliente'], Terrenos: this.terrenosCliente }));
                     this.vista.emit({Activa : 'Contrato', Cliente: res['Data']['Cliente'], Terrenos: this.terrenosCliente });
                 }
             }).catch(err=>{
@@ -352,14 +352,19 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             error = `Debes introducir una cuota de mantenimiento para continuar`;*/
         }else if(!obj.Terrenos){
             error = `Debes introducir al menos un terreno para continuar`;
+        } else if(obj.Periodo_cobro == '-' || obj.Periodo_cobro < 1){
+            error = `Debes introducir un periodo de cobro valido para continuar y que sea mayor a 1`;
+        }else if(obj.Fecha_mantenimiento == '-' || !moment(obj.Fecha_mantenimiento).isValid()){
+            error = `Debes introducir una fecha de primer mantenimiento valida para continuar`;
         }
-        obj.Terrenos.forEach(t=>{
-            if((!t.Cotizacion[0].PeriodoCobro || t.Cotizacion[0].PeriodoCobro == '-') && error != ''){
-                error = `Debes introducir un periodo de cobro valido para continuar`;
-            }else if((t.Cotizacion[0].FechaMantenimiento == '-' || !moment(t.Cotizacion[0].FechaMantenimiento).isValid()) && error != ''){
-                error = `Debes introducir una fecha de primer mantenimiento valida para continuar`;
-            }
-        });
+
+        // obj.Terrenos.forEach(t=>{
+        //     if((!t.Cotizacion[0].PeriodoCobro || t.Cotizacion[0].PeriodoCobro == '-') && error != ''){
+        //         error = `Debes introducir un periodo de cobro valido para continuar`;
+        //     }else if((t.Cotizacion[0].FechaMantenimiento == '-' || !moment(t.Cotizacion[0].FechaMantenimiento).isValid()) && error != ''){
+        //         error = `Debes introducir una fecha de primer mantenimiento valida para continuar`;
+        //     }
+        // });
         console.log('error',error);
         return error;
     }

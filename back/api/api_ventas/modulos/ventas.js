@@ -710,6 +710,7 @@ module.exports = class Catalogos {
         });
     }
     Editar_cliente(conexion,datos,Cliente){
+        console.log('datos',datos);
         return new Promise((resolve, reject)=>{
 //            console.log('datos ACTUALI',datos);
 //            console.log('datos ACTUALI',Cliente);
@@ -718,22 +719,23 @@ module.exports = class Catalogos {
             valores += `,Correo = '${datos.Correo}'`;
             valores += (datos.Direccion)?`,Direccion = '${datos.Direccion}'`:'';
             valores += (datos.Telefono)?`,Telefono = '${datos.Telefono}'`:'';
-            valores += (datos.Num_ife)?`,Num_ife = '${datos.Num_ife}'`:'';
+            valores += (datos.NumIfe)?`,Num_ife = '${datos.NumIfe}'`:'';
             valores += (datos.Origen)?`,Origen = '${datos.Origen}'`:'';
-            valores += (datos.Referencia1)?`,Referencia1 = '${datos.Referencia1}'`:'';
-            valores += (datos.Referencia2)?`,Referencia2 = '${datos.Referencia2}'`:'';
-            valores += (datos.Referencia3)?`,Referencia3 = '${datos.Referencia3}'`:'';
+            valores += (datos.Ref1)?`,Referencia_1 = '${datos.Ref1}'`:'';
+            valores += (datos.Ref2)?`,Referencia_2 = '${datos.Ref2}'`:'';
+            valores += (datos.Ref3)?`,Referencia_3 = '${datos.Ref3}'`:'';
             valores += (datos.TelRef_1)?`,TelRef_1 = '${datos.TelRef_1}'`:'';
             valores += (datos.TelRef_2)?`,TelRef_2 = '${datos.TelRef_2}'`:'';
             valores += (datos.TelRef_3)?`,TelRef_3 = '${datos.TelRef_3}'`:'';
             valores += (datos.Fecha_nacimiento)?`,Fecha_nacimiento = '${datos.Fecha_nacimiento}'`:'';
-            valores += (datos.Monto_mantenimiento)?`,Monto_mantenimiento = ${datos.Monto_mantenimiento}`:'';
+            valores += (datos.Importe_mantenimiento)?`,Monto_mantenimiento = ${datos.Importe_mantenimiento}`:'';
             valores += (datos.Saldo_mantenimiento)?`,Saldo_mantenimiento = ${datos.Saldo_mantenimiento}`:'';
             valores += (datos.Saldo_adeudo)?`,Saldo_adeudo = ${datos.Saldo_adeudo}`:'';
             valores += (datos.Saldo_anualidad)?`,Saldo_anualidad = ${datos.Saldo_anualidad}`:'';
             valores += (datos.Credito_original)?`,Credito_original = ${datos.Credito_original}`:'';
             valores += (datos.Saldo_agua)?`,Saldo_agua = ${datos.Saldo_agua}`:'';
-            valores += (datos.Periodo_cobro)?`,Periodo_mantenimiento = '${datos.Periodo_cobro}'`:'';
+            valores += (datos.Saldo_certificado)?`,Saldo_certificado = ${datos.Saldo_certificado}`:'';
+            valores += (datos.Periodo_cobro)?`,Periodo_mantenimiento = ${datos.Periodo_cobro} `:'';
             valores += (datos.Fecha_mantenimiento)?`,Fecha_primer_mantenimiento = '${datos.Fecha_mantenimiento}'`:'';
 //            valores += (datos.)`,Correo = '${datos.Correo}'`;
             this._ordenarQuery(conexion,`UPDATE Clientes SET ${valores} WHERE IdCliente = ${Cliente[0].IdCliente};`).then((res)=>{
@@ -743,18 +745,14 @@ module.exports = class Catalogos {
 
                 //GUARDA REGISTRO DEL CLIENTE
 //            }).then((res)=>{
-                let condiciones =  `Nombre = '${datos.Nombre}' AND Codigo = 'CLI' `;
-                //console.log('query',`SELECT * FROM Clientes WHERE ${condiciones} LIMIT 1;`);
-                return this._ordenarQuery(conexion,`SELECT * FROM Clientes WHERE ${condiciones} LIMIT 1;`);
+                return this._ordenarQuery(conexion,`SELECT * FROM Clientes WHERE Nombre = '${datos.Nombre}'  LIMIT 1;`);
                 //OBTIENE LOS DATOS COMPLETOS DEL CLIENTE
             }).then(cliente=>{
                 //console.log('cliente',cliente);
                 datos.ClienteCompleto = cliente[0];
                 datos.ClienteCompleto.Codigo += `${datos.ClienteCompleto.IdCliente}`;
-                console.log('dat',datos.ClienteCompleto);
                 return this._eliminarAdeudosPendientes(conexion,datos);
             }).then(datosEliminados =>{
-                console.log('Eliminados',datosEliminados);
                 return this._guardarRelacionesTerrenos(conexion,datos);
                 //GUARDA LA RELACION CON LOS TERRENOS
             }).then(relacionesGuardadas =>{
@@ -797,8 +795,8 @@ module.exports = class Catalogos {
 
                 //return this._guardarMantenimientoBasico(conexion,datos);
                 //GUARDA EL PRIMER MANTENIMIENTO BASICOS
-            }).then(terminaCotizacion =>{
-                return this._guardarMantenimientoBasico(conexion,datos);
+/*            }).then(terminaCotizacion =>{
+                return this._guardarMantenimientoBasico(conexion,datos);*/
 /*            }).then(terminaAnualidad =>{
                 if(datos.FuenteDatos){
                     return this._actualizarDatosTodosOrigen(conexion,datos);
@@ -891,7 +889,8 @@ module.exports = class Catalogos {
     _verificarUsuario(conexion,datos){
         return new Promise((resolve, reject)=>{
 //            let condiciones =  `Nombre ='${datos.Nombre}' AND  Correo = '${datos.Correo}' AND Num_ife = '${datos.NumIfe}'`;
-            let condiciones =  `Nombre ='${datos.Nombre}' AND  Correo = '${datos.Correo}' `;
+//            let condiciones =  `Nombre ='${datos.Nombre}' AND  Correo = '${datos.Correo}' `;
+            let condiciones =  ` Nombre ='${datos.Nombre}' `;
             this._ordenarQuery(conexion,`SELECT IdCliente FROM Clientes WHERE ${condiciones} LIMIT 1;`).then((res)=>{
             //mysql.ejecutar(`SELECT IdCliente FROM Clientes WHERE ${condiciones} LIMIT 1;`).then((res)=>{
                 return resolve(res);
