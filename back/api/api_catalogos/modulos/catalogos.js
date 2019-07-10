@@ -567,7 +567,7 @@ module.exports = class Catalogos {
     Catalogo_datos(data){
 //        console.log('datos',data);
         return new Promise((resolve, reject)=>{
-            let condiciones = ` ACTIVO = 1 AND `+"`"+`NOMBRE DEL CLIENTE`+"`"+` NOT LIKE '%DUARTE%MEDRANO%' `;
+            let condiciones = ` ACTIVO = 1 AND `+"`"+`NOMBRE DEL CLIENTE`+"`"+` NOT LIKE '%DUARTE%MEDRANO%' AND  `+"`"+`NOMBRE DEL CLIENTE`+"`"+` NOT LIKE '%DUARTE%PRECIADO%' AND  `+"`"+`NOMBRE DEL CLIENTE`+"`"+` NOT LIKE '%MEDRANDO%' AND  `+"`"+`NOMBRE DEL CLIENTE`+"`"+` NOT LIKE '%MEDRANO%NEVAREZ%' `;
             return mysql.ejecutar(`SELECT * from Datos_todos WHERE ${condiciones}`).then((res)=>{
                 return resolve({Datos:res});
             }).catch(err => { console.log('err',err); return reject({Data: false, err })});

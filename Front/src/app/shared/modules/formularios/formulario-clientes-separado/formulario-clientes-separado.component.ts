@@ -27,6 +27,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     frmCliente: FormGroup; // Formulario de solicitud
     numParcela;numLote;numEtapa;supercifie;costoMetro;
     @Input('datosCliente') datosCliente: any
+    @Input() Nuevo: Boolean = false ;
     @Output() public vista = new EventEmitter();
     //Mantenimiento
     fechaPrimerMantenimiento;contratoAgua;importeMantenimiento;fechaParaCobro;
@@ -104,6 +105,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     }
     ngOnInit() {
         console.log('datosCliente',this.datosCliente);
+        console.log('Nuevo',this.Nuevo);
 //        this._obtenerTerrenos();
         if(this.datosCliente){
             this._asignarFormulario();
@@ -136,13 +138,13 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                         Superficie: t['SUPERFICIE'],
                         etapa: t['ETAPA'],
                         lote: t['LOTE'],
-                        parcela: t['PARCELA'],                      
+                        parcela: t['PARCELA'],
                     });
                 }
-                
             });
             this.frmCliente =  this.fb.group({
                 'Nombre': this.datosCliente.Nombre,
+                'Nombre2': this.datosCliente.Nombre,
                 'Correo': this.datosCliente.Correo,
                 'NumIfe': (this.datosCliente.NumIfe)?parseFloat(this.datosCliente.NumIfe):(this.datosCliente.Num_ife)?this.datosCliente.Num_ife:'-',
 //                'NumIfe': (this.datosCliente.NumIfe != '-')?parseFloat(this.datosCliente.NumIfe):(this.datosCliente.Num_ife)?this.datosCliente.Num_ife:'-',
@@ -171,6 +173,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 'Terrenos': this.terrenosCliente,
                 'ObjCompletos': this.datosCliente.Terrenos
             });
+//            if(!this.Nuevo){                this.frmCliente.controls['Nombre'].disable();            }
             this.pagina = 1;
             console.log('datos',this.frmCliente);
             let noRegistrados = this.datosCliente.Terrenos.filter(t=>t.IdTerreno == 0);

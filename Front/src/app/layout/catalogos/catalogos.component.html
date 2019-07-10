@@ -110,7 +110,7 @@
                     <td>{{d.InfoTerrenos}}</td>
                     <td>$ {{d.Saldo_credito |number }}</td>
                     <td>$ {{d.Saldo_mantenimiento |number }}</td>
-                    <td>{{d.Estatus}}</td>
+                    <td>{{d.Estado}}</td>
 <!--                    <td>$ {{d.Saldo_certificado | number}} </td>
                     <td>$ {{d.Saldo_agua | number}} </td>-->
                     <td>
@@ -141,7 +141,7 @@
             <button class="btn btn-warning pull-right" (click)="verEditarCampos();">Editar</button>
         </div>
         <div class="col-lg-12" style="overflow: auto;">
-            <app-formulario-clientes-separado [datosCliente]="detalleCliente" ></app-formulario-clientes-separado>
+            <app-formulario-clientes-separado [Nuevo]="true" [datosCliente]="detalleCliente" ></app-formulario-clientes-separado>
 <!--            <app-datatables-general #datatableDetalles *ngIf="detalleCliente" (checks)="asignarChecks($event);" (edit)="editarRegistro($event);" (delete)="eliminarRegistro($event);" [datosDatatable]="detalleCliente" ></app-datatables-general>-->
         </div>
     </div>

@@ -64,7 +64,7 @@ export class CatalogosComponent implements OnInit {
                 if(dat.Nombre.toString().toUpperCase().indexOf(this.textoBuscar.toUpperCase()) > -1){
                     validado = true;
                 }
-                if(dat.Estatus.toString().toUpperCase().indexOf(this.textoBuscar.toUpperCase()) > -1){
+                if(dat.Estado.toString().toUpperCase().indexOf(this.textoBuscar.toUpperCase()) > -1){
                     validado = true;
                 }
 /*                if(dat.Partidas[0]){
