@@ -513,7 +513,11 @@ module.exports = class Catalogos {
                 //return this._guardarMantenimientoBasico(conexion,datos);
                 //GUARDA EL PRIMER MANTENIMIENTO BASICOS
             }).then(terminaCotizacion =>{
-                return this._guardarMantenimientoBasico(conexion,datos);
+                if(datos.Mantenimientos_calculados){
+                    return this._guardarMantenimientosCalculados(conexion,datos);
+                }else{
+                    return this._guardarMantenimientoBasico(conexion,datos);
+                }
             }).then(terminaAnualidad =>{
                 if(datos.FuenteDatos){
                     return this._actualizarDatosTodosOrigen(conexion,datos);
@@ -587,6 +591,32 @@ module.exports = class Catalogos {
               }, Promise.resolve([])).then(r => {
                   return resolve(r);
                 }).catch(err=>{ console.log('error',err); reject(err);})
+        });
+    }
+    _guardarMantenimientosCalculados(conexion,datos){
+        return new Promise((resolve, reject)=>{
+            console.log('datos man nuevos ',datos);
+            let today = moment().format('YYYY-MM-DD HH:mm:ss');
+            let mantenimientosGuardados = [];
+            this._ordenarQuery(conexion,`DELETE FROM Adeudos_mantenimientos WHERE IdCliente = ${datos.ClienteCompleto.IdCliente};`).then(res=>{
+                datos.Mantenimientos_calculados.forEach(man=>{
+                    let campos_mantenimiento = `IdCliente, Concepto, Importe, Fecha, Fecha_modificacion`;//datos.Fecha_mantenimiento
+                    let valores_mantenimiento = `${datos.ClienteCompleto.IdCliente},'Mantenimiento - ${man['Fecha Mantenimiento']}',${man['Monto Mantenimiento']},'${man['Fecha Mantenimiento']}','${today}'`;
+                    mantenimientosGuardados.push( this._ordenarQuery(conexion,`INSERT INTO Adeudos_mantenimientos (${campos_mantenimiento}) VALUES (${valores_mantenimiento});`));
+                })
+                mantenimientosGuardados.reduce((Mans, current) => {
+                    return Mans.then(results => {
+                      return current.then(currentResult => {
+                        return Promise.resolve({Procesado:true,Res:currentResult});
+                      }).catch(e => {
+                        return Promise.resolve({Procesado:false,Res:e});
+                      })
+                    })
+                  }, Promise.resolve([])).then(r => {
+                      console.log('Resultado', r);
+                      return resolve(r);
+                    }).catch(err=>{ console.log('error',err); reject(err);})  
+            });
         });
     }
     _guardarMantenimientoBasico(conexion,datos){
@@ -805,6 +835,12 @@ module.exports = class Catalogos {
                     return Promise.resolve({});
                 }*/
             }).then(terminaTodo=>{
+                if(datos.Mantenimientos_calculados){
+                    return this._guardarMantenimientosCalculados(conexion,datos);
+                }else{
+                    return Promise.resolve({});
+                }
+            }).then(res=>{
                 return resolve({Procesado: true, Operacion: 'El cliente fue Editado correctamente', Tipo: 'success', Cliente:datos});
                 //conexion.end();
                 //console.log('mantenimientos',terminaMantenimiento);
@@ -1979,6 +2015,90 @@ module.exports = class Catalogos {
                 return resO(r);
             }).catch(err=>{console.log('err',err); return rejE(err);});
         });
+     }
+     obtener_mantenimiento_calculado(data){
+        return new Promise((resolve, reject)=>{
+            let mantenimiento = [];
+            if(data.Saldo_mantenimiento > 0){
+                mantenimiento = this._calcularEnBaseAMonto(data);
+            }else if(data.Fecha_mantenimiento){
+                mantenimiento = this._calcularEnBaseAFecha(data);
+            }else{
+                mantenimiento = [];
+            }
+            console.log('mant',mantenimiento);
+            return resolve(mantenimiento);
+        });
+     }
+     _calcularEnBaseAMonto(datos){
+        let MantenimientoTemporadas = {
+            "2002":[450,450],"2003":[450,450],"2004":[450,450],"2005":[450,450],
+            "2006":[450,450],"2007":[900,900],"2008":[900,900],"2009":[900,1200],
+            "2010":[1200,1200],"2011":[1200,1200],"2012":[1500,1500],"2013":[1500,1500],
+            "2014":[1500,1500],"2015":[1500,1500],"2016":[1500,1500],"2017":[1500,1500],"2018":[1500,1500],
+            "2018":[1500,1500],"2019":[datos.Importe_mantenimiento,datos.Importe_mantenimiento]
+        };
+        let sigue = true;
+        let montoInicial = datos.Saldo_mantenimiento;
+        let mantenimientos = [];
+        let quitar = 0;
+        let saldo_p ;
+        while(sigue){
+            let fecha =  moment(datos.Fecha_mantenimiento).subtract(quitar,'month').format('YYYY-MM-DD');
+            // console.log('fecha',fecha);
+            // console.log('lugar',this._mesesLugar(fecha));
+            let monto = (MantenimientoTemporadas[`${moment(fecha).format('YYYY')}`])?MantenimientoTemporadas[`${moment(fecha).format('YYYY')}`][this._mesesLugar(fecha)]:450;
+            // console.log('monto',monto);
+//            mantenimientos.push({Fecha:fecha, Monto: monto });
+            saldo_p = montoInicial;
+            montoInicial -=monto;
+            if(montoInicial >= 0 ){
+                mantenimientos.push({"Fecha Mantenimiento":fecha, "Monto Mantenimiento": monto , "Restante": montoInicial });
+            }
+            if(montoInicial <= 0 ){
+                quitar += datos.Periodo_cobro;
+                sigue = false;
+            }            
+        }
+        return {mantenimientos, Saldo: saldo_p};
+     }
+     _calcularEnBaseAFecha(datos){
+//         console.log('datos fecha',datos);
+        let MantenimientoTemporadas = {
+            "2002":[450,450],"2003":[450,450],"2004":[450,450],"2005":[450,450],
+            "2006":[450,450],"2007":[900,900],"2008":[900,900],"2009":[900,1200],
+            "2010":[1200,1200],"2011":[1200,1200],"2012":[1500,1500],"2013":[1500,1500],
+            "2014":[1500,1500],"2015":[1500,1500],"2016":[1500,1500],"2017":[1500,1500],"2018":[1500,1500],
+            "2018":[1500,1500],"2019":[datos.Importe_mantenimiento,datos.Importe_mantenimiento]
+        };
+    
+        let diferencia_meses =  moment().diff(moment(datos.Fecha_adeudo_mantenimiento), 'months');
+        let mantenimientos = [];
+        let saldoMan = 0;
+//        console.log('diferencia',diferencia_meses);
+        if(diferencia_meses >= datos.Periodo_cobro){
+            for( let s=0;s<=diferencia_meses;){
+                let fecha = moment(datos.Fecha_adeudo_mantenimiento).add(s,'month').format('YYYY-MM-DD');
+//                console.log('fecha',fecha);
+                let monto = (MantenimientoTemporadas[`${moment(fecha).format('YYYY')}`])?MantenimientoTemporadas[`${moment(fecha).format('YYYY')}`][this._mesesLugar(fecha)]:datos.Importe_mantenimiento;
+//                console.log('monto',monto);
+                saldoMan += monto;
+                mantenimientos.push({"Fecha Mantenimiento":fecha, "Monto Mantenimiento": monto , "Acumulado": saldoMan });
+                s +=datos.Periodo_cobro;
+            }
+            
+        }else{
+            mantenimientos.push({"Fecha Mantenimiento":datos.Fecha_adeudo_mantenimiento, "Monto Mantenimiento": datos.Importe_mantenimiento , "Acumulado":  datos.Importe_mantenimiento  });
+        }
+        console.log('mantenimientos',mantenimientos);
+        return {mantenimientos, Saldo: saldoMan};
+     }
+     _mesesLugar(fecha){
+         switch(moment(fecha).format('MM')){
+            case '01':{ return 0; }case '02':{ return 0; } case '03':{ return 0; } case '04':{ return 0; } case '05':{ return 0; }case '06':{ return 0; }
+            case '07':{ return 1; }case '08':{ return 1; } case '09':{ return 1; } case '10':{ return 1; } case '11':{ return 1; }case '12':{ return 1; }
+            default: {return 0;}
+         }
      }
      _diferenciaMesesFechas(fecha1, fecha2){
          let fch1 = moment(fecha1); 

@@ -117,7 +117,7 @@
                             <input type="text" placeholder="Telefono:" [(ngModel)]="celReferencia3" class="form-control"/>-->
                         </div>
                     </div>
-                    <div class="class-lg-12"><hr></div>
+                    <!-- <div class="class-lg-12"><hr></div>
                     <div class="col-lg-3">
                         <div class="form-group">
                             <label class="label-form">  Monto Mantenimiento </label>
@@ -141,7 +141,7 @@
                             <label class="label-form"> Periodo de Cobro Mantenimiento </label>
                             <input type="number" placeholder="Periodo Mantenimiento"  formControlName="Periodo_cobro" class="form-control" required />
                         </div>
-                    </div>                    
+                    </div>                     -->
                     <div class="col-lg-12">
                         <button class="btn btn-primary pull-right" (click)="validarFomulario();" >Siguiente <i class="fa fa-arrow-right"></i></button>
                     </div>
@@ -329,11 +329,70 @@
                         </div>
                     </div> 
                     <div class="col-lg-12">
-                        <button class="btn btn-primary pull-right" (click)="validarFomulario();" >Revisión <i class="fa fa-arrow-right"></i></button>
+                        <button class="btn btn-primary pull-right" (click)="validarFomulario();" >Siguiente <i class="fa fa-arrow-right"></i></button>
                         <button class="btn btn-info pull-right" (click)="this.pagina =1 " >Regresar <i class="fa fa-arrow-left"></i></button>
                     </div>
                 </div>
+            <form [formGroup]="frmCliente" class="form-validate" (keydown.enter)="$event.preventDefault()" novalidate="">
                 <div class="row" *ngIf="pagina == 3">
+                    <div class="col-lg-12"><h3 class="text-center text-danger">Datos de Mantenimiento</h3><hr></div>
+                    <div class="class-lg-12"><hr></div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="label-form">  Monto Mantenimiento </label>
+                                <input type="number" placeholder="Monto Mantenimiento"  formControlName="Importe_mantenimiento" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="label-form">  Saldo Mantenimiento </label>
+                                <input type="number" placeholder="Saldo Mantenimiento"  formControlName="Saldo_mantenimiento" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="label-form"> Fecha inicio Mantenimiento </label>
+                                <input type="date" placeholder="Fecha Inicio" formControlName="Fecha_mantenimiento" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="label-form"> Periodo de Cobro Mantenimiento </label>
+                                <input type="number" placeholder="Periodo Mantenimiento"  formControlName="Periodo_cobro" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="label-form"> Fecha de adeudo Mantenimiento </label>
+                                <div class="input-group mb-3">
+                                    <input type="date" placeholder="Fecha de adeudo Mantenimiento"  formControlName="Fecha_adeudo_mantenimiento" class="form-control" required >
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" title="Calcular con fecha" (click)="calcularMantenimientoPorFecha();" type="button"><i class="fa fa-arrow-down"></i> | Calcular </button>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                        <div class="col-lg-5">
+                            <div class="form-group">
+                                <label class="label-form"> Monto de adeudo Mantenimiento </label>
+                                <div class="input-group mb-3">
+                                    <input  type="number" placeholder="Monto de adeudo Mantenimiento"  formControlName="Saldo_mantenimiento" class="form-control" required >
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" title="Calcular con Monto" (click)="calcularMantenimientoPorMonto();" type="button"><i class="fa fa-arrow-down"></i> | Calcular </button>
+                                    </div>
+                                </div>    
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <app-datatables-general #datatableMantenimientos *ngIf="datosMantenimientos" [datosDatatable]="datosMantenimientos"  ></app-datatables-general>
+                        </div>
+                    <div class="col-lg-12">
+                        <button class="btn btn-primary pull-right" (click)="validarFomulario();" >Revisión <i class="fa fa-arrow-right"></i></button>
+                        <button class="btn btn-info pull-right" (click)="this.pagina =2 " >Regresar <i class="fa fa-arrow-left"></i></button>
+                    </div>
+                </div>
+            </form>
+                <div class="row" *ngIf="pagina == 4">
                         <div class="col-lg-12"><h3 class="text-center">Revisión de Datos</h3><hr></div>
                         <div class="col-lg-6">
                             <b>Nombre: </b> {{dataCli.Nombre}}
@@ -403,7 +462,7 @@
                         </div>                
                         <div class="col-lg-12">        
                                 <button class="btn btn-primary pull-right" (click)="validarFomulario();" >Guardar <i class="fa fa-save"></i></button>                            
-                            <button class="btn btn-info pull-right" (click)="this.pagina =2 " >Regresar <i class="fa fa-arrow-left"></i></button>
+                            <button class="btn btn-info pull-right" (click)="this.pagina = 3 " >Regresar <i class="fa fa-arrow-left"></i></button>
                         </div>
                 </div>
 <!--            </form>-->

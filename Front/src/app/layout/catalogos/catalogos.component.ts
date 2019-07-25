@@ -40,6 +40,7 @@ export class CatalogosComponent implements OnInit {
             'Saldo_agua': null,
             'Importe_mantenimiento': null,
             'Fecha_mantenimiento':  null,
+            'Fecha_adeudo_mantenimiento':null,
             'Saldo_mantenimiento':  null,
             'Saldo_adeudo': null,
             'Saldo_anualidad': null,
@@ -198,6 +199,7 @@ export class CatalogosComponent implements OnInit {
                 let terrenos = datos.filter(da => da["NOMBRE DEL CLIENTE"].trim() == d["NOMBRE DEL CLIENTE"].trim());
                 let infoT = '';
                 let FechaMantenimiento = '';
+                let FechaAdeudoMantenimiento = '';
                 let ImporteMantenimiento = 0;
                 let SaldoMantenimiento = 0;
                 let PeriodoCobro = 0;
@@ -235,6 +237,8 @@ export class CatalogosComponent implements OnInit {
                             ImporteMantenimiento : this._datoNumerico(t['CUOTA MANTENIMIENTO']),
                             PeriodoCobro: (t['MODO DE COBRO DE MANTEMIENTO (MENSUAL O SEMESTRAL)'].indexOf('6') > -1)?6:(t['MODO DE COBRO DE MANTEMIENTO (MENSUAL O SEMESTRAL)'].indexOf('1') > -1)?1:0,
                             FechaMantenimiento:(t['FECHA DE COBRO PRIMER MANTENIMIENTO'] && t['FECHA DE COBRO PRIMER MANTENIMIENTO'] != '-')?(moment(t['FECHA DE COBRO PRIMER MANTENIMIENTO']).isValid())?`${moment(t['FECHA DE COBRO PRIMER MANTENIMIENTO']).format('YYYY-MM-DD')}`:'':'',
+//                            FechaAdeudoMantenimiento:(t['TIEMPO DE DEUDA MANTENIMIENTO'] && t['TIEMPO DE DEUDA MANTENIMIENTO'] != '-')?(moment(t['TIEMPO DE DEUDA MANTENIMIENTO']).isValid())?`${moment(t['TIEMPO DE DEUDA MANTENIMIENTO']).format('YYYY-MM-DD')}`:'':'',
+//                            FechaAdeudoMantenimiento:(t['TIEMPO DE DEUDA MANTENIMIENTO'] && t['TIEMPO DE DEUDA MANTENIMIENTO'] != '-')?`${t['TIEMPO DE DEUDA MANTENIMIENTO']}`:'',
                             SaldoCertificado : (this._datoNumerico(t['DEUDA CERTIFICADO']) - this._datoNumerico(t['CANTIDAD ABONADA A CERTIFICADP'])),
                             Estado: `${t['ESTADO']}`,
                         }
@@ -253,6 +257,11 @@ export class CatalogosComponent implements OnInit {
                         }
                         if(FechaMantenimiento == ''){
                             FechaMantenimiento = (t['FECHA DE COBRO PRIMER MANTENIMIENTO'] && t['FECHA DE COBRO PRIMER MANTENIMIENTO'] != '-')?(moment(t['FECHA DE COBRO PRIMER MANTENIMIENTO']).isValid())?`${moment(t['FECHA DE COBRO PRIMER MANTENIMIENTO']).format('YYYY-MM-DD')}`:'':'';
+                        }
+                        if(FechaAdeudoMantenimiento == ''){
+//                            console.log('FechaAdeudoMantenimiento',FechaAdeudoMantenimiento);
+//                            FechaAdeudoMantenimiento = t['TIEMPO DE DEUDA MANTENIMIENTO'];
+                            FechaAdeudoMantenimiento = (t['TIEMPO DE DEUDA MANTENIMIENTO'] && t['TIEMPO DE DEUDA MANTENIMIENTO'] != '-')?(moment(t['TIEMPO DE DEUDA MANTENIMIENTO']).isValid())?`${moment(t['TIEMPO DE DEUDA MANTENIMIENTO']).format('YYYY-MM-DD')}`:'':'';
                         }
                         //DATOS CREDITO Y ADEUDOS
                         SaldoAdeudo += (t.Cotizacion.Enganche - t.Cotizacion.EnganchePagado);
@@ -281,6 +290,7 @@ export class CatalogosComponent implements OnInit {
                     Saldo_agua:SaldoAgua,
                     Importe_mantenimiento:ImporteMantenimiento,
                     Fecha_mantenimiento:FechaMantenimiento,
+                    Fecha_adeudo_mantenimiento:FechaAdeudoMantenimiento,
                     Saldo_mantenimiento: SaldoMantenimiento,
                     Saldo_adeudo: SaldoAdeudo,
                     Saldo_anualidad: SaldoAnualidad,

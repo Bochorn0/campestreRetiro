@@ -221,6 +221,15 @@ router.get('/mantenimientosAutomaticos', (req, res) => {
         res.status(400).send(error);
     })
 });
+router.post('/obtenerMantenimientoCalculado', (req, res) => {
+    let objVentas = new Ventas();
+    objVentas.obtener_mantenimiento_calculado(req.body).then((result) => {
+        res.status(200).send(result);
+    }).catch((error) => {
+        res.status(400).send(error);
+    })
+});
+
 
 
 

@@ -111,4 +111,9 @@ export class VentasService {
       return Promise.resolve(response);
     }).catch(err => { return Promise.reject(err); });
   }
+  obtenerMantenimientoCalculado(datosConsulta){
+    return this.api.post(`/ingresos/obtenerMantenimientoCalculado`,datosConsulta).then(response => {
+      return Promise.resolve(response);
+    }).catch(err => { return Promise.reject(err); });
+  }
 }

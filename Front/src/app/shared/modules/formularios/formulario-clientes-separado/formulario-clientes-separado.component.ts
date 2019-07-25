@@ -20,12 +20,14 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     IdCotizacion;cotizaciones;nombre;numIfe;comprobante;fotoIfe;origen;telefono;correo;fComprobante;fIfe;direccion;fNacimiento;
     terrenos;IdTerreno; datosTerreno;celReferencia1;celReferencia2;celReferencia3;pdfPagare;
     parcelas;lotes;etapas;clienteDatosTodos; pagina ;dataCli;
+    datosMantenimientos;MantenimientosPreCalculados;
     //Datos Referencias
     referencia1;referencia2;referencia3;
     //Datos Terreno
     terrenosCliente;
     frmCliente: FormGroup; // Formulario de solicitud
     numParcela;numLote;numEtapa;supercifie;costoMetro;
+    @ViewChild('datatableMantenimientos')datatableMantenimientos;
     @Input('datosCliente') datosCliente: any
     @Input() Nuevo: Boolean = false ;
     @Output() public vista = new EventEmitter();
@@ -63,6 +65,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             'TelRef_3': null,
             'Saldo_agua': null,
             'Importe_mantenimiento': null,
+            'Fecha_adeudo_mantenimiento':null,
             'Fecha_mantenimiento':  null,
             'Saldo_mantenimiento':  null,
             'Saldo_adeudo': null,
@@ -77,6 +80,74 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         });        
         this.clienteDatosTodos = false;
         //console.log('datosCliente',this.datosCliente);
+    }
+    calcularMantenimientoPorFecha(){
+        let datosForm = this.frmCliente.getRawValue();
+//        let fecha = this.frmCliente.controls['Fecha_adeudo_mantenimiento'].value;
+ //       let datosConsulta = {Fecha: `${fecha}`};
+        let error = ``;
+        if(!datosForm.Periodo_cobro || datosForm.Periodo_cobro <= 0){
+            error = `Debes introducir un periodo de cobro`;
+        }
+        if(!datosForm.Fecha_adeudo_mantenimiento || !moment(datosForm.Fecha_adeudo_mantenimiento).isValid()){
+            error = `Debes introducir una fecha de adeudo valida`;
+        }
+        if(!datosForm.Importe_mantenimiento){
+            error = `Debes introducir un monto de mantenimiento valido `;
+        }
+        if(error){
+            swal('Error',error,'error');
+        }else{
+            datosForm.Saldo_mantenimiento = 0;
+    ///        console.log('datosConsulta',datosForm);
+            this.ventasService.obtenerMantenimientoCalculado(datosForm).then(res=>{
+                let result =JSON.parse(JSON.stringify(res));
+                this.MantenimientosPreCalculados = result;
+                this.frmCliente.controls['Saldo_mantenimiento'].setValue(result.Saldo);
+                this.datosMantenimientos = { Datos : result.mantenimientos}
+                if(this.datatableMantenimientos != null){
+                    this.datatableMantenimientos._reiniciarRegistros(this.datosMantenimientos);
+                }
+            }).catch(err=>{
+                console.log('err',err);
+            });
+        }
+
+    }
+    calcularMantenimientoPorMonto(){
+        let datosForm = this.frmCliente.getRawValue();
+        let error = ``;
+        if(!datosForm.Periodo_cobro || datosForm.Periodo_cobro <= 0){
+            error = `Debes introducir un periodo de cobro`;
+        }
+        if(!datosForm.Fecha_mantenimiento || !moment(datosForm.Fecha_mantenimiento).isValid()){
+            error = `Debes introducir una fecha de mantenimiento inicial  valida`;
+        }
+        if(!datosForm.Importe_mantenimiento){
+            error = `Debes introducir un monto de mantenimiento valido `;
+        }
+        if(!datosForm.Saldo_mantenimiento || datosForm.Saldo_mantenimiento <= 0){
+            error = `Debes introducir un monto de adeudo de mantenimiento valido `;
+        }
+        if(error){
+            swal('Error',error,'error');
+        }else{
+            // let monto = this.frmCliente.controls['Saldo_mantenimiento'].value;
+            // let datosConsulta = {Monto: monto};
+
+            console.log('datosConsulta',datosForm);
+            this.ventasService.obtenerMantenimientoCalculado(datosForm).then(res=>{
+                let result =JSON.parse(JSON.stringify(res));
+                console.log('res',result);
+                this.MantenimientosPreCalculados = result;
+                this.datosMantenimientos = { Datos : result.mantenimientos}
+                if(this.datatableMantenimientos != null){
+                    this.datatableMantenimientos._reiniciarRegistros(this.datosMantenimientos);
+                }
+            }).catch(err=>{
+                console.log('err',err);
+            });
+        }
     }
     formatter = (result: string) => result.toUpperCase();
     _obtenerCotizaciones(){
@@ -142,6 +213,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                     });
                 }
             });
+            console.log('frm cliente',this.frmCliente);
             this.frmCliente =  this.fb.group({
                 'Nombre': this.datosCliente.Nombre,
                 'Nombre2': this.datosCliente.Nombre,
@@ -161,6 +233,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 'Saldo_agua':this.datosCliente.Saldo_agua,
                 'Importe_mantenimiento':(this.datosCliente.Importe_mantenimiento)?this.datosCliente.Importe_mantenimiento:this.datosCliente.Monto_mantenimiento,
                 'Fecha_mantenimiento': (moment(this.datosCliente.Fecha_mantenimiento).isValid())?moment(this.datosCliente.Fecha_mantenimiento).format('YYYY-MM-DD'):this.datosCliente.Fecha_mantenimiento,
+                'Fecha_adeudo_mantenimiento': (this.datosCliente.Fecha_adeudo_mantenimiento && moment(this.datosCliente.Fecha_adeudo_mantenimiento).isValid())?moment(this.datosCliente.Fecha_adeudo_mantenimiento).format('YYYY-MM-DD'):this.datosCliente.Fecha_adeudo_mantenimiento,
                 'Saldo_mantenimiento': this.datosCliente.Saldo_mantenimiento,
                 'Saldo_adeudo': this.datosCliente.Saldo_adeudo,
                 'Saldo_anualidad':this.datosCliente.Saldo_anualidad,
@@ -207,6 +280,15 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 this.pagina = (!error)?3:2 ;
             }
         }else if(this.pagina == 3){
+            error =this._validarFormularioParte3();
+            if(!error){
+                console.log('terren',this.terrenosCliente);
+                this.frmCliente.controls['Terrenos'].setValue( (!error)?this.terrenosCliente:this.frmCliente.controls['Terrenos'].value );
+                this.dataCli = this.frmCliente.getRawValue();
+                this._datosTerrenoGeneral();
+                this.pagina = (!error)?4:3 ;
+            }
+        }else if(this.pagina == 4){
             //console.log('data',this.dataCli);
             let error = this._validarDatosCliente(this.dataCli);
             if(!error){
@@ -217,6 +299,10 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 //this.dataCli.Periodo_cobro = this.terrenosCliente[0].Cotizacion[0].PeriodoCobro;
                 this.dataCli.ObjCompletos = this.datosCliente.Terrenos;
                 this.dataCli.Usuario = JSON.parse(localStorage.getItem('Datos'));
+                if(this.MantenimientosPreCalculados){
+                    this.dataCli.Mantenimientos_calculados = this.MantenimientosPreCalculados.mantenimientos;
+//                    this.dataCli.Saldo_mantenimiento = (this.MantenimientosPreCalculados.Saldo > 0)?this.MantenimientosPreCalculados.Saldo:this.dataCli.Saldo_mantenimiento;
+                }
                 console.log('dataCli',this.dataCli);
                 this.ventasService.guardarNuevoCliente(this.dataCli).then(res=>{
                     if(res['Data']['Operacion'] && res['Data']['Tipo']){
@@ -274,6 +360,10 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 error = `Debes de especificar una fecha de inicio`;
             }*/
         })
+        return error;
+    }
+    _validarFormularioParte3(){
+        let error = ``;
         return error;
     }
     _datosTerrenoGeneral(){
