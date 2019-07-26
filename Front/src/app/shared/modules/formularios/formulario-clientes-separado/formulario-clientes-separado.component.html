@@ -275,14 +275,6 @@
                                     </div>                                                        
                                     <div class="col-lg-3">
                                         <div class="form-group">
-                                            <label class="label-form">Contrato de agua </label>
-                                            <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
-                                            <input type="number" placeholder="Contrato de Agua" [(ngModel)]="ter.Cotizacion[0].Saldo_agua" class="form-control" required />
-                                            <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-3">
-                                        <div class="form-group">
                                             <label class="label-form">Certificado </label>
                                             <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
                                             <input type="number" placeholder="Certificado" [(ngModel)]="ter.Cotizacion[0].SaldoCertificado" class="form-control" required />
@@ -337,6 +329,13 @@
                 <div class="row" *ngIf="pagina == 3">
                     <div class="col-lg-12"><h3 class="text-center text-danger">Datos de Mantenimiento</h3><hr></div>
                     <div class="class-lg-12"><hr></div>
+                    <div class="class-lg-12">
+                        <div class="alert alert-danger" role="alert">
+                            Para calcular el mantenimiento por fecha o por monto debes incluir forzosamente el 
+                            <b>Monto de mantenimiento</b> , la Fecha del primer cobro del siguiente mantenimiento <b>(Fecha inicio Mantenimiento )</b>
+                            y el <b>periodo de cobro </b>
+                        </div>
+                    </div>
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <label class="label-form">  Monto Mantenimiento </label>
@@ -361,7 +360,13 @@
                                 <input type="number" placeholder="Periodo Mantenimiento"  formControlName="Periodo_cobro" class="form-control" required />
                             </div>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label class="label-form">Contrato de agua </label>
+                                <input type="number" placeholder="Contrato de Agua" formControlName="Saldo_agua" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
                             <div class="form-group">
                                 <label class="label-form"> Fecha de adeudo Mantenimiento </label>
                                 <div class="input-group mb-3">
@@ -372,7 +377,7 @@
                                 </div>                                
                             </div>
                         </div>
-                        <div class="col-lg-5">
+                        <div class="col-lg-4">
                             <div class="form-group">
                                 <label class="label-form"> Monto de adeudo Mantenimiento </label>
                                 <div class="input-group mb-3">

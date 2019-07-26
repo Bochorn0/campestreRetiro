@@ -379,7 +379,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         console.log('datos',this.dataCli);
         this.dataCli.Terrenos.forEach(t=>{
             //DATOS DE SALDOS DE AGUA
-            SaldoAgua += t.Cotizacion[0].Saldo_agua;
+//            SaldoAgua += t.Cotizacion[0].Saldo_agua;
             //DATOS MANTENIMIENTO
             // SaldoMantenimiento += t.Cotizacion[0].ImporteMantenimiento;
             // if(PeriodoCobro == 0){
@@ -395,8 +395,8 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             SaldoCredito += (t.Cotizacion[0].Num_pagos_Actual * t.Cotizacion[0].Mensualidad);
             SaldoAnualidad += (t.Cotizacion[0].Num_anualidades*t.Cotizacion[0].Anualidad);
         })
-        this.dataCli.SaldoAgua;
-        this.dataCli.Saldo_agua=SaldoAgua;
+//        this.dataCli.SaldoAgua;
+//        this.dataCli.Saldo_agua = SaldoAgua;
         //this.dataCli.Importe_mantenimiento=(this.dataCli.Monto_mantenimiento)?this.dataCli.Monto_mantenimiento:SaldoMantenimiento;
         // this.dataCli.Fecha_mantenimiento = FechaMantenimiento;
         // this.dataCli.Saldo_mantenimiento= SaldoMantenimiento;
