@@ -24,7 +24,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     //Datos Referencias
     referencia1;referencia2;referencia3;
     //Datos Terreno
-    terrenosCliente;
+    terrenosCliente = [];
     frmCliente: FormGroup; // Formulario de solicitud
     numParcela;numLote;numEtapa;supercifie;costoMetro;
     @ViewChild('datatableMantenimientos')datatableMantenimientos;
@@ -512,8 +512,10 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     }
     seleccionarParcela(selected, indice){
         this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == selected.item.toString())[0];
+        if(!this.datosTerreno.Cotizacion){
+            this.datosTerreno.Cotizacion = [{IdCotizacion:0}]
+        }
         let  existe = this.terrenosCliente.filter(ob => ob.IdTerreno == this.datosTerreno.IdTerreno);
-        console.log('dat',this.datosTerreno);
         if(this.datosTerreno && !existe[0]){
             this.terrenosCliente[indice] =  this.datosTerreno;
             let restantes = this.terrenos.filter(t=> t.IdTerreno != this.datosTerreno.IdTerreno);
