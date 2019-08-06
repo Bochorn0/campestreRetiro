@@ -457,6 +457,7 @@ module.exports = class Catalogos {
                 let idIfe = (archivos.IdIfe)?archivos.IdIfe:0;
                 let idComprobante = (archivos.IdComprobante)?archivos.IdComprobante:0;
                 datos.Importe_mantenimiento = (datos.Importe_mantenimiento)?datos.Importe_mantenimiento:0
+                datos.Fecha_nacimiento = (datos.Fecha_nacimiento)?datos.Fecha_nacimiento:`${moment().format('YYYY-MM-DD')}`
                 let campos =  `IdArchivo_ife, IdArchivo_comprobante, Codigo, Nombre, Correo, Telefono, Direccion, Saldo_agua, Saldo_anualidad, Saldo_adeudo, Saldo_credito,Saldo_certificado ,Saldo_mantenimiento, Credito_original, Num_ife, Origen, Referencia_1, Referencia_2, Referencia_3, Fecha_nacimiento, Fecha_insercion, Ultimo_movimiento, Activo,TelRef_1,TelRef_2,TelRef_3,Fecha_primer_mantenimiento,Periodo_mantenimiento,Monto_mantenimiento`;
                 let valores = `${idIfe},${idComprobante},'${datos.Codigo}','${datos.Nombre}','${datos.Correo}','${datos.Telefono}','${datos.Direccion}',${(datos.Saldo_agua)?datos.Saldo_agua:0},${(datos.Saldo_anualidad)?datos.Saldo_anualidad:0},${(datos.Saldo_adeudo)?datos.Saldo_adeudo:0},${(datos.Saldo_credito)?datos.Saldo_credito:0},${(datos.Saldo_certificado)?datos.Saldo_certificado:0} ,${(datos.Saldo_mantenimiento)?datos.Saldo_mantenimiento:0},${(datos.Credito_original)?datos.Credito_original:0},'${datos.NumIfe}', '${datos.Origen}','${datos.Ref1}','${datos.Ref2}','${datos.Ref3}','${datos.Fecha_nacimiento}', '${today}','${today}',1, '${(datos.TelRef_1)?datos.TelRef_1:0}','${(datos.TelRef_2)?datos.TelRef_2:0}','${(datos.TelRef_3)?datos.TelRef_3:0}','${moment(datos.Fecha_mantenimiento).format('YYYY-MM-DD')}',${datos.Periodo_cobro},${datos.Importe_mantenimiento}`;
                 return this._ordenarQuery(conexion,`INSERT INTO Clientes (${campos}) VALUES (${valores});`);
@@ -669,6 +670,7 @@ module.exports = class Catalogos {
                 //console.log('rela',`INSERT INTO Clientes_terrenos (${campos_terreno}) VALUES (${valores_terreno});`);
                 terrenosGuardados.push(this._ordenarQuery(conexion,`INSERT INTO Clientes_terrenos (${campos_terreno}) VALUES (${valores_terreno});`));
                 terrenosGuardados.push(this._ordenarQuery(conexion,updateTerrenos));
+                terrenosGuardados.push(this._ordenarQuery(conexion,` UPDATE Datos_todos SET ACTIVO = 0 WHERE PARCELA = '${ter.parcela}'; `));
             })
             terrenosGuardados.reduce((Terr, current) => {
                 return Terr.then(results => {
@@ -2035,8 +2037,8 @@ module.exports = class Catalogos {
             "2002":[450,450],"2003":[450,450],"2004":[450,450],"2005":[450,450],
             "2006":[450,450],"2007":[900,900],"2008":[900,900],"2009":[900,1200],
             "2010":[1200,1200],"2011":[1200,1200],"2012":[1500,1500],"2013":[1500,1500],
-            "2014":[1500,1500],"2015":[1500,1500],"2016":[1500,1500],"2017":[1500,1500],"2018":[1500,1500],
-            "2018":[1500,1500],"2019":[datos.Importe_mantenimiento,datos.Importe_mantenimiento]
+            "2014":[1500,1500],"2015":[1500,1500],"2016":[1500,1500],"2017":[1500,1500],"2018":[1800,1800],
+            "2019":[datos.Importe_mantenimiento,datos.Importe_mantenimiento]
         };
         let sigue = true;
         let montoInicial = datos.Saldo_mantenimiento;
@@ -2068,8 +2070,8 @@ module.exports = class Catalogos {
             "2002":[450,450],"2003":[450,450],"2004":[450,450],"2005":[450,450],
             "2006":[450,450],"2007":[900,900],"2008":[900,900],"2009":[900,1200],
             "2010":[1200,1200],"2011":[1200,1200],"2012":[1500,1500],"2013":[1500,1500],
-            "2014":[1500,1500],"2015":[1500,1500],"2016":[1500,1500],"2017":[1500,1500],"2018":[1500,1500],
-            "2018":[1500,1500],"2019":[datos.Importe_mantenimiento,datos.Importe_mantenimiento]
+            "2014":[1500,1500],"2015":[1500,1500],"2016":[1500,1500],"2017":[1500,1500],"2018":[1800,1800],
+            "2019":[datos.Importe_mantenimiento,datos.Importe_mantenimiento]
         };
     
         let diferencia_meses =  moment().diff(moment(datos.Fecha_adeudo_mantenimiento), 'months');

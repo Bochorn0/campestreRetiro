@@ -33,8 +33,10 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     @Output() public vista = new EventEmitter();
     //Mantenimiento
     fechaPrimerMantenimiento;contratoAgua;importeMantenimiento;fechaParaCobro;
+    datosTodosTotales;otroClienteTerreno;
     constructor(private fb: FormBuilder,private catalogosService : CatalogosService, private ventasService: VentasService) {
         this.IdCotizacion = 0;
+        this.datosTodosClientes();
         this._obtenerCotizaciones();
         this._obtenerTerrenos();
         this.numParcela = '';
@@ -80,6 +82,14 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         });        
         this.clienteDatosTodos = false;
         //console.log('datosCliente',this.datosCliente);
+    }
+    datosTodosClientes(){
+        this.catalogosService.obtenerDatosTodos().then(res=>{
+//            console.log('datos',datos);
+            this.datosTodosTotales  = res['Datos'];
+        }).catch(err=>{
+            console.log('err',err);
+        });
     }
     calcularMantenimientoPorFecha(){
         let datosForm = this.frmCliente.getRawValue();
@@ -439,8 +449,8 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         console.log('obj.Periodo_cobro',obj);
         if(!obj.Nombre || obj.Nombre == '-'){
             error = `Debes introducir un nombre valido para continuar`;
-        }else if(obj.Fecha_nacimiento == '-' && !moment(obj.Fecha_nacimiento).isValid()){
-            error = `Debes introducir una Fecha de nacimiento valida para continuar`;
+        // }else if(obj.Fecha_nacimiento == '-' && !moment(obj.Fecha_nacimiento).isValid()){
+        //     error = `Debes introducir una Fecha de nacimiento valida para continuar`;
 /*        }else if(!obj.Importe_mantenimiento || obj.Importe_mantenimiento == '-'){
             error = `Debes introducir una cuota de mantenimiento para continuar`;*/
         }else if(!obj.Terrenos){
@@ -511,21 +521,46 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         console.log('etapa', sele);
     }
     seleccionarParcela(selected, indice){
-        this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == selected.item.toString())[0];
-        if(!this.datosTerreno.Cotizacion){
-            this.datosTerreno.Cotizacion = [{IdCotizacion:0}]
-        }
-        let  existe = this.terrenosCliente.filter(ob => ob.IdTerreno == this.datosTerreno.IdTerreno);
-        if(this.datosTerreno && !existe[0]){
-            this.terrenosCliente[indice] =  this.datosTerreno;
-            let restantes = this.terrenos.filter(t=> t.IdTerreno != this.datosTerreno.IdTerreno);
-            this.parcelas = restantes.map((key)=>{
-                return key.parcela;
+        let terrenoOtroCliente = this.datosTodosTotales.find(dt => dt['PARCELA'] == selected.item.toString());
+        console.log('terreno otro',terrenoOtroCliente);
+        console.log('terreno otro',this.frmCliente.getRawValue());
+        if(terrenoOtroCliente){
+            let datosA = {Titulo: 'Advertencia',Contenido: `Estas seguro que deseas agregar este terreno, pertenece al siguiente cliente ${terrenoOtroCliente["NOMBRE DEL CLIENTE"].trim()}`,Confirm: 'Si Adelante' , Tipo: 'warning'}
+            this._confirmarModal({},datosA).then(res=>{
+                this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == selected.item.toString())[0];
+                if(!this.datosTerreno.Cotizacion){
+                    this.datosTerreno.Cotizacion = [{IdCotizacion:0}]
+                }
+                let  existe = this.terrenosCliente.filter(ob => ob.IdTerreno == this.datosTerreno.IdTerreno);
+                if(this.datosTerreno && !existe[0]){
+                    this.terrenosCliente[indice] =  this.datosTerreno;
+                    let restantes = this.terrenos.filter(t=> t.IdTerreno != this.datosTerreno.IdTerreno);
+                    this.parcelas = restantes.map((key)=>{
+                        return key.parcela;
+                    })
+                }else{
+                    swal('Error','El terreno no puede agregarse porque ya esta en la lista, por favor selecciona uno diferente','error');
+                    this.terrenosCliente[indice] = {}; 
+                }
             })
         }else{
-            swal('Error','El terreno no puede agregarse porque ya esta en la lista, por favor selecciona uno diferente','error');
-            this.terrenosCliente[indice] = {}; 
+            this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == selected.item.toString())[0];
+            if(!this.datosTerreno.Cotizacion){
+                this.datosTerreno.Cotizacion = [{IdCotizacion:0}]
+            }
+            let  existe = this.terrenosCliente.filter(ob => ob.IdTerreno == this.datosTerreno.IdTerreno);
+            if(this.datosTerreno && !existe[0]){
+                this.terrenosCliente[indice] =  this.datosTerreno;
+                let restantes = this.terrenos.filter(t=> t.IdTerreno != this.datosTerreno.IdTerreno);
+                this.parcelas = restantes.map((key)=>{
+                    return key.parcela;
+                })
+            }else{
+                swal('Error','El terreno no puede agregarse porque ya esta en la lista, por favor selecciona uno diferente','error');
+                this.terrenosCliente[indice] = {}; 
+            }            
         }
+
         console.log('ter',this.terrenosCliente);
     }
     guardarNuevoCliente(){
@@ -610,6 +645,23 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         dwldLink.click();
         document.body.removeChild(dwldLink);
     }
+    _confirmarModal(datos, datosAlert){
+        return new Promise ((resolve,reject)=>{
+          swal({ title: datosAlert.Titulo,
+            html: `<p class="">${datosAlert.Contenido}</p>`,
+            type: datosAlert.Tipo,
+            showCancelButton: true,
+            cancelButtonColor:'#D33',
+            confirmButtonText: datosAlert.Confirm
+          }).then((result)=>{
+            if(result.value){
+              return resolve(true);
+            }
+          }).catch((err)=>{
+            return reject(false);
+          });
+        });
+      }
     _delay(ms){
         return new Promise( resolve => setTimeout(resolve, ms) );
     }
