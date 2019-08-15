@@ -2033,6 +2033,7 @@ module.exports = class Catalogos {
         });
      }
      _calcularEnBaseAMonto(datos){
+        console.log('datos fecha',datos);
         let MantenimientoTemporadas = {
             "2002":[450,450],"2003":[450,450],"2004":[450,450],"2005":[450,450],
             "2006":[450,450],"2007":[900,900],"2008":[900,900],"2009":[900,1200],
@@ -2041,6 +2042,14 @@ module.exports = class Catalogos {
             "2018":[datos.Importe_mantenimiento,datos.Importe_mantenimiento],
             "2019":[datos.Importe_mantenimiento,datos.Importe_mantenimiento]
         };
+        // let MantenimientoTemporadas = {
+        //     "2002":[1500,1500],"2003":[1500,1500],"2004":[1500,1500],"2005":[1500,1500],
+        //     "2006":[1500,1500],"2007":[1500,1500],"2008":[1500,1500],"2009":[1500,1500],
+        //     "2010":[1500,1500],"2011":[1500,1500],"2012":[1500,1500],"2013":[1500,1500],
+        //     "2014":[1500,1500],"2015":[1500,1500],"2016":[1500,1500],"2017":[1800,1800],
+        //     "2018":[datos.Importe_mantenimiento,datos.Importe_mantenimiento],
+        //     "2019":[datos.Importe_mantenimiento,datos.Importe_mantenimiento]
+        // };
         let sigue = true;
         let montoInicial = datos.Saldo_mantenimiento;
         let mantenimientos = [];
@@ -2066,7 +2075,7 @@ module.exports = class Catalogos {
         return {mantenimientos, Saldo: saldo_p};
      }
      _calcularEnBaseAFecha(datos){
-//         console.log('datos fecha',datos);
+        console.log('datos fecha',datos);
         let MantenimientoTemporadas = {
             "2002":[450,450],"2003":[450,450],"2004":[450,450],"2005":[450,450],
             "2006":[450,450],"2007":[900,900],"2008":[900,900],"2009":[900,1200],
@@ -2075,7 +2084,14 @@ module.exports = class Catalogos {
             "2018":[datos.Importe_mantenimiento,datos.Importe_mantenimiento],
             "2019":[datos.Importe_mantenimiento,datos.Importe_mantenimiento]
         };
-    
+        // let MantenimientoTemporadas = {
+        //     "2002":[1500,1500],"2003":[1500,1500],"2004":[1500,1500],"2005":[1500,1500],
+        //     "2006":[1500,1500],"2007":[1500,1500],"2008":[1500,1500],"2009":[1500,1500],
+        //     "2010":[1500,1500],"2011":[1500,1500],"2012":[1500,1500],"2013":[1500,1500],
+        //     "2014":[1500,1500],"2015":[1500,1500],"2016":[1500,1500],"2017":[1800,1800],
+        //     "2018":[datos.Importe_mantenimiento,datos.Importe_mantenimiento],
+        //     "2019":[datos.Importe_mantenimiento,datos.Importe_mantenimiento]
+        // };
         let diferencia_meses =  moment().diff(moment(datos.Fecha_adeudo_mantenimiento), 'months');
         let mantenimientos = [];
         let saldoMan = 0;

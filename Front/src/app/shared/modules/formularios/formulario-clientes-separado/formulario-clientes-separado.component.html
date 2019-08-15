@@ -164,6 +164,7 @@
                                 <div class="card-body row">
                                     <div class="col-lg-12">
                                         <b> - TERRENO - </b>
+                                        <b> {{ter.Pertenece}}</b>
                                         <hr>
                                     </div>
                                     <div class="col-lg-2">
@@ -325,19 +326,30 @@
                         <button class="btn btn-info pull-right" (click)="this.pagina =1 " >Regresar <i class="fa fa-arrow-left"></i></button>
                     </div>
                 </div>
-            <form [formGroup]="frmCliente" class="form-validate" (keydown.enter)="$event.preventDefault()" novalidate="">
                 <div class="row" *ngIf="pagina == 3">
                     <div class="col-lg-12"><h3 class="text-center text-danger">Datos de Mantenimiento</h3><hr></div>
-                    <div class="class-lg-12"><hr></div>
-                    <div class="class-lg-12">
+                    <div class="col-lg-12"><hr></div>
+                    <div class="col-lg-12">
+                            <div class="alert alert-danger" role="alert">
+                                Introduce los mantenimientos segun la tabla de generacion 
+                            </div>
+                        </div>                    
+                    <div class="col-lg-12">
+                        <textarea placeholder=" ENE-JUN 2016	JUL-DIC 2016	ENE-JUN 2017	JUL-DIC 2017
+1,500.00 	 1,500.00 	 1,500.00 	 1,500.00" class="form-control" rows="4" style="resize: none;" [(ngModel)]="filasMantenimiento" (change)="cambiosArea();"></textarea>
+                        <br>
+                    </div>
+                    <div class="col-lg-12">
                         <div class="alert alert-danger" role="alert">
                             Para calcular el mantenimiento por fecha o por monto debes incluir forzosamente el 
                             <b>Monto de mantenimiento</b> , la Fecha del primer cobro del siguiente mantenimiento <b>(Fecha inicio Mantenimiento )</b>
                             y el <b>periodo de cobro </b>
                         </div>
                     </div>
+                    <form [formGroup]="frmCliente" class="form-validate row" (keydown.enter)="$event.preventDefault()" novalidate="">
                         <div class="col-lg-3">
                             <div class="form-group">
+                                <b style="color: #C00;"> * </b>
                                 <label class="label-form">  Monto Mantenimiento </label>
                                 <input type="number" placeholder="Monto Mantenimiento"  formControlName="Importe_mantenimiento" class="form-control" required />
                             </div>
@@ -350,12 +362,14 @@
                         </div>
                         <div class="col-lg-3">
                             <div class="form-group">
-                                <label class="label-form"> Fecha inicio Mantenimiento </label>
+                                <b style="color: #C00;"> * </b>
+                                <label class="label-form"> Fecha Proxima de cobro </label>
                                 <input type="date" placeholder="Fecha Inicio" formControlName="Fecha_mantenimiento" class="form-control" required />
                             </div>
                         </div>
                         <div class="col-lg-3">
                             <div class="form-group">
+                                <b style="color: #C00;"> * </b>
                                 <label class="label-form"> Periodo de Cobro Mantenimiento </label>
                                 <input type="number" placeholder="Periodo Mantenimiento"  formControlName="Periodo_cobro" class="form-control" required />
                             </div>
@@ -395,8 +409,8 @@
                         <button class="btn btn-primary pull-right" (click)="validarFomulario();" >Revisión <i class="fa fa-arrow-right"></i></button>
                         <button class="btn btn-info pull-right" (click)="this.pagina =2 " >Regresar <i class="fa fa-arrow-left"></i></button>
                     </div>
+                    </form>
                 </div>
-            </form>
                 <div class="row" *ngIf="pagina == 4">
                         <div class="col-lg-12"><h3 class="text-center">Revisión de Datos</h3><hr></div>
                         <div class="col-lg-6">

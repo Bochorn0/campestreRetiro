@@ -34,6 +34,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     //Mantenimiento
     fechaPrimerMantenimiento;contratoAgua;importeMantenimiento;fechaParaCobro;
     datosTodosTotales;otroClienteTerreno;
+    filasMantenimiento;
     constructor(private fb: FormBuilder,private catalogosService : CatalogosService, private ventasService: VentasService) {
         this.IdCotizacion = 0;
         this.datosTodosClientes();
@@ -83,6 +84,41 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         this.clienteDatosTodos = false;
         //console.log('datosCliente',this.datosCliente);
     }
+    cambiosArea(){
+        let mantenimientosGenerados = [];
+//        console.log('filas',this.filasMantenimiento);
+        if(this.filasMantenimiento){
+            let rows = this.filasMantenimiento.split("\n");
+//            console.log('rows',rows);
+            let fechs = rows[0].split("\t");
+            let cols = rows[1].split("\t");
+            // if(cols[0].trim()!= '' && cols[0].trim() != "\n"){
+                let acumulado = 0;
+                let monto_man = 0;
+                for(let i = 0; i < cols.length; i++){
+                    let f = `${fechs[i]}`.trim();
+                    let mont = parseFloat(`${cols[i]}`.split('$').join('').split(',').join('').split('.')[0]);
+                    console.log('`${cols[i]}`',`${mont}`);
+                    let mon = (f.toUpperCase().indexOf('JUL') > -1 || f.toUpperCase().indexOf('DIC') > -1)?'07':'01';
+                    let ani = f.substring(f.length-4,f.length);
+                    let fech = `${ani}-${mon}-01`;
+                    acumulado += mont;                
+                    mantenimientosGenerados.push({"Fecha Mantenimiento": fech, "Monto Mantenimiento":mont , "Acumulado": acumulado });
+                    monto_man = mont;
+                }
+                let mes = parseFloat(moment().format('MM'));
+                this.frmCliente.controls['Fecha_mantenimiento'].setValue((mes > 6)?`${moment().format('YYYY')}-12-01`:`${moment().format('YYYY')}-01-01`);
+                this.frmCliente.contains['Monto_mantenimiento'].setValue(monto_man);
+//                console.log('mantenimientosGenerados',mantenimientosGenerados);
+                this.MantenimientosPreCalculados = {mantenimientos: mantenimientosGenerados,  Saldo: acumulado } ;
+                this.frmCliente.controls['Saldo_mantenimiento'].setValue(acumulado);
+                this.datosMantenimientos = { Datos : mantenimientosGenerados}
+                if(this.datatableMantenimientos != null){
+                    this.datatableMantenimientos._reiniciarRegistros(this.datosMantenimientos);
+                }            
+            // }
+        }
+    }
     datosTodosClientes(){
         this.catalogosService.obtenerDatosTodos().then(res=>{
 //            console.log('datos',datos);
@@ -95,7 +131,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         let datosForm = this.frmCliente.getRawValue();
 //        let fecha = this.frmCliente.controls['Fecha_adeudo_mantenimiento'].value;
  //       let datosConsulta = {Fecha: `${fecha}`};
-        let error = ``;
+        let error = ``; 
         if(!datosForm.Periodo_cobro || datosForm.Periodo_cobro <= 0){
             error = `Debes introducir un periodo de cobro`;
         }
@@ -112,6 +148,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     ///        console.log('datosConsulta',datosForm);
             this.ventasService.obtenerMantenimientoCalculado(datosForm).then(res=>{
                 let result =JSON.parse(JSON.stringify(res));
+                console.log('res',result);
                 this.MantenimientosPreCalculados = result;
                 this.frmCliente.controls['Saldo_mantenimiento'].setValue(result.Saldo);
                 this.datosMantenimientos = { Datos : result.mantenimientos}
