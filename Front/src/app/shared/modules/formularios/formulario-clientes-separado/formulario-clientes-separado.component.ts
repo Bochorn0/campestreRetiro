@@ -109,6 +109,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                     let mes = parseFloat(moment().format('MM'));
                     this.frmCliente.controls['Fecha_mantenimiento'].setValue((mes > 6)?`${moment().format('YYYY')}-07-01`:`${moment().format('YYYY')}-01-01`);
                     this.frmCliente.controls['Importe_mantenimiento'].setValue(monto_man);
+                    this.frmCliente.controls['Periodo_cobro'].setValue(6);
             //                console.log('mantenimientosGenerados',mantenimientosGenerados);
                     this.MantenimientosPreCalculados = {mantenimientos: mantenimientosGenerados,  Saldo: acumulado } ;
                     this.frmCliente.controls['Saldo_mantenimiento'].setValue(acumulado);
@@ -136,6 +137,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 }
                 this.MantenimientosPreCalculados = {mantenimientos: mantenimientosGenerados,  Saldo: acumulado } ;
                 this.frmCliente.controls['Saldo_mantenimiento'].setValue(acumulado);
+                this.frmCliente.controls['Periodo_cobro'].setValue(6);
                 this.datosMantenimientos = { Datos : mantenimientosGenerados}
                 if(this.datatableMantenimientos != null){
                     this.datatableMantenimientos._reiniciarRegistros(this.datosMantenimientos);
