@@ -90,32 +90,58 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         if(this.filasMantenimiento){
             let rows = this.filasMantenimiento.split("\n");
 //            console.log('rows',rows);
-            let fechs = rows[0].split("\t");
-            let cols = rows[1].split("\t");
-            // if(cols[0].trim()!= '' && cols[0].trim() != "\n"){
+            if(rows[0] && rows[1]){
+                let fechs = rows[0].split("\t");
+                let cols = rows[1].split("\t");
+                // if(cols[0].trim()!= '' && cols[0].trim() != "\n"){
+                    let acumulado = 0;
+                    let monto_man = 0;
+                    for(let i = 0; i < cols.length; i++){
+                        let f = `${fechs[i]}`.trim();
+                        let mont = parseFloat(`${cols[i]}`.split('$').join('').split(',').join('').split('.')[0]);
+                        let mon = (f.toUpperCase().indexOf('JUL') > -1 || f.toUpperCase().indexOf('DIC') > -1)?'07':'01';
+                        let ani = f.substring(f.length-4,f.length);
+                        let fech = `${ani}-${mon}-01`;
+                        acumulado += mont;                
+                        mantenimientosGenerados.push({"Fecha Mantenimiento": fech, "Monto Mantenimiento":mont , "Acumulado": acumulado });
+                        monto_man = mont;
+                    }
+                    let mes = parseFloat(moment().format('MM'));
+                    this.frmCliente.controls['Fecha_mantenimiento'].setValue((mes > 6)?`${moment().format('YYYY')}-07-01`:`${moment().format('YYYY')}-01-01`);
+                    this.frmCliente.controls['Importe_mantenimiento'].setValue(monto_man);
+            //                console.log('mantenimientosGenerados',mantenimientosGenerados);
+                    this.MantenimientosPreCalculados = {mantenimientos: mantenimientosGenerados,  Saldo: acumulado } ;
+                    this.frmCliente.controls['Saldo_mantenimiento'].setValue(acumulado);
+                    this.datosMantenimientos = { Datos : mantenimientosGenerados}
+                    if(this.datatableMantenimientos != null){
+                        this.datatableMantenimientos._reiniciarRegistros(this.datosMantenimientos);
+                    }
+            }else if(rows[0]){
+                let cols = rows[0].split("\t");
+                // console.log('cols',cols);
+//                let monto = 0;
                 let acumulado = 0;
-                let monto_man = 0;
-                for(let i = 0; i < cols.length; i++){
-                    let f = `${fechs[i]}`.trim();
+                let fech_final = (parseFloat(moment().format('MM')) > 6)?`${moment().format('YYYY')}-07-01`:`${moment().format('YYYY')}-01-01`;
+                
+                this.frmCliente.controls['Fecha_mantenimiento'].setValue(moment(fech_final).add('6','month').format('YYYY-MM-DD'));
+                // console.log('cols[cols.length-1]',cols[cols.length-1]);
+                this.frmCliente.controls['Importe_mantenimiento'].setValue(`${cols[cols.length-1]}`.trim().split('$').join('').split(',').join('').split('.')[0]);
+                let fecha_ = fech_final;
+                for(let i = cols.length-1; i >= 0; i--){
                     let mont = parseFloat(`${cols[i]}`.split('$').join('').split(',').join('').split('.')[0]);
-                    console.log('`${cols[i]}`',`${mont}`);
-                    let mon = (f.toUpperCase().indexOf('JUL') > -1 || f.toUpperCase().indexOf('DIC') > -1)?'07':'01';
-                    let ani = f.substring(f.length-4,f.length);
-                    let fech = `${ani}-${mon}-01`;
-                    acumulado += mont;                
-                    mantenimientosGenerados.push({"Fecha Mantenimiento": fech, "Monto Mantenimiento":mont , "Acumulado": acumulado });
-                    monto_man = mont;
+                    acumulado += mont;
+                    mantenimientosGenerados.push({"Fecha Mantenimiento": fecha_, "Monto Mantenimiento": mont , "Acumulado": acumulado });
+                    fecha_ = moment(fecha_).subtract('6','month').format('YYYY-MM-DD');
+
                 }
-                let mes = parseFloat(moment().format('MM'));
-                this.frmCliente.controls['Fecha_mantenimiento'].setValue((mes > 6)?`${moment().format('YYYY')}-12-01`:`${moment().format('YYYY')}-01-01`);
-                this.frmCliente.contains['Monto_mantenimiento'].setValue(monto_man);
-//                console.log('mantenimientosGenerados',mantenimientosGenerados);
                 this.MantenimientosPreCalculados = {mantenimientos: mantenimientosGenerados,  Saldo: acumulado } ;
                 this.frmCliente.controls['Saldo_mantenimiento'].setValue(acumulado);
                 this.datosMantenimientos = { Datos : mantenimientosGenerados}
                 if(this.datatableMantenimientos != null){
                     this.datatableMantenimientos._reiniciarRegistros(this.datosMantenimientos);
-                }            
+                }                
+            }
+
             // }
         }
     }
