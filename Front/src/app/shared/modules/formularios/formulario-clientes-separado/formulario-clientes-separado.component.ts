@@ -520,11 +520,12 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             error = `Debes introducir una cuota de mantenimiento para continuar`;*/
         }else if(!obj.Terrenos){
             error = `Debes introducir al menos un terreno para continuar`;
-        } else if(obj.Periodo_cobro == '-' || obj.Periodo_cobro < 1){
+        } else if(obj.Periodo_cobro == '-' || obj.Periodo_cobro < 0){
             error = `Debes introducir un periodo de cobro valido para continuar y que sea mayor a 1`;
-        }else if(obj.Fecha_mantenimiento == '-' || !moment(obj.Fecha_mantenimiento).isValid()){
-            error = `Debes introducir una fecha de primer mantenimiento valida para continuar`;
         }
+        // }else if(obj.Fecha_mantenimiento == '-' || !moment(obj.Fecha_mantenimiento).isValid()){
+            // error = `Debes introducir una fecha de primer mantenimiento valida para continuar`;
+        // }
 
         // obj.Terrenos.forEach(t=>{
         //     if((!t.Cotizacion[0].PeriodoCobro || t.Cotizacion[0].PeriodoCobro == '-') && error != ''){

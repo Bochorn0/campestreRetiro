@@ -18,7 +18,7 @@ export class CatalogoClientesComponent implements OnInit {
     clienteDetalles;nombresClientes;detallesClienteVista;mantenimientoVista;
     clientesTodosVista;nombreCliente;mensualidadesVista;contenidoContrato;anualidadesVista;
     diaMantenimiento;importeMantenimiento;IdTerrenoMantenimiento;IdTerrenoContrato;mantenimientosTodos;
-    idTerrenoMensualidad;datosDetalle;
+    idTerrenoMensualidad;datosDetalle;terrenoDatos;
     @Output() public nuevaOperacion = new EventEmitter();
     constructor(private catalogosService : CatalogosService, private ventasService: VentasService) {
         this.obtenerClientesActivos();
@@ -228,6 +228,7 @@ export class CatalogoClientesComponent implements OnInit {
     obtenerContratoTerreno(){
         let datosTerreno = this.clienteDetalles.Terrenos.filter(ob=>ob.IdTerreno == this.IdTerrenoContrato)[0];
         let datos_contrato = {datosTerreno, datosCliente: this.clienteDetalles};
+        this.terrenoDatos = datosTerreno;
         this.catalogosService.obtenerDatosContrato(datos_contrato).then(res=>{
             if(res['Data']){
                 this.contenidoContrato =  res['Data'];

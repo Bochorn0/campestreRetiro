@@ -34,6 +34,8 @@ module.exports = class Catalogos {
                             numCliente += `0`; 
                         }
                         r.Codigo += `${numCliente}${r.IdCliente}`; 
+                        r.Saldo_total = r.Saldo_credito + r.Saldo_adeudo + r.Saldo_mantenimiento + r.Saldo_agua + r.Saldo_certificado +r.Saldo_anualidad;
+                        console.log('saldo',r);
                     })
                     return resolve({Data: res, error: false});
                 }else{

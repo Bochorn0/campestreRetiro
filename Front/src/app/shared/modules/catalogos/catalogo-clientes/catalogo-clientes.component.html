@@ -45,159 +45,190 @@
                                                 <div class="row" *ngIf="clienteDetalles.IdCliente">
                                                     <div class="col-lg-12">
                                                         <button class="btn btn-warning pull-right" (click)="EditarCliente();"><i class="fa fa-pencil"></i> | Editar Cliente</button>
-                                                    </div>
-                                                    <div class="col-lg-12"><h3 class="text-center text-dark "> Saldos </h3><hr></div>
-                                                    <div class="col-lg-2 text-center"> 
-                                                        <!-- <button class="btn btn-primary" (click)="nuevaVenta(clienteDetalles)"> -->
-                                                            Adeudo Enganche: <br><b> $ {{clienteDetalles.Saldo_adeudo | number}} 
-                                                                <!-- <i class="fa fa-arrow-circle-right"></i> -->
-                                                            </b>
-                                                        <!-- </button><br> -->
-                                                    </div>
-                                                    <div class="col-lg-2 text-center"> 
-                                                        <!-- <button class="btn btn-secondary" (click)="nuevaVenta(clienteDetalles)">  -->
-                                                            Contrato Agua: <br><b> $ {{clienteDetalles.Saldo_agua | number}} 
-                                                                <!-- <i class="fa fa-arrow-circle-right"></i> -->
-                                                            </b>
-                                                        <!-- </button><br> -->
-                                                    </div>
-                                                    <div class="col-lg-2 text-center">
-                                                        <!-- <button class="btn btn-success" (click)="nuevaVenta(clienteDetalles)"> -->
-                                                            Terreno: <br><b> $ {{clienteDetalles.Saldo_credito | number}} 
-                                                                <!-- <i class="fa fa-arrow-circle-right"></i> -->
-                                                            </b>
-                                                        <!-- </button><br> -->
-                                                    </div>
-                                                    <div class="col-lg-2 text-center">
-                                                        <!-- <button class="btn btn-danger" (click)="nuevoMantenimiento(clienteDetalles)"> -->
-                                                            Mantenimiento: <br><b> $ {{clienteDetalles.Saldo_mantenimiento | number}} 
-                                                                <!-- <i class="fa fa-arrow-circle-right"></i> -->
-                                                            </b>
-                                                        <!-- </button><br> -->
-                                                    </div>
-                                                    <div class="col-lg-2 text-center text-info">
-                                                            <b>Crédito Original: <br><b> $ {{clienteDetalles.Credito_original | number}} </b></b> 
-                                                    </div>
-                                                    <div class="col-lg-2 text-center text-success">
-                                                        <b>Saldo TOTAL: <br><b> $ {{(clienteDetalles.Saldo_credito + clienteDetalles.Saldo_adeudo + clienteDetalles.Saldo_agua + clienteDetalles.Saldo_mantenimiento) | number}} </b></b>
-                                                    </div>
-                                                    <div class="col-lg-12"><hr></div>
-                                                </div>
-                                                <!-- *ngIf="clienteDetalles.IdCliente" -->
-                                                <div class="row" >
-                                                    <div class="col-lg-12"><h3 class="text-center text-dark "> Datos Basicos </h3><hr></div>
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            <label class="label-form"> Nombre : </label>
-                                                            {{ clienteDetalles.Nombre}}
-<!--                                                            <input type="text" [(ngModel)]="clienteDetalles.Nombre" class="form-control" required/>-->
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-6">
-                                                        <div class="form-group">
-                                                            <label class="label-form"> Correo : </label>
-                                                            {{ clienteDetalles.Correo}}
-<!--                                                            <input type="text" [(ngModel)]="clienteDetalles.Correo" class="form-control" required/>-->
-                                                        </div>
+                                                        <br><br>
                                                     </div>
                                                     <div class="col-lg-4">
-                                                        <div class="form-group">
-                                                            <label class="label-form"> IFE :</label>
-                                                            {{ clienteDetalles.Num_ife}}
-<!--                                                            <input type="text"  [(ngModel)]="clienteDetalles.Num_ife" class="form-control" required />-->
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-4">
-<!--                                                        <div class="form-group">
-                                                            <label class="label-form"> Comprobante domicilio </label>
-                                                            <div class="input-group">
-                                                                <label class="input-group-btn" style="margin:0;">
-                                                                    <span class="btn btn-success" >
-                                                                        <i class="fa fa-upload"> </i> Cargar comprobante
-                                                                        <input type="file" style="display: none;" accept="image/*" (change)="nombreArchivo($event,'Domicilio');" required>
-                                                                    </span>
-                                                                </label>
-                                                                <input type="text" class="form-control" [(ngModel)]="comprobante">
+                                                        <div class="card card-default">
+                                                            <div class="card-header" style="color:#000 !important; ">
+                                                                <h4>Saldos Cliente</h4>
                                                             </div>
-                                                        </div>-->
-                                                    </div>
-                                                    <div class="col-lg-4">
-<!--                                                        <div class="form-group">
-                                                            <label class="label-form"> Foto IFE </label>
-                                                            <div class="input-group">
-                                                                <label class="input-group-btn" style="margin:0;">
-                                                                    <span class="btn btn-success">
-                                                                        <i class="fa fa-upload"> </i> Cargar foto IFE
-                                                                        <input type="file" style="display: none;" accept="image/*" (change)="nombreArchivo($event,'Ife');" required >
-                                                                    </span>
-                                                                </label>
-                                                                <input type="text" class="form-control" name="nombreArchivo" [(ngModel)]="fotoIfe">
-                                                            </div>
-                                                        </div>-->
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <div class="form-group">
-                                                            <label class="label-form"> Origen :</label>
-                                                            {{ clienteDetalles.Origen}}
-<!--                                                            <input type="text" [(ngModel)]="clienteDetalles.Origen" class="form-control" required/>-->
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <div class="form-group">
-                                                            <label class="label-form"> Teléfono :</label>
-                                                            {{ clienteDetalles.Telefono}}
-<!--                                                            <input type="text" [(ngModel)]="clienteDetalles.Telefono" class="form-control" required />-->
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-4">
-                                                        <div class="form-group">
-                                                            <label class="label-form"> Fecha Nacimiento :</label>
-                                                            {{ clienteDetalles.Fecha_nacimiento}}
-<!--                                                            <input type="date" [(ngModel)]="clienteDetalles.Fecha_nacimiento" class="form-control" required/>-->
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-lg-12">
-                                                        <div class="form-group">
-                                                            <label class="label-form"> Direccion :</label>
-                                                            {{ clienteDetalles.Direccion}}
-<!--                                                            <textarea [(ngModel)]="clienteDetalles.Direccion" class="form-control"> </textarea>-->
-                                                        </div>
-                                                    </div>
-<!--                                                    <div class="col-lg-12">
-                                                        <div class="form-group">
-                                                                <label class="label-form"> &nbsp;</label><br>
-                                                            <button class="btn btn-primary pull-right" (click)="actualizarDatosCliente();">Actualizar Cliente</button>
-                                                        </div>
-                                                    </div>-->
-                                                    <div class="col-lg-12">
-                                                        <div class="row">
-                                                            <div class="col-lg-12"><h3 class="text-center text-dark "> Contratos</h3><hr></div>
-                                                            <div class="col-lg-6">
-                                                                <div class="form-group">
-                                                                    <label class="label-form"> Selecciona Terreno </label>
-                                                                    <select *ngIf="clienteDetalles.Terrenos" class="form-control" (change)="obtenerContratoTerreno();" [(ngModel)]="IdTerrenoContrato" >
-                                                                        <option value="0">Selecciona el terreno</option>
-                                                                        <option  *ngFor=" let ter of clienteDetalles.Terrenos" value="{{ter.IdTerreno}}" > Lote: {{ter.lote}} - Etapa: {{ter.etapa}} - Parcela: {{ter.parcela}}</option>
-                                                                    </select>
+                                                             <div class="list-group">
+                                                                    <div class="list-group-item text-left" *ngIf="clienteDetalles.Credito_original > 0">
+                                                                    <b><i class="fa fa-dollar"></i> Crédito Original:</b>
+                                                                    $ {{clienteDetalles.Credito_original | number}}
                                                                 </div>
+                                                                <div class="list-group-item text-left text-primary" *ngIf="clienteDetalles.Saldo_adeudo > 0">
+                                                                    <b><i class="fa fa-money"></i> Saldo Enganche:</b>
+                                                                    $ {{clienteDetalles.Saldo_adeudo | number}}
+                                                                </div>
+                                                                <div class="list-group-item text-left text-primary" *ngIf="clienteDetalles.Saldo_credito > 0">
+                                                                    <b><i class="fa fa-credit-card"></i> Saldo Pendiente:</b>
+                                                                    $ {{clienteDetalles.Saldo_credito | number}}
+                                                                </div>
+                                                                <div class="list-group-item text-left text-danger" *ngIf="clienteDetalles.Saldo_mantenimiento > 0">
+                                                                    <b><i class="fa fa-home"></i> Saldo Mantenimiento:</b>
+                                                                    $ {{clienteDetalles.Saldo_mantenimiento | number}}
+                                                                </div>
+                                                                <div class="list-group-item text-left text-info" *ngIf="clienteDetalles.Saldo_agua > 0">
+                                                                    <b><i class="fa fa-dollar"></i> Saldo Agua:</b>
+                                                                    $ {{clienteDetalles.Saldo_agua | number}}
+                                                                </div>
+                                                                <div class="list-group-item text-left text-warning" *ngIf="clienteDetalles.Saldo_certificado > 0">
+                                                                    <b><i class="fa fa-address-card"></i> Saldo Certificado:</b>
+                                                                    $ {{clienteDetalles.Saldo_certificado | number}}
+                                                                </div>
+                                                                <div class="list-group-item text-success" *ngIf="clienteDetalles.Saldo_total > 0">
+                                                                    <b><i class="fa fa-dollar"></i> Saldo Total:</b>
+                                                                    $ {{clienteDetalles.Saldo_total | number}}
+                                                                </div>                                                                
+                                                             </div>
+                                                            <!-- <div class="card-footer"><a class="text-sm" href="#">Load more</a></div> -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-8" >
+                                                        <div class="card card-default">
+                                                            <div class="card-header" style="color:#000 !important; ">
+                                                                <h4>Datos Basicos </h4>
                                                             </div>
-                                                            <div class="col-lg-6"><br><button *ngIf="contenidoContrato" class="btn btn-warning" (click)="enviarContratoCorreo();">Enviar por correo</button></div>
-                                                            <div class="col-xl-12 col-lg-12 col-xs-12" *ngIf="contenidoContrato">
-                                                                <div class="card mb-3">
-                                                                    <div class="card-header " >
-                                                                        Contrato de nuevo cliente
+                                                            <div class="card-body row text-left">
+                                                                <div class="col-lg-4">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> #Cliente:</label>
+                                                                        {{ clienteDetalles.Codigo}}
                                                                     </div>
-                                                                    <div class="card-body" *ngIf="contenidoContrato" [froalaEditor] [(froalaModel)]="contenidoContrato"></div>
-                                                                    <div class="col-lg-12">
-                                                                        <div class="form-group">
-                                                                                <label class="label-form"> &nbsp;</label><br>
-                                                                            <button class="btn btn-primary pull-right" (click)="guardarContrato();">Guardar Contrato</button>
+                                                                </div>
+                                                                <div class="col-lg-8">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> Nombre : </label>
+                                                                        {{ clienteDetalles.Nombre}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> Correo : </label>
+                                                                        {{ clienteDetalles.Correo}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> Fecha Nacimiento :</label>
+                                                                        {{ clienteDetalles.Fecha_nacimiento}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> IFE :</label>
+                                                                        {{ clienteDetalles.Num_ife}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> Origen :</label>
+                                                                        {{ clienteDetalles.Origen}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> Teléfono :</label>
+                                                                        {{ clienteDetalles.Telefono}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> Direccion :</label>
+                                                                        {{ clienteDetalles.Direccion}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> Mantenimiento Actual :</label>
+                                                                        {{ clienteDetalles.Monto_mantenimiento | number}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> Periodo de cobro :</label>
+                                                                        {{ clienteDetalles.Periodo_cobro}} Meses
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> Referencia :</label>
+                                                                        {{ clienteDetalles.Referencia_1}}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-lg-6">
+                                                                    <div class="form-group">
+                                                                        <label class="label-form"> Cel Referencia :</label>
+                                                                        {{ clienteDetalles.TelRef_1}}
+                                                                    </div>
+                                                                </div>                                                                
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <br>
+                                                        <div class="card card-default">
+                                                            <div class="card-header" style="color:#000 !important; ">
+                                                                Terrenos y Contratos del cliente
+                                                            </div>
+                                                            <div class="card-body">
+                                                                <div class="col-lg-12">
+                                                                    <div class="row">
+                                                                        <div class="col-lg-12" *ngIf="terrenoDatos" >
+                                                                            <div class="row">
+                                                                                <div class="col-lg-12"><h5><b>Datos del terreno </b></h5></div>
+                                                                                <hr>
+                                                                                <div class="col-lg-6">
+                                                                                    <div class="form-group">
+                                                                                        <label class="label-form"> Dueño Original:</label>
+                                                                                        {{terrenoDatos.Pertenece}}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-6">
+                                                                                    <div class="form-group">
+                                                                                        <label class="label-form"> Superficie :</label>
+                                                                                        {{ terrenoDatos.Superficie | number}}
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="col-lg-12">
+                                                                                    <div class="form-group">
+                                                                                        <label class="label-form"> Datos sección :</label>
+                                                                                        Lote: {{terrenoDatos.lote}} - Etapa: {{terrenoDatos.etapa}} - Parcela: {{terrenoDatos.parcela}}
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
+                                                                            <hr>
+                                                                        </div>                                                                        
+                                                                        <div class="col-lg-6">
+                                                                            <div class="form-group">
+                                                                                <label class="label-form"> Selecciona Terreno </label>
+                                                                                <select *ngIf="clienteDetalles.Terrenos" class="form-control" (change)="obtenerContratoTerreno();" [(ngModel)]="IdTerrenoContrato" >
+                                                                                    <option value="0">Selecciona el terreno</option>
+                                                                                    <option  *ngFor=" let ter of clienteDetalles.Terrenos" value="{{ter.IdTerreno}}" > Lote: {{ter.lote}} - Etapa: {{ter.etapa}} - Parcela: {{ter.parcela}}</option>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-lg-6"><br><button *ngIf="contenidoContrato" class="btn btn-warning" (click)="enviarContratoCorreo();">Enviar contrato por correo</button></div>
+                                                                        <div class="col-xl-12 col-lg-12 col-xs-12" *ngIf="contenidoContrato">
+                                                                            <div class="card mb-3">
+                                                                                <div class="card-header "  style="color: #000 !important;">
+                                                                                    Contrato de nuevo cliente
+                                                                                </div>
+                                                                                <div class="card-body" *ngIf="contenidoContrato" [froalaEditor] [(froalaModel)]="contenidoContrato"></div>
+                                                                                <div class="col-lg-12">
+                                                                                    <div class="form-group">
+                                                                                        <label class="label-form"> &nbsp;</label><br>
+                                                                                        <button class="btn btn-primary pull-right" (click)="guardarContrato();">Guardar Contrato</button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
+                                                                </div>                                                                
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div>                                                    
                                                 </div>
                                             </div>
                                         </div>
@@ -291,48 +322,7 @@
                             </ngb-tab>                            -->
                         </ngb-tabset>    
                     </div>
-
-                        <!--                        
-                    <div class="col-lg-2">
-                        <div class="form-group">
-                            <button (click)="obtenerClientesActivos();" class="btn btn-dark"><i class="fa fa-users"></i> Ver Todos  </button>
-                        </div>
-                    </div>
-                    <div class="col-lg-2" *ngIf="clienteDetalles.IdCliente">
-                        <div class="form-group">
-                            <button (click)="estadosCuenta();" class="btn btn-success" ><i class="fa fa-credit-card"></i> Detalle Cliente</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-2" *ngIf="clienteDetalles.IdCliente">
-                        <div class="form-group">
-                            <button (click)="mensualidades();" class="btn btn-warning" style="color:#fff;"><i class="fa fa-address-card"></i> FINANCIAMIENTO</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-2" *ngIf="clienteDetalles.IdCliente">
-                        <div class="form-group">
-                            <button (click)="anualidades();" class="btn btn-info" ><i class="fa fa-home"></i> Anualidades</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-2" *ngIf="clienteDetalles.IdCliente">
-                        <div class="form-group">
-                            <button (click)="mantenimientos();" class="btn btn-danger" ><i class="fa fa-home"></i> Mantenimientos</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-2" *ngIf="clienteDetalles.IdCliente">
-                        <div class="form-group">
-                            <button (click)="ingresosExtra();" class="btn btn-primary" ><i class="fa fa-home"></i> Certificados</button>
-                        </div>
-                    </div>-->
                 </div>
-<!--                <div class="row" *ngIf="clientesTodosVista">
-                    <div class="col-lg-12">
-                        <div class="form-group"> 
-                            <label class="label-form"> Nombre </label>
-                            <input id="typeahead-format" (keyup)="campoNombre();"  placeholder="Encontrar por nombre del cliente:" type="text" class="form-control" [(ngModel)]="nombreCliente" [ngbTypeahead]="filtrarCliente" (selectItem)="estadosCuenta($event.item);" [resultFormatter]="formatter" />
-                        </div>
-                        <br>
-                    </div>
-                </div>-->
                 <div class="row" *ngIf="clientesTodos && !clienteDetalles.IdCliente">
                     <div class="col-lg-12">
                         <table class="table table-hover table-stripped" *ngIf="clientesTodos">
