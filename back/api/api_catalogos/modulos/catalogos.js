@@ -35,7 +35,7 @@ module.exports = class Catalogos {
                         }
                         r.Codigo += `${numCliente}${r.IdCliente}`; 
                         r.Saldo_total = r.Saldo_credito + r.Saldo_adeudo + r.Saldo_mantenimiento + r.Saldo_agua + r.Saldo_certificado +r.Saldo_anualidad;
-                        console.log('saldo',r);
+                        //console.log('saldo',r);
                     })
                     return resolve({Data: res, error: false});
                 }else{
@@ -48,6 +48,7 @@ module.exports = class Catalogos {
         return new Promise((resolve, reject)=>{
             // as cli JOIN Clientes_terrenos as cter on cli.IdCliente = cter.IdCliente JOIN Terrenos as ter on ter.IdTerreno = cter.IdTerreno;
             mysql.ejecutar('SELECT * from Clientes_terrenos as cter JOIN Terrenos as ter on ter.IdTerreno = cter.IdTerreno').then((res)=>{
+                console.log('res',res);
                 return resolve({Data: res, error: false});
             }).catch(err=>{ console.log('error',err); reject(err);})
         })

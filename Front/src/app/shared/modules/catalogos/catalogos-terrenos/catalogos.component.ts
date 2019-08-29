@@ -17,6 +17,7 @@ export class CatalogosTerrenosComponent implements OnInit {
     terrenosTodos;datosTerrenos;vistaCentro;
     chksTerrenos = [];parcelas = []; etapas=[]; lotes = []; estatusTodos = [];
     parcelaFiltro;loteFiltro;etapaFiltro;estatusFiltro;
+    detalleTerrenos;textoTerreno;
     @ViewChild('datatableTerrenos')datatableTerrenos;
     frmSolicitud: FormGroup; // Formulario de solicitud
     constructor(private catalogosService : CatalogosService,private fb: FormBuilder) {
@@ -39,38 +40,79 @@ export class CatalogosTerrenosComponent implements OnInit {
     filtrarTerrenos(){
         let filtrados = this.terrenosTodos;
         //console.log('filtrados',filtrados);
+        if((this.textoTerreno) && filtrados){
+            let coincidencias = [];
+            filtrados.forEach((dat)=>{
+                let validado = false;
+                if(dat.Etapa.toString().toUpperCase().indexOf(this.textoTerreno.toUpperCase()) > -1){
+                    validado = true;
+                }
+                if(dat.Parcela.toString().toUpperCase().indexOf(this.textoTerreno.toUpperCase()) > -1){
+                    validado = true;
+                }
+                if(dat.Pertenece.toString().toUpperCase().indexOf(this.textoTerreno.toUpperCase()) > -1){
+                    validado = true;
+                }
+                if(dat.Lote.toString().toUpperCase().indexOf(this.textoTerreno.toUpperCase()) > -1){
+                    validado = true;
+                }
+                if(validado){ coincidencias.push(dat);}
+            });
+            filtrados = (coincidencias[0])?coincidencias:filtrados;
+        }
         filtrados = (this.parcelaFiltro != '0')?filtrados.filter(f=>f.Parcela == this.parcelaFiltro):filtrados;
         filtrados = (this.loteFiltro != '0')?filtrados.filter(f=>f.Lote == this.loteFiltro):filtrados;
         filtrados = (this.etapaFiltro != '0')?filtrados.filter(f=>f.Etapa == this.etapaFiltro):filtrados;
         filtrados = (this.estatusFiltro != '0')?filtrados.filter(f=>f.Estado == this.estatusFiltro):filtrados;
         //console.log('filtrados',filtrados);
+        /*
         let datosOrdenados = {Opciones:{Eliminar:true,Seleccionar: true,Editar:true,Detalles:true},Datos:filtrados};
 
         this.datosTerrenos = datosOrdenados;
         if(this.datatableTerrenos != null){
             this.datatableTerrenos._reiniciarRegistros(datosOrdenados);
         }
-        this.datosTerrenos = datosOrdenados;
+        this.datosTerrenos = datosOrdenados;*/
+        this.datosTerrenos = filtrados;
         this._recorrerFiltros(filtrados);
 
+    }
+    detalleTerreno(ter){
+        this.detalleTerrenos = false;
+        this.detalleTerrenos =  ter;
+    }
+    guardarCambiosTerreno(){
+        console.log('guardar datos',this.detalleTerrenos);
+        this.catalogosService.actualizarDatosTerreno(this.detalleTerrenos).then(res=>{
+            let tipo = res['Tipo'];
+            swal('Exito', `${res['Operacion']}`, tipo);
+            this.verCatalogoTerrenos({});
+            this.detalleTerrenos = false;
+        }).catch(err=>{
+            this.detalleTerrenos = false;
+            console.log('error obteniendo catalogo', err);
+        })
     }
     verCatalogoTerrenos(event){
         console.log('entro',event);
         this.catalogosService.obtenerTerrenos().then(res=>{
             let datos = this._ordenarDatosTerrenos(res['Data']);
+            
             this._recorrerFiltros(datos);
-            console.log('par',this.parcelas);
-            console.log('lot',this.lotes);
-            console.log('eta',this.etapas);
+            // console.log('par',this.parcelas);
+            // console.log('lot',this.lotes);
+            // console.log('eta',this.etapas);
             this.vistaCentro = true;
             this.terrenosTodos =  datos;
+            this.datosTerrenos = datos;
+            /*
             let datosOrdenados = {Opciones:{Eliminar:true,Seleccionar: true,Editar:true,Detalles:true},Datos:datos};
             console.log('res',this.terrenosTodos);
             this.datosTerrenos = datosOrdenados;
             if(this.datatableTerrenos != null){
                 this.datatableTerrenos._reiniciarRegistros(datosOrdenados);
             }
-            this.datosTerrenos = datosOrdenados;
+            this.datosTerrenos = datosOrdenados;*/
             console.log('res',this.datosTerrenos);
         }).catch(err=>{
             console.log('err',err);
@@ -162,6 +204,31 @@ export class CatalogosTerrenosComponent implements OnInit {
             swal('Error','Debes seleccionar al menos un gasto para usar este boton', 'error');
         }
     }
+    confirmarBorrarTerreno(ter){
+        return new Promise ((resolve,reject)=>{
+            swal({ title: 'Introduce el codigo del Terreno para confirmar',
+              html: ``,
+              input:'text',
+              type: 'warning',
+              showCancelButton: true,
+              cancelButtonColor:'#D33',
+              confirmButtonText: 'Confirmar'
+            }).then((result)=>{
+              if(result.value == `TER-${ter.IdTerreno}`){
+                let datosEliminar =  {Ids: [ter.IdTerreno]};
+                console.log('datos eli',datosEliminar);
+                // return  this.catalogosService.borrarMultiplesTerrenos(datosEliminar);
+              }else{
+                return Promise.reject({error:false});
+              }
+            }).then((termino)=>{
+                swal('Exito', `Haz Eliminado la parcela ${ter.Parcela} correctamente`,'success');
+                this.verCatalogoTerrenos({});
+            }).catch((err)=>{
+                console.log('cancelar');
+            });
+        });
+    }
     importarArchivo($event){
         return new Promise((resolve, reject) => {
             try {
@@ -207,7 +274,7 @@ export class CatalogosTerrenosComponent implements OnInit {
         let datosOrdenados = [];
         if(datos){
             datos.forEach(d=>{
-                datosOrdenados.push({Etapa :d.etapa, Lote: d.lote, Parcela: d.parcela, Superficie:d.Superficie,
+                datosOrdenados.push({ IdTerreno: d.IdTerreno, Etapa :d.etapa, Lote: d.lote, Parcela: d.parcela, Superficie:d.Superficie,
                 Pertenece:d.Pertenece, Estado: d.Estado, Asignado: d.Asignado, Activo: d.Activo, ObjCompleto:d});
             });
         }

@@ -55,8 +55,10 @@ export class CatalogoClientesComponent implements OnInit {
         Parcela = Lote = Etapa = '-';
         datos.forEach(dat=>{
             let ter =  this.terrenos.filter(ob => ob.IdCliente ==  dat.IdCliente);
+//            console.log('dat',dat);
             if(!ter[0]){
                 ter =  {IdTerreno:0,Parcela,Etapa,Lote}
+                Parcela = Lote = Etapa = '';
             }else{
                 Parcela = Lote = Etapa = '';
                 let aux = (ter.length > 1)?` y `:``;
@@ -71,6 +73,7 @@ export class CatalogoClientesComponent implements OnInit {
             dat.Parcela = Parcela;
             dat.Lote = Lote;
             dat.Etapa = Etapa;
+//            console.log('ter',ter);
             dat.Terrenos = ter;
             dat.Fecha_nacimiento =  dat.Fecha_nacimiento.split('T')[0];
             datosOrdenados.push(dat);
@@ -85,6 +88,8 @@ export class CatalogoClientesComponent implements OnInit {
             if(this.clienteDetalles.Terrenos[0]){
                 this.mensualidades();
                 this.anualidades();
+            }else{
+                this.clienteDetalles.Terrenos = [];
             }
             this.mantenimientos();
         }
@@ -284,6 +289,7 @@ export class CatalogoClientesComponent implements OnInit {
         console.log('detalle',this.clienteDetalles);
         let totalTerrenos =  this.clienteDetalles.Terrenos.length;
         console.log('totalTerrenos',totalTerrenos);
+        
         this.clienteDetalles.Terrenos.forEach(t=>{
             t.Estado = (t.Estado)?t.Estado:'SIN ESTADO';
             console.log('tCOT',t);
