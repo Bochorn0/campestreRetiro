@@ -16,6 +16,7 @@ import { StatModule} from './stat/stat.module';
 import { PageHeaderModule } from './page-header/page-header.module';
 import { ChartsModule as Ng2Charts } from 'ng2-charts';
 import { NgbCarouselModule, NgbAlertModule, NgbTypeaheadModule,NgbTabsetModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxPaginationModule } from 'ngx-pagination';
 import { AuthGuard } from '../guard/auth.guard';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 //import { AngularPrint} from 'angular-print';
@@ -58,7 +59,8 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     NgbTypeaheadModule.forRoot(),
     FroalaEditorModule.forRoot(), 
     FroalaViewModule.forRoot(),
-    NgbTabsetModule.forRoot()
+    NgbTabsetModule.forRoot(),
+    NgxPaginationModule
    // AngularPrint
   ],
   exports: [
@@ -84,7 +86,8 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     NgbTypeaheadModule,
     FroalaEditorModule,
     FroalaViewModule,
-    NgbTabsetModule
+    NgbTabsetModule,
+    NgxPaginationModule
    // AngularPrint
   ],
   providers:[AuthGuard]

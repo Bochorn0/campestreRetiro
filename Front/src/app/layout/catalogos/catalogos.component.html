@@ -27,6 +27,11 @@
     </div>
     <!--Catalog de clientes--><!--[@routerTransition]-->
     <div class="row" *ngIf="datosTodos && !detalleCliente && !datosDetalle"  style="overflow: auto;">
+        <div class="col-lg-12">
+            <br>
+            <button class="btn btn-success float-right" (click)="generarNuevoCliente();"><i class="fa fa-plus-circle"></i> Nuevo </button>
+            <br><br>
+        </div>
         <div class="col-lg-4"> 
             <h4> Información General de Lotes </h4>
             <input type="text" class="form-control" (keyup)="buscarEn();" placeholder="Filtrar Clientes 'Nombre' 'Terreno' 'Estatus' " [(ngModel)]="textoBuscar">
@@ -104,7 +109,7 @@
                     </th>-->
                     <th>Ajustes</th>
                 </tr>
-                <tr *ngFor="let d of datosTodos.Datos">
+                <tr *ngFor="let d of datosTodos.Datos | paginate: { itemsPerPage: 10, currentPage: this.datosPage }">
                     <td>{{d.Nombre}}</td>
 <!--                    <td>{{d.Terrenos.length}}</td>-->
                     <td>{{d.InfoTerrenos}}</td>
@@ -120,6 +125,9 @@
                     </td>
                 </tr>
             </table>
+            <div class="text-right" >
+                <pagination-controls (pageChange)="this.datosPage = $event" ></pagination-controls>
+            </div>            
 <!--            <app-datatables-general #datatableDatosTodos *ngIf="datosTodos" [datosDatatable]="datosTodos"  ></app-datatables-general>-->
         </div>
     </div>
@@ -141,7 +149,7 @@
             <button class="btn btn-warning pull-right" (click)="verEditarCampos();">Editar</button>
         </div>
         <div class="col-lg-12" style="overflow: auto;">
-            <app-formulario-clientes-separado [Nuevo]="true" [datosCliente]="detalleCliente" ></app-formulario-clientes-separado>
+            <app-formulario-clientes-separado [Nuevo]="true" [datosCliente]="detalleCliente" (vista)="this.detalleCliente = false" ></app-formulario-clientes-separado>
 <!--            <app-datatables-general #datatableDetalles *ngIf="detalleCliente" (checks)="asignarChecks($event);" (edit)="editarRegistro($event);" (delete)="eliminarRegistro($event);" [datosDatatable]="detalleCliente" ></app-datatables-general>-->
         </div>
     </div>

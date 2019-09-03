@@ -164,6 +164,9 @@ export class CatalogosComponent implements OnInit {
         
         } 
     }
+    generarNuevoCliente(){
+        this.detalleCliente = {Terrenos:[{Id:0,Cotizacion:[{IdCotizacion:0}]}]}
+    }
     editarRegistro(obj){
         let datosArray = [];
         Object.keys(obj).forEach((key)=>{
