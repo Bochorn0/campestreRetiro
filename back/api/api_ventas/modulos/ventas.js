@@ -667,6 +667,7 @@ module.exports = class Catalogos {
                 let campos_terreno = `IdCliente, IdUsuario, IdTerreno, IdCotizacion,Fecha_insercion,Folio,Quien_guardo`;
                 let valores_terreno = `${datos.ClienteCompleto.IdCliente},${datos.Usuario.Datos.IdUsuario},${ter.IdTerreno},${(ter.IdCotizacion)?ter.IdCotizacion:0}, '${today}',${(ter.Folio)?ter.Folio:0},'${datos.Usuario.Datos.Nombre}'`;
                 let auxUp = (ter.Estado)?` ,Estado='${ter.Estado}' `:'  ';
+                auxUp += (ter.Pertenece)?` ,Pertenece='${ter.Pertenece}' `:``;
                 let updateTerrenos = `Update Terrenos Set Asignado = 1 ${auxUp} WHERE IdTerreno = ${ter.IdTerreno}`;
                 //console.log('rela',`INSERT INTO Clientes_terrenos (${campos_terreno}) VALUES (${valores_terreno});`);
                 terrenosGuardados.push(this._ordenarQuery(conexion,`INSERT INTO Clientes_terrenos (${campos_terreno}) VALUES (${valores_terreno});`));

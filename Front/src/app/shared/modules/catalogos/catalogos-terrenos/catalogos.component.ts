@@ -275,7 +275,7 @@ export class CatalogosTerrenosComponent implements OnInit {
         if(datos){
             datos.forEach(d=>{
                 datosOrdenados.push({ IdTerreno: d.IdTerreno, Etapa :d.etapa, Lote: d.lote, Parcela: d.parcela, Superficie:d.Superficie,
-                Pertenece:d.Pertenece, Estado: d.Estado, Asignado: d.Asignado, Activo: d.Activo, ObjCompleto:d});
+                Pertenece:d.Pertenece, Original: d.Original, Estado: d.Estado, Asignado: d.Asignado, Activo: d.Activo, ObjCompleto:d});
             });
         }
         return datosOrdenados;

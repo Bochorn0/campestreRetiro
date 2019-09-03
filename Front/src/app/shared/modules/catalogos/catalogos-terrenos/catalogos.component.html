@@ -68,7 +68,8 @@
                                                 <th>Lote</th>                                                
                                                 <th>Parcela</th>
                                                 <th>Superficie</th>
-                                                <th>Pertenece</th>
+                                                <th>Dueño original</th>
+                                                <th>Dueño Actual</th>
                                                 <th>Estado</th>
                                                 <th>Asignado</th>
                                                 <th>Activo</th>
@@ -82,6 +83,7 @@
                                                 <td>{{ter.Lote}}</td>
                                                 <td>{{ter.Parcela}}</td>
                                                 <td>{{ter.Superficie}}</td>
+                                                <td >{{ter.Original}}</td>
                                                 <td >{{ter.Pertenece}}</td>
                                                 <td >{{ter.Estado}}</td>
                                                 <td ><i class="fa fa-{{(ter.Asignado)?'check-circle text-success':'times-circle text-danger'}}"></i></td>
@@ -129,7 +131,7 @@
                                                 <input type="text" class="form-control" [(ngModel)]="detalleTerrenos.Superficie" />
                                             </div>
                                             <div class="form-group col-lg-6">
-                                                <label class="label-form"><b>Dueño Original</b></label>
+                                                <label class="label-form"><b>Dueño Actual</b></label>
                                                 <input type="text" class="form-control" [(ngModel)]="detalleTerrenos.Pertenece" />
                                             </div>
                                             <!-- <div class="form-group col-lg-6">
