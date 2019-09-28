@@ -19,7 +19,7 @@ export class CatalogoClientesComponent implements OnInit {
     clientesTodosVista;nombreCliente;mensualidadesVista;contenidoContrato;anualidadesVista;
     diaMantenimiento;importeMantenimiento;IdTerrenoMantenimiento;IdTerrenoContrato;mantenimientosTodos;
     idTerrenoMensualidad;datosDetalle;terrenoDatos;
-    parcelaFiltro;loteFiltro;etapaFiltro;estatusFiltro;
+    parcelaFiltro;loteFiltro;etapaFiltro;estatusFiltro;textoCliente;
     @Output() public nuevaOperacion = new EventEmitter();
     constructor(private catalogosService : CatalogosService, private ventasService: VentasService) {
         this.obtenerClientesActivos();
@@ -36,10 +36,36 @@ export class CatalogoClientesComponent implements OnInit {
     filtrarTerrenos(){
         let filtrados = this.clientesTodosTodos;
         //console.log('filtrados',filtrados);
+        if((this.textoCliente) && filtrados){
+            let coincidencias = [];
+            filtrados.forEach((dat)=>{
+                let validado = false;
+                if(dat.Nombre.toString().toUpperCase().indexOf(this.textoCliente.toUpperCase()) > -1){
+                    validado = true;
+                }
+/*                if(dat.Etapa.toString().toUpperCase().indexOf(this.textoCliente.toUpperCase()) > -1){
+                    validado = true;
+                }
+                if(dat.Parcela.toString().toUpperCase().indexOf(this.textoCliente.toUpperCase()) > -1){
+                    validado = true;
+                }
+                if(dat.Pertenece.toString().toUpperCase().indexOf(this.textoCliente.toUpperCase()) > -1){
+                    validado = true;
+                }
+                if(dat.Lote.toString().toUpperCase().indexOf(this.textoCliente.toUpperCase()) > -1){
+                    validado = true;
+                }*/
+                if(validado){ coincidencias.push(dat);}
+            });
+            filtrados = (coincidencias[0])?coincidencias:filtrados;
+        }
         if(filtrados){
             let coincidencias = [];
             filtrados.forEach((dat)=>{
                 let validado = false;
+
+
+
                 if(dat.Terrenos[0]){
                     dat.Terrenos.forEach(ter=>{
                         if(this.etapaFiltro != 0 && ter.etapa == this.etapaFiltro){
@@ -222,7 +248,7 @@ export class CatalogoClientesComponent implements OnInit {
                     }else{
                         te.Mensualidades = {Datos: [{Fecha: '0000-00-00', Fecha_ultimo_abono: '0000-00-00', Importe:'-',Pagado : '-', Restante: '-', ObjCompleto: {}}]}
                     }
-                    //console.log('mensu',te.Mensualidades);
+                    console.log('mensu',te.Mensualidades);
                 })
                     this.clienteDetalles.Mensualidades = men['Data'];
                     //console.log('clientes',this.clienteDetalles);

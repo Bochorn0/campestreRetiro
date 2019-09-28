@@ -980,6 +980,7 @@ module.exports = class Catalogos {
     }
     Obtener_mensualidades(Id){
         return new Promise((resolve, reject)=>{
+            console.log(`SELECT * FROM Adeudos_clientes WHERE IdCliente =  ${Id} ORDER BY Fecha asc ;`);
             mysql.ejecutar(`SELECT * FROM Adeudos_clientes WHERE IdCliente =  ${Id} ORDER BY Fecha asc ;`).then((res)=>{
                 if(res[0]){
                     res.forEach(r=>{
