@@ -20,24 +20,27 @@
                         <div class="row" *ngIf="!detalleTerrenos">
                             <div class="col-lg-3">
                                 <h4> Parcela </h4>
-                                <select  class="form-control" [(ngModel)]="parcelaFiltro" (change)="filtrarTerrenos();" >
+                                <input id="typeahead-format" (keyup)="filtrarTerrenos();"   placeholder="Parcela:" type="text" class="form-control" [(ngModel)]="parcelaFiltro" [ngbTypeahead]="filtrarParcelas" (selectItem)="parcelaFiltro = $event.item; filtrarTerrenos();" [resultFormatter]="formatter" />
+                                <!-- <select  class="form-control" [(ngModel)]="parcelaFiltro" (change)="filtrarTerrenos();" >
                                     <option value="0">Todas</option>
                                     <option  *ngFor="let e of parcelas;" value="{{e.parcela}}">{{e.parcela}}</option>
-                                </select>
+                                </select> -->
                             </div>
                             <div class="col-lg-3">
                                 <h4> Lote </h4>
-                                <select  class="form-control" [(ngModel)]="loteFiltro" (change)="filtrarTerrenos();" >
+                                <input id="typeahead-format" (keyup)="filtrarTerrenos();"  placeholder="Lote:" type="text" class="form-control" [(ngModel)]="loteFiltro" [ngbTypeahead]="filtrarLotes" (selectItem)="loteFiltro = $event.item; filtrarTerrenos();"  [resultFormatter]="formatter" />
+                                <!-- <select  class="form-control" [(ngModel)]="loteFiltro" (change)="filtrarTerrenos();" >
                                     <option value="0">Todos</option>
                                     <option  *ngFor="let e of lotes;" value="{{e.lote}}">{{e.lote}}</option>
-                                </select>
+                                </select> -->
                             </div>
                             <div class="col-lg-3"> 
                                 <h4> Estapa </h4>
-                                <select  class="form-control" [(ngModel)]="etapaFiltro" (change)="filtrarTerrenos();" >
+                                <input id="typeahead-format" (keyup)="filtrarTerrenos();"  placeholder="Etapa:" type="text" class="form-control" [(ngModel)]="etapaFiltro" [ngbTypeahead]="filtrarEtapas" (selectItem)="etapaFiltro = $event.item; filtrarTerrenos();" [resultFormatter]="formatter" />
+                                <!-- <select  class="form-control" [(ngModel)]="etapaFiltro" (change)="filtrarTerrenos();" >
                                     <option value="0">Todas</option>
                                     <option  *ngFor="let e of etapas;" value="{{e.etapa}}">{{e.etapa}}</option>
-                                </select>
+                                </select> -->
                             </div>
                             <div class="col-lg-3">
                                 <h4> Estatus </h4>

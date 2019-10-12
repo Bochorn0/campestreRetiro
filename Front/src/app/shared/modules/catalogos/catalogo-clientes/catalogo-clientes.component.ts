@@ -25,14 +25,27 @@ export class CatalogoClientesComponent implements OnInit {
         this.obtenerClientesActivos();
         this.clienteDetalles = {};
         this.idTerrenoMensualidad = this.IdTerrenoMantenimiento =  this.IdTerrenoContrato = 0;
-        this.parcelaFiltro = this.loteFiltro =this.etapaFiltro = this.estatusFiltro = '0';
+        //this.parcelaFiltro = this.loteFiltro =this.etapaFiltro = 
+        this.estatusFiltro = '0';
     }
     formatter = (result: string) => result.toUpperCase();
     filtrarCliente = (text$: Observable<string>) =>
     text$.pipe( debounceTime(200), distinctUntilChanged(),
       map(term => term === ''?[]:this.nombresClientes.filter(ob => ob.toUpperCase().indexOf(term.toUpperCase()) > -1))
     );
-
+    filtrarParcelas = (text$: Observable<string>) =>
+    
+    text$.pipe( debounceTime(200), distinctUntilChanged(),
+        map(term => term === ''?[]:this.parcelas.map(o=>o.parcela).filter(ob => ob.toUpperCase().indexOf(term.toUpperCase()) > -1))
+    );    
+    filtrarLotes = (text$: Observable<string>) =>
+    text$.pipe( debounceTime(200), distinctUntilChanged(),
+        map(term => term === ''?[]:this.lotes.map(o=>o.lote).filter(ob => ob.toUpperCase().indexOf(term.toUpperCase()) > -1))
+    );    
+    filtrarEtapas = (text$: Observable<string>) =>
+    text$.pipe( debounceTime(200), distinctUntilChanged(),
+        map(term => term === ''?[]:this.etapas.map(o=>o.etapa).filter(ob => ob.toUpperCase().indexOf(term.toUpperCase()) > -1))
+    );    
     filtrarTerrenos(){
         let filtrados = this.clientesTodosTodos;
         //console.log('filtrados',filtrados);
@@ -63,21 +76,18 @@ export class CatalogoClientesComponent implements OnInit {
             let coincidencias = [];
             filtrados.forEach((dat)=>{
                 let validado = false;
-
-
-
                 if(dat.Terrenos[0]){
                     dat.Terrenos.forEach(ter=>{
-                        if(this.etapaFiltro != 0 && ter.etapa == this.etapaFiltro){
+                        if((this.etapas.find(o=>o.etapa == `${this.etapaFiltro}`))  && ter.etapa == this.etapaFiltro){
                             validado = true;
                         }
-                        if(this.parcelaFiltro != 0 && ter.parcela == this.parcelaFiltro){
+                        if((this.parcelas.find(o=>o.parcela == `${this.parcelaFiltro}`)) && ter.parcela == this.parcelaFiltro){
                             validado = true;
                         }
                         if(this.estatusFiltro != 0 && ter.Estado == this.estatusFiltro){
                             validado = true;
                         }
-                        if(this.loteFiltro != 0 && ter.lote == this.loteFiltro){
+                        if((this.lotes.find(o=>o.lote == `${this.loteFiltro}`))  && ter.lote == this.loteFiltro){
                             validado = true;
                         }
                     });

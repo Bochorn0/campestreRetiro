@@ -3,6 +3,8 @@ import { routerTransition } from '../../router.animations';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { CatalogosService } from '../../shared/services/catalogos.service';
 import * as moment  from 'moment';
+import {Observable} from 'rxjs';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 @Component({
     selector: 'app-catalogos',
     templateUrl: './catalogos.component.html',
@@ -22,7 +24,8 @@ export class CatalogosComponent implements OnInit {
     parcelas=[];lotes=[];etapas=[];estatusTodos=[]
     parcelaFiltro;loteFiltro;etapaFiltro;estatusFiltro;
     constructor(private fb: FormBuilder, private catalogosService: CatalogosService) { 
-        this.parcelaFiltro = this.loteFiltro = this.etapaFiltro = this.estatusFiltro = '0';
+        //this.parcelaFiltro = this.loteFiltro = this.etapaFiltro = 
+        this.estatusFiltro = '0';
         this.frmCliente = fb.group({
             'Nombre': null,
             'Correo':  null,
@@ -48,12 +51,26 @@ export class CatalogosComponent implements OnInit {
             'Saldo_certificado': null,
             'Saldo_credito':  null,
             'Periodo_cobro': null,
+            'Observaciones':null,
             'FileIFE': null,
             'FileComprobante': null,
             'Terrenos': []
         });                
     }
 
+    filtrarParcelas = (text$: Observable<string>) =>
+    
+    text$.pipe( debounceTime(200), distinctUntilChanged(),
+        map(term => term === ''?[]:this.parcelas.map(o=>o.parcela).filter(ob => `${ob}`.toUpperCase().indexOf(term.toUpperCase()) > -1))
+    );    
+    filtrarLotes = (text$: Observable<string>) =>
+    text$.pipe( debounceTime(200), distinctUntilChanged(),
+        map(term => term === ''?[]:this.lotes.map(o=>o.lote).filter(ob => `${ob}`.toUpperCase().indexOf(term.toUpperCase()) > -1))
+    );    
+    filtrarEtapas = (text$: Observable<string>) =>
+    text$.pipe( debounceTime(200), distinctUntilChanged(),
+        map(term => term === ''?[]:this.etapas.map(o=>o.etapa).filter(ob => `${ob}`.toUpperCase().indexOf(term.toUpperCase()) > -1))
+    );    
     ngOnInit() {}
     buscarEn(){
         let dataFiltrada;
@@ -93,12 +110,15 @@ export class CatalogosComponent implements OnInit {
             });
         });
 //        console.log('datosF',datosF);
-        datosF = (this.parcelaFiltro != '0')?datosF.filter(f=>f['PARCELA'] == this.parcelaFiltro):datosF;
-        datosF = (this.loteFiltro != '0')?datosF.filter(f=>f['LOTE'] == this.loteFiltro):datosF;
-        datosF = (this.etapaFiltro != '0')?datosF.filter(f=>f['ETAPA'] == this.etapaFiltro):datosF;
+        // datosF = (this.parcelaFiltro != '0')?datosF.filter(f=>f['PARCELA'] == this.parcelaFiltro):datosF;
+        // datosF = (this.loteFiltro != '0')?datosF.filter(f=>f['LOTE'] == this.loteFiltro):datosF;
+        // datosF = (this.etapaFiltro != '0')?datosF.filter(f=>f['ETAPA'] == this.etapaFiltro):datosF;
+        datosF = (this.parcelas.find(o=>o.parcela == this.parcelaFiltro))?datosF.filter(f=>f['PARCELA'] == this.parcelaFiltro):datosF;
+        datosF = (this.lotes.find(o=>o.lote == this.loteFiltro))?datosF.filter(f=>f['LOTE'] == this.loteFiltro):datosF;
+        datosF = (this.etapas.find(o=>o.etapa == this.etapaFiltro))?datosF.filter(f=>f['ETAPA'] == this.etapaFiltro):datosF;        
         datosF = (this.estatusFiltro != '0')?datosF.filter(f=>f['ESTADO'] == this.estatusFiltro):datosF;
         let datosOrd = this._ordenarDatosTodos(datosF);
-//        console.log('datosF',datosF);
+        console.log('datosF',datosF);
         this._recorrerFiltros(datosOrd);
         this.datosTodos.Datos = datosOrd;
     }

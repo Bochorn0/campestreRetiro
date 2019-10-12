@@ -2,8 +2,12 @@ import { Component, OnInit,ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { routerTransition } from '../../../../router.animations';
 import { CatalogosService } from '../../../services/catalogos.service';
+import {Observable} from 'rxjs';
+import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
 import swal from 'sweetalert2';
 import * as moment from 'moment';
+
+
 
 @Component({
     selector: 'app-catalogos-terrenos',
@@ -24,10 +28,26 @@ export class CatalogosTerrenosComponent implements OnInit {
         this.frmSolicitud = fb.group({
             'File': [null]
         });
-        this.parcelaFiltro = this.loteFiltro =this.etapaFiltro = this.estatusFiltro = '0';
+//        this.parcelaFiltro = this.loteFiltro =this.etapaFiltro = 
+this.estatusFiltro = '0';
         this.verCatalogoTerrenos({});
     }
 
+    // <!-- <input id="typeahead-format" (keyup)="campoNombre();"  placeholder="Encontrar por nombre del cliente:" type="text" class="form-control" [(ngModel)]="nombreCliente" [ngbTypeahead]="filtrarCliente" (selectItem)="detalleCliente($event.item);" [resultFormatter]="formatter" /> -->
+    filtrarParcelas = (text$: Observable<string>) =>
+    
+    text$.pipe( debounceTime(200), distinctUntilChanged(),
+        map(term => term === ''?[]:this.parcelas.map(o=>o.parcela).filter(ob => ob.toUpperCase().indexOf(term.toUpperCase()) > -1))
+    );    
+    filtrarLotes = (text$: Observable<string>) =>
+    text$.pipe( debounceTime(200), distinctUntilChanged(),
+        map(term => term === ''?[]:this.lotes.map(o=>o.lote).filter(ob => ob.toUpperCase().indexOf(term.toUpperCase()) > -1))
+    );    
+    filtrarEtapas = (text$: Observable<string>) =>
+    text$.pipe( debounceTime(200), distinctUntilChanged(),
+        map(term => term === ''?[]:this.etapas.map(o=>o.etapa).filter(ob => ob.toUpperCase().indexOf(term.toUpperCase()) > -1))
+    );    
+            
     ngOnInit() { }
     obtenerContratosActivos(event){
         this._limpiarVariables();
@@ -39,7 +59,8 @@ export class CatalogosTerrenosComponent implements OnInit {
     }
     filtrarTerrenos(){
         let filtrados = this.terrenosTodos;
-        //console.log('filtrados',filtrados);
+        console.log('filtrados',filtrados);
+        console.log('par',this.parcelaFiltro);
         if((this.textoTerreno) && filtrados){
             let coincidencias = [];
             filtrados.forEach((dat)=>{
@@ -60,9 +81,10 @@ export class CatalogosTerrenosComponent implements OnInit {
             });
             filtrados = (coincidencias[0])?coincidencias:filtrados;
         }
-        filtrados = (this.parcelaFiltro != '0')?filtrados.filter(f=>f.Parcela == this.parcelaFiltro):filtrados;
-        filtrados = (this.loteFiltro != '0')?filtrados.filter(f=>f.Lote == this.loteFiltro):filtrados;
-        filtrados = (this.etapaFiltro != '0')?filtrados.filter(f=>f.Etapa == this.etapaFiltro):filtrados;
+        console.log('parcelas',this.parcelas);
+        filtrados = (this.parcelas.find(o=>o.parcela == `${this.parcelaFiltro}`))?filtrados.filter(f=>f.Parcela == `${this.parcelaFiltro}`):filtrados;
+        filtrados = (this.lotes.find(o=>o.lote == `${this.loteFiltro}`))?filtrados.filter(f=>f.Lote == `${this.loteFiltro}`):filtrados;
+        filtrados = (this.etapas.find(o=>o.etapa == `${this.etapaFiltro}`))?filtrados.filter(f=>f.Etapa == `${this.etapaFiltro}`):filtrados;
         filtrados = (this.estatusFiltro != '0')?filtrados.filter(f=>f.Estado == this.estatusFiltro):filtrados;
         //console.log('filtrados',filtrados);
         /*
@@ -74,7 +96,9 @@ export class CatalogosTerrenosComponent implements OnInit {
         }
         this.datosTerrenos = datosOrdenados;*/
         this.datosTerrenos = filtrados;
-        this._recorrerFiltros(filtrados);
+        if(this.datosTerrenos[0]){
+            this._recorrerFiltros(filtrados);
+        }
 
     }
     detalleTerreno(ter){

@@ -70,6 +70,7 @@ export class FormularioClientesComponent implements OnInit {
             'Saldo_certificado': null,
             'Saldo_credito':  null,
             'Periodo_cobro': null,
+            'Observaciones':null,
             'FotoIfe': null,
             'Comprobante':null,
             'Terrenos': []
@@ -161,6 +162,7 @@ export class FormularioClientesComponent implements OnInit {
                 'Saldo_certificado':this.datosCliente.Saldo_certificado,
                 'Saldo_credito': this.datosCliente.Saldo_credito,
                 'Periodo_cobro':this.datosCliente.Periodo_cobro,
+                'Observaciones':this.datosCliente.Observaciones,
                 'FotoIfe': null,
                 'Comprobante':null,
                 'Terrenos': this.terrenosCliente,

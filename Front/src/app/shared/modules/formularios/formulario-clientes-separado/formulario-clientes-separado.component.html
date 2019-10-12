@@ -354,12 +354,12 @@
                                 <input type="number" placeholder="Monto Mantenimiento"  formControlName="Importe_mantenimiento" class="form-control" required />
                             </div>
                         </div>
-                        <div class="col-lg-3">
+<!--                        <div class="col-lg-3">
                             <div class="form-group">
                                 <label class="label-form">  Saldo Mantenimiento </label>
                                 <input type="number" placeholder="Saldo Mantenimiento"  formControlName="Saldo_mantenimiento" class="form-control" required />
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-lg-3">
                             <div class="form-group">
                                 <b style="color: #C00;"> * </b>
@@ -393,7 +393,7 @@
                         </div>
                         <div class="col-lg-4">
                             <div class="form-group">
-                                <label class="label-form"> Monto de adeudo Mantenimiento </label>
+                                <label class="label-form"> Adeudo de Mantenimiento </label>
                                 <div class="input-group mb-3">
                                     <input  type="number" placeholder="Monto de adeudo Mantenimiento"  formControlName="Saldo_mantenimiento" class="form-control" required >
                                     <div class="input-group-append">
@@ -401,6 +401,9 @@
                                     </div>
                                 </div>    
                             </div>
+                        </div>
+                        <div class="col-lg-12">
+                                <textarea  type="text" placeholder="Observaciones"  formControlName="Observaciones" class="form-control" ></textarea>                            
                         </div>
                         <div class="col-lg-12">
                             <app-datatables-general #datatableMantenimientos *ngIf="datosMantenimientos" [datosDatatable]="datosMantenimientos"  ></app-datatables-general>

@@ -38,7 +38,31 @@
         </div>
         <div class="col-lg-6"> 
             <div class="row">
-                <div class="col-lg-4">
+                    <div class="col-lg-4">
+                        <h4> Parcela </h4>
+                        <input id="typeahead-format" (keyup)="buscarEn();"   placeholder="Parcela:" type="text" class="form-control" [(ngModel)]="parcelaFiltro" [ngbTypeahead]="filtrarParcelas" (selectItem)="parcelaFiltro = $event.item; buscarEn();" [resultFormatter]="formatter" />
+                        <!-- <select  class="form-control" [(ngModel)]="parcelaFiltro" (change)="filtrarTerrenos();" >
+                            <option value="0">Todas</option>
+                            <option  *ngFor="let e of parcelas;" value="{{e.parcela}}">{{e.parcela}}</option>
+                        </select> -->
+                    </div>
+                    <div class="col-lg-4">
+                        <h4> Lote </h4>
+                        <input id="typeahead-format" (keyup)="buscarEn();"  placeholder="Lote:" type="text" class="form-control" [(ngModel)]="loteFiltro" [ngbTypeahead]="filtrarLotes" (selectItem)="loteFiltro = $event.item; buscarEn();"  [resultFormatter]="formatter" />
+                        <!-- <select  class="form-control" [(ngModel)]="loteFiltro" (change)="filtrarTerrenos();" >
+                            <option value="0">Todos</option>
+                            <option  *ngFor="let e of lotes;" value="{{e.lote}}">{{e.lote}}</option>
+                        </select> -->
+                    </div>
+                    <div class="col-lg-4"> 
+                        <h4> Estapa </h4>
+                        <input id="typeahead-format" (keyup)="buscarEn();"  placeholder="Etapa:" type="text" class="form-control" [(ngModel)]="etapaFiltro" [ngbTypeahead]="filtrarEtapas" (selectItem)="etapaFiltro = $event.item; buscarEn();" [resultFormatter]="formatter" />
+                        <!-- <select  class="form-control" [(ngModel)]="etapaFiltro" (change)="filtrarTerrenos();" >
+                            <option value="0">Todas</option>
+                            <option  *ngFor="let e of etapas;" value="{{e.etapa}}">{{e.etapa}}</option>
+                        </select> -->
+                    </div>     
+                <!-- <div class="col-lg-4">
                     <h4> Parcela </h4>
                     <select  class="form-control" [(ngModel)]="parcelaFiltro" (change)="buscarEn();" >
                         <option value="0">Todas</option>
@@ -58,7 +82,7 @@
                         <option value="0">Todas</option>
                         <option  *ngFor="let e of etapas;" value="{{e.etapa}}">{{e.etapa}}</option>
                     </select>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="col-lg-2">
