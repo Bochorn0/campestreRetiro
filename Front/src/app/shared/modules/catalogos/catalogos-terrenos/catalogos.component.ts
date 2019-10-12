@@ -83,6 +83,13 @@ export class CatalogosTerrenosComponent implements OnInit {
     }
     guardarCambiosTerreno(){
         console.log('guardar datos',this.detalleTerrenos);
+        if(!this.detalleTerrenos.Asignado){
+            this.detalleTerrenos.Asignado = 0
+        }
+        if(!this.detalleTerrenos.Activo){
+            this.detalleTerrenos.Activo = 0
+        }
+        console.log('guardar datos',this.detalleTerrenos);
         this.catalogosService.actualizarDatosTerreno(this.detalleTerrenos).then(res=>{
             let tipo = res['Tipo'];
             swal('Exito', `${res['Operacion']}`, tipo);

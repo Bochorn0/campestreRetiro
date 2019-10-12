@@ -468,8 +468,8 @@ module.exports = class Catalogos {
             update += (datos.Superficie )?` superficie = '${datos.Superficie}',`:``;
             update += (datos.Pertenece )?` Pertenece = '${datos.Pertenece}',`:``;
             update += (datos.Estado )?` Estado = '${datos.Estado}',`:``;
-            update += (datos.Asignado && datos.Asignado == '0' )?` Asignado = 0,`:(datos.Asignado != '')?` Asignado = 1,`:``;
-            update += (datos.Activo && datos.Activo == '0' )?` Activo = 0,`:(datos.Activo != '')?` Activo = 1,`:``;
+            update += (!datos.Asignado || datos.Asignado == 0 )?` Asignado = 0,`:(datos.Asignado)?` Asignado = 1,`:'';
+            update += (!datos.Activo || datos.Activo == 0 )?` Activo = 0,`:(datos.Activo)?` Activo = 1,`:'';
             update = update.slice(0,-1);
             console.log(`UPDATE Terrenos ${update} WHERE IdTerreno= ${datos.IdTerreno};`);
             mysql.ejecutar(`UPDATE Terrenos ${update} WHERE IdTerreno= ${datos.IdTerreno};`).then((res)=>{

@@ -90,38 +90,72 @@
                                                                 <h4>Saldos Cliente</h4>
                                                             </div>
                                                              <div class="list-group">
-                                                                    <div class="list-group-item text-left" *ngIf="clienteDetalles.Credito_original > 0">
-                                                                    <b><i class="fa fa-dollar"></i> Crédito Original:</b>
-                                                                    $ {{clienteDetalles.Credito_original | number}}
-                                                                </div>
-                                                                <div class="list-group-item text-left text-primary" *ngIf="clienteDetalles.Saldo_adeudo > 0">
-                                                                    <b><i class="fa fa-money"></i> Saldo Enganche:</b>
-                                                                    $ {{clienteDetalles.Saldo_adeudo | number}}
-                                                                </div>
-                                                                <div class="list-group-item text-left text-primary" *ngIf="clienteDetalles.Saldo_credito > 0">
-                                                                    <b><i class="fa fa-credit-card"></i> Saldo Pendiente:</b>
-                                                                    $ {{clienteDetalles.Saldo_credito | number}}
-                                                                </div>
-                                                                <div class="list-group-item text-left text-danger" *ngIf="clienteDetalles.Saldo_mantenimiento > 0">
-                                                                    <b><i class="fa fa-home"></i> Saldo Mantenimiento:</b>
-                                                                    $ {{clienteDetalles.Saldo_mantenimiento | number}}
-                                                                </div>
-                                                                <div class="list-group-item text-left text-info" *ngIf="clienteDetalles.Saldo_agua > 0">
-                                                                    <b><i class="fa fa-dollar"></i> Saldo Agua:</b>
-                                                                    $ {{clienteDetalles.Saldo_agua | number}}
-                                                                </div>
-                                                                <div class="list-group-item text-left text-warning" *ngIf="clienteDetalles.Saldo_certificado > 0">
-                                                                    <b><i class="fa fa-address-card"></i> Saldo Certificado:</b>
-                                                                    $ {{clienteDetalles.Saldo_certificado | number}}
-                                                                </div>
-                                                                <div class="list-group-item text-success" *ngIf="clienteDetalles.Saldo_total > 0">
-                                                                    <b><i class="fa fa-dollar"></i> Saldo Total:</b>
-                                                                    $ {{clienteDetalles.Saldo_total | number}}
-                                                                </div>                                        
-                                                                <div class="list-group-item text-success" >
-                                                                    <b><i class="fa fa-dollar"></i> Proximo Mantenimiento:</b>
-                                                                    2020-01-01 | $ {{clienteDetalles.Monto_mantenimiento | number}}
-                                                                </div>                                                                
+                                                                 <table class="table table-stripped table-bordered">
+                                                                     <tr *ngIf="clienteDetalles.Credito_original > 0">
+                                                                         <td>
+                                                                            <b><i class="fa fa-dollar"></i> Crédito Original:</b>
+                                                                         </td>
+                                                                         <td>
+                                                                            $ {{clienteDetalles.Credito_original | number}}
+                                                                         </td>
+                                                                    </tr>
+                                                                    <tr *ngIf="clienteDetalles.Saldo_adeudo > 0">
+                                                                        <td>
+                                                                            <b><i class="fa fa-money"></i> Saldo Enganche:</b>
+                                                                        </td>
+                                                                        <td>
+                                                                            $ {{clienteDetalles.Saldo_adeudo | number}}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr *ngIf="clienteDetalles.Saldo_credito > 0">
+                                                                        <td>
+                                                                            <b><i class="fa fa-credit-card"></i> Saldo Pendiente:</b>
+                                                                        </td>
+                                                                        <td>
+                                                                            $ {{clienteDetalles.Saldo_credito | number}}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr *ngIf="clienteDetalles.Saldo_mantenimiento > 0">
+                                                                        <td>
+                                                                            <b><i class="fa fa-home"></i> Saldo Mantenimiento:</b>
+                                                                        </td>
+                                                                        <td>
+                                                                            $ {{clienteDetalles.Saldo_mantenimiento | number}}
+                                                                        </td>
+                                                                    </tr>  
+                                                                    <tr *ngIf="clienteDetalles.Saldo_agua > 0">
+                                                                        <td>
+                                                                            <b><i class="fa fa-dollar"></i> Saldo Agua:</b>
+                                                                        </td>
+                                                                        <td>
+                                                                            $ {{clienteDetalles.Saldo_agua | number}}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr *ngIf="clienteDetalles.Saldo_certificado > 0">
+                                                                        <td>
+                                                                            <b><i class="fa fa-address-card"></i> Saldo Certificado:</b>
+                                                                        </td>
+                                                                        <td>
+                                                                            $ {{clienteDetalles.Saldo_certificado | number}}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr *ngIf="clienteDetalles.Saldo_total > 0">
+                                                                        <td>
+                                                                            <b><i class="fa fa-dollar"></i> Saldo Total:</b>
+                                                                        </td>
+                                                                        <td>
+                                                                            $ {{clienteDetalles.Saldo_total | number}}
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr *ngIf="clienteDetalles.Credito_original > 0">
+                                                                        <td>
+                                                                            <b><i class="fa fa-dollar"></i> Proximo Mantenimiento:</b>
+                                                                        </td>
+                                                                        <td>
+                                                                            2020-01-01 | $ {{clienteDetalles.Monto_mantenimiento | number}}
+                                                                        </td>
+                                                                    </tr>                                                                    
+                                                                 </table>                                                                
                                                              </div>
                                                             <!-- <div class="card-footer"><a class="text-sm" href="#">Load more</a></div> -->
                                                         </div>
@@ -205,21 +239,42 @@
                                                                     </div>
                                                                 </div>                                                                
                                                             </div>
+                                                            <div class="card-header" style="color:#000 !important; ">
+                                                                <h4>Terrenos del cliente  </h4>
+                                                            </div>
+                                                            <div class="card-body row text-left">
+                                                                <div class="col-lg-12">
+                                                                    <table class="table table-stripped " *ngIf="clienteDetalles.Terrenos">
+                                                                        <tr><th>Parcela</th><th>Lote</th><th>Etapa</th></tr>
+                                                                        <tr  *ngFor="let t of clienteDetalles.Terrenos">
+                                                                            <td>
+                                                                                {{t.parcela}}
+                                                                            </td>
+                                                                            <td>
+                                                                                {{t.lote}}
+                                                                            </td>
+                                                                            <td>
+                                                                                {{t.etapa}}
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-12">
                                                         <br>
                                                         <div class="card card-default">
                                                             <div class="card-header" style="color:#000 !important; ">
-                                                                Terrenos y Contratos del cliente
+                                                                <h4>Contratos del cliente</h4>
                                                             </div>
                                                             <div class="card-body">
-                                                                <div class="col-lg-12">
+                                                                <!-- <div class="col-lg-12">
                                                                     <b>Parcelas:</b> {{clienteDetalles.Parcela}}
                                                                     <b>Lotes:</b> {{clienteDetalles.Lote}}
                                                                     <b>Etapas:</b> {{clienteDetalles.Etapa}}
                                                                     <b>Estatus:</b> {{clienteDetalles.Estado}}
-                                                                </div>
+                                                                </div> -->
                                                                 <div class="col-lg-12">
                                                                     <div class="row">
                                                                         <div class="col-lg-12" *ngIf="terrenoDatos" >
