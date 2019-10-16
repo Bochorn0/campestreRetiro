@@ -108,7 +108,7 @@
                                                         <button class="btn btn-warning pull-right" (click)="EditarCliente();"><i class="fa fa-pencil"></i> | Editar Cliente</button>
                                                         <br><br>
                                                     </div>
-                                                    <div class="col-lg-4">
+                                                    <div class="col-lg-6">
                                                         <div class="card card-default">
                                                             <div class="card-header" style="color:#000 !important; ">
                                                                 <h4>Saldos Cliente</h4>
@@ -183,8 +183,39 @@
                                                              </div>
                                                             <!-- <div class="card-footer"><a class="text-sm" href="#">Load more</a></div> -->
                                                         </div>
+                                                        <div class="card-header" style="color:#000 !important; ">
+                                                            <h4>Terrenos del cliente  </h4>
+                                                        </div>
+                                                        <div class="list-group text-left">
+                                                            <table class="table table-stripped table-bordered " *ngIf="clienteDetalles.Terrenos">
+                                                                <tr><th>Dueño Original</th><th>Dueño Actual</th><th>Superficie</th><th>Lote</th><th>Etapa</th><th>Parcela</th> <th>Estatus</th></tr>
+                                                                <tr  *ngFor="let t of clienteDetalles.Terrenos">
+                                                                    <td>
+                                                                        {{t.Original}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{t.Pertenece}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{t.Superficie}}
+                                                                    </td>                                                                        
+                                                                    <td>
+                                                                        {{t.lote}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{t.etapa}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{t.parcela}}
+                                                                    </td>                                                                        
+                                                                    <td>
+                                                                        {{t.Estado}}
+                                                                    </td>                                                                        
+                                                                </tr>
+                                                            </table>
+                                                        </div>                                                        
                                                     </div>
-                                                    <div class="col-lg-8" >
+                                                    <div class="col-lg-6" >
                                                         <div class="card card-default">
                                                             <div class="card-header" style="color:#000 !important; ">
                                                                 <h4>Datos Basicos </h4>
@@ -266,27 +297,6 @@
                                                                     <label class="label-form"> Observaciones:</label>
                                                                     {{ clienteDetalles.Observaciones}}
                                                                 </div> 
-                                                            </div>
-                                                            <div class="card-header" style="color:#000 !important; ">
-                                                                <h4>Terrenos del cliente  </h4>
-                                                            </div>
-                                                            <div class="card-body row text-left">
-                                                                <div class="col-lg-12">
-                                                                    <table class="table table-stripped " *ngIf="clienteDetalles.Terrenos">
-                                                                        <tr><th>Parcela</th><th>Lote</th><th>Etapa</th></tr>
-                                                                        <tr  *ngFor="let t of clienteDetalles.Terrenos">
-                                                                            <td>
-                                                                                {{t.parcela}}
-                                                                            </td>
-                                                                            <td>
-                                                                                {{t.lote}}
-                                                                            </td>
-                                                                            <td>
-                                                                                {{t.etapa}}
-                                                                            </td>
-                                                                        </tr>
-                                                                    </table>
-                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
