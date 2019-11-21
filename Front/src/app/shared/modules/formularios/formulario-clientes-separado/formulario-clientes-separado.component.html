@@ -157,59 +157,88 @@
                     </div>
                     <div class="col-lg-12" *ngFor="let ter of terrenosCliente; let t = index;">
                         <div class="row card">
-                                <div class="card-header"  style="color: #000 !important;">
-                                    <b> Parcela :  {{ter.parcela}} </b>
-                                    <button class="btn btn-danger pull-right" (click)="borrarTerreno(t);"><i class="fa fa-times"></i></button>
+                            <div class="card-header"  style="color: #000 !important;">
+                                <div class="row">
+                                    <div class="col-lg-10">
+                                        <div class="row">
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <b style="color: #C00;"> * </b>                                            
+                                                    <label class="label-form"> Parcela </label>
+                                                    <input type="hidden"[(ngModel)]="ter.IdTerreno">
+                                                    <input id="typeahead-format" title="Parcela # y propietario: {{ter.Pertenece}}" placeholder="Parcela:" type="text" class="form-control" [(ngModel)]="ter.parcela" [ngbTypeahead]="filtrarTerrenos" (selectItem)="seleccionarParcela($event, t)" [resultFormatter]="formatter" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <b style="color: #C00;"> * </b>                                            
+                                                    <label class="label-form"> Lote </label>                                        
+                                                    <input id="typeahead-format" title="Lote #: " placeholder="Lote:" type="text" class="form-control" [(ngModel)]="ter.lote" [ngbTypeahead]="filtrarLotes" (selectItem)="seleccionarLote($event)" [resultFormatter]="formatter" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <b style="color: #C00;"> * </b>                                            
+                                                    <label class="label-form"> Etapa </label>
+                                                    <input id="typeahead-format" title="Etapa #: " placeholder="Etapa:" type="text" class="form-control" [(ngModel)]="ter.etapa" [ngbTypeahead]="filtrarEtapas" (selectItem)="seleccionarEtapa($event)" [resultFormatter]="formatter" required/>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <b style="color: #C00;"> * </b>
+                                                    <label class="label-form"> Superficie </label>
+                                                    <input type="text"  title="Extension en m2: " placeholder="Superficie:" [(ngModel)]="ter.Superficie" class="form-control" required/> 
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-2">
+                                                <div class="form-group">
+                                                    <label class="label-form"> Folio </label>                                            
+                                                    <input type="text"  title="Folio #: " placeholder="Folio:" [(ngModel)]="ter.folio" class="form-control" required/> 
+                                                </div>
+                                            </div>                                    
+                                            <!-- <b> Parcela :  {{ter.parcela}} </b> -->
+                                            <div class="col-lg-2">
+                                                <label class="label-form"> Estatus </label>
+                                                <select class="form-control" [(ngModel)]="ter.Estado">
+                                                    <option value="SIN ESTADO">	SIN ESTADO</option>
+                                                    <option value="ACTIVO"> ACTIVO </option>
+                                                    <option value="POR CEDER"> POR CEDER </option>
+                                                    <option value="CEDIDO"> CEDIDO </option>
+                                                </select> 
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2">   
+                                        <div class="form-group">
+                                            <label class="label-form"> <br> </label><br>                                            
+                                            <button class="btn btn-danger pull-right" (click)="borrarTerreno(t);"><i class="fa fa-times"></i> | Quitar</button>
+                                        </div>                                                                         
+
+                                    </div>
                                 </div>
-                                <div class="card-body row">
-                                    <div class="col-lg-12">
-                                        <b> - TERRENO - </b>
-                                        <b> <input type="text" class="form-control" [(ngModel)]="ter.Pertenece" /></b>
-                                        <hr>
+                            </div>
+                            <div class="card-body row">
+                                    <div class="col-lg-12 text-center">
+                                        <b > - PROPIEDAD - </b>
                                     </div>
-                                    <div class="col-lg-2">
+                                    <div class="col-lg-6">
                                         <div class="form-group">
-                                            <b style="color: #C00;"> * </b>                                            
-                                            <label class="label-form"> Parcela </label>
-                                            <input type="hidden"[(ngModel)]="ter.IdTerreno">
-                                            <input id="typeahead-format" title="Parcela # y propietario: {{ter.Pertenece}}" placeholder="Parcela:" type="text" class="form-control" [(ngModel)]="ter.parcela" [ngbTypeahead]="filtrarTerrenos" (selectItem)="seleccionarParcela($event, t)" [resultFormatter]="formatter" required/>
+                                            <label class="label-form">Dueño actual </label>
+                                            <input type="text" class="form-control" [(ngModel)]="ter.Pertenece" />
                                         </div>
                                     </div>
-                                    <div class="col-lg-2">
+                                    <div class="col-lg-3">
                                         <div class="form-group">
-                                            <b style="color: #C00;"> * </b>                                            
-                                            <label class="label-form"> Lote </label>                                        
-                                            <input id="typeahead-format" title="Lote #: " placeholder="Lote:" type="text" class="form-control" [(ngModel)]="ter.lote" [ngbTypeahead]="filtrarLotes" (selectItem)="seleccionarLote($event)" [resultFormatter]="formatter" required/>
+                                            <label class="label-form">Certificado </label>
+                                            <input type="number" placeholder="Certificado" [(ngModel)]="ter.Cotizacion[0].SaldoCertificado" class="form-control" required />
                                         </div>
                                     </div>
-                                    <div class="col-lg-2">
-                                        <div class="form-group">
-                                            <b style="color: #C00;"> * </b>                                            
-                                            <label class="label-form"> Etapa </label>
-                                            <input id="typeahead-format" title="Etapa #: " placeholder="Etapa:" type="text" class="form-control" [(ngModel)]="ter.etapa" [ngbTypeahead]="filtrarEtapas" (selectItem)="seleccionarEtapa($event)" [resultFormatter]="formatter" required/>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <div class="form-group">
-                                            <b style="color: #C00;"> * </b>
-                                            <label class="label-form"> Superficie </label>
-                                            <input type="text"  title="Extension en m2: " placeholder="Superficie:" [(ngModel)]="ter.Superficie" class="form-control" required/> 
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <div class="form-group">
-                                            <label class="label-form"> Folio </label>                                            
-                                            <input type="text"  title="Folio #: " placeholder="Folio:" [(ngModel)]="ter.folio" class="form-control" required/> 
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2">
-                                        <label class="label-form"> Estatus </label>
-                                        <select class="form-control" [(ngModel)]="ter.Estado">
-                                            <option value="SIN ESTADO">	SIN ESTADO</option>
-                                            <option value="ACTIVO"> ACTIVO </option>
-                                            <option value="POR CEDER"> POR CEDER </option>
-                                            <option value="CEDIDO"> CEDIDO </option>
-                                        </select> 
+                                    <div class="col-lg-3 text-center">
+                                            <label class="label-form"> Pago Activo </label><br>
+                                            <label class="switch">
+                                                <input type="checkbox" [(ngModel)]="ter.ContieneMensualidad">
+                                                <span class="slider round"></span>
+                                            </label>
                                     </div>
                                     <!-- <div class="col-lg-3">
                                         <div class="form-group">
@@ -220,7 +249,9 @@
                                             </select>
                                         </div>
                                     </div> -->
-                                    <div class="col-lg-12"><b> - SALDOS - </b><hr></div>
+                            </div>
+                            <div class="row" *ngIf="ter.ContieneMensualidad">
+                                    <div class="col-lg-12 text-center"><b > - SALDOS - </b><hr></div>
                                     <div class="col-lg-3">
                                         <div class="form-group">
                                             <b style="color: #C00;"> * </b>                                            
@@ -274,14 +305,14 @@
                                             <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
                                         </div>
                                     </div>                                                        
-                                    <div class="col-lg-3">
+                                    <!-- <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="label-form">Certificado </label>
+                                            <input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
+                                            <!-- <input type="number" placeholder="Certificado" [(ngModel)]="ter.Cotizacion[0].SaldoCertificado" class="form-control" required /> -->
                                             <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
-                                            <input type="number" placeholder="Certificado" [(ngModel)]="ter.Cotizacion[0].SaldoCertificado" class="form-control" required />
-                                            <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
-                                        </div>
-                                    </div>                                    
+                                        <!-- </div> -->
+                                    <!-- </div>                                      -->
                                     <!-- <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="label-form">Mantenimiento mensual</label>
@@ -315,7 +346,7 @@
                                         </div>
                                     </div> -->
 <!--                                    <div class="col-lg-12"><b>TERRENO</b><hr></div>-->
-                                </div>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-12"><br><br></div>
