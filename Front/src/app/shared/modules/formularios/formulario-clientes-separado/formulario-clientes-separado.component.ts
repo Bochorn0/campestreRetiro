@@ -268,7 +268,6 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 let existeTerreno = this.terrenos.find(tt=>tt.parcela == t['PARCELA']);
                 existeTerreno = ((t.Superficie && t.etapa && t.parcela))?t:existeTerreno;
                 if(existeTerreno){
-                    //console.log('existe',existeTerreno);
                     existeTerreno.IdCotizacion = 0;
                     existeTerreno.Cotizacion = [t.Cotizacion];
                     existeTerreno.Estado = t.Estado;
@@ -289,7 +288,6 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                     });
                 }
             });
-            console.log('frm cliente',this.frmCliente);
             this.frmCliente =  this.fb.group({
                 'Nombre': this.datosCliente.Nombre,
                 'Nombre2': this.datosCliente.Nombre,
@@ -345,6 +343,12 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         let error = ``;
         if(this.pagina == 1){
             error = this._validarFormularioParte1();
+            if(this.terrenosCliente[0]){
+                this.terrenosCliente.forEach(tc=>{
+                    tc.Pertenece =  this.frmCliente.controls['Nombre'].value;
+                })
+            }
+            console.log('terren',this.terrenosCliente);
             this.pagina = (!error)?2:1 ;
             //this.frmCliente.controls['Pagina'].setValue( (!error)?2:1 );
         }else if(this.pagina == 2){
