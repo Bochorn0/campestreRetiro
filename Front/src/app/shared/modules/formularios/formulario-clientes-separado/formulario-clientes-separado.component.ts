@@ -236,6 +236,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         return new Promise((resolve, reject)=>{
             this.catalogosService.obtenerTerrenos().then(res=>{
                 let terr =  res['Data'].filter(ob=>ob.Asignado == 0);
+                //console.log('ter',terr);
                 this.terrenos = terr;
                 this.parcelas = this.terrenos.map((key)=>{
                     return key.parcela;
@@ -270,7 +271,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 if(existeTerreno){
                     existeTerreno.IdCotizacion = 0;
                     existeTerreno.Cotizacion = [t.Cotizacion];
-                    existeTerreno.Estado = t.Estado;
+                    existeTerreno.Estado = (existeTerreno.Estado)?existeTerreno.Estado:t.Estado;
                     this.terrenosCliente.push(existeTerreno);
                 }else{
                     this.terrenosCliente.push({
@@ -339,6 +340,16 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             console.log('err',err); 
         })        
     }
+    asignarTerrenosNombre(){
+        if(this.terrenosCliente[0]){
+            this.terrenosCliente.forEach(tc=>{
+                if(!this.datosCliente.IdCliente){
+                    tc.Pertenece =  this.frmCliente.controls['Nombre'].value;
+                }
+                tc.ContieneMensualidad = false
+            });
+        }
+    }
     validarFomulario(){
         let error = ``;
         if(this.pagina == 1){
@@ -350,6 +361,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             }
             console.log('terren',this.terrenosCliente);
             this.pagina = (!error)?2:1 ;
+            this.asignarTerrenosNombre();
             //this.frmCliente.controls['Pagina'].setValue( (!error)?2:1 );
         }else if(this.pagina == 2){
             error =this._validarFormularioParte2();
