@@ -15,7 +15,7 @@ import { FormularioClientesSeparadoModule } from './formularios/formulario-clien
 import { StatModule} from './stat/stat.module';
 import { PageHeaderModule } from './page-header/page-header.module';
 import { ChartsModule as Ng2Charts } from 'ng2-charts';
-import { NgbCarouselModule, NgbAlertModule, NgbTypeaheadModule,NgbTabsetModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbCarouselModule, NgbAlertModule, NgbTypeaheadModule,NgbTabsetModule ,NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AuthGuard } from '../guard/auth.guard';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
@@ -60,6 +60,7 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     FroalaEditorModule.forRoot(), 
     FroalaViewModule.forRoot(),
     NgbTabsetModule.forRoot(),
+    NgbModalModule.forRoot(),
     NgxPaginationModule
    // AngularPrint
   ],
@@ -73,7 +74,7 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     MantenimientoVentasModule,
     FinanciamientoVentasModule,
     IngresosExtraModule,
-    FormularioClientesModule,
+    FormularioClientesModule, 
     FormularioClientesSeparadoModule,
     DatatableModule,
     HttpModule,
@@ -87,10 +88,11 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     FroalaEditorModule,
     FroalaViewModule,
     NgbTabsetModule,
+    NgbModalModule,
     NgxPaginationModule
    // AngularPrint
   ],
   providers:[AuthGuard]
 })
 export class SharedModule { }
- 
+  

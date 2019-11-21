@@ -52,6 +52,8 @@ export class CatalogosComponent implements OnInit {
             'Saldo_credito':  null,
             'Periodo_cobro': null,
             'Observaciones':null,
+            'ObservacionesDatos':null,
+            'ObservacionesMantenimiento':null,
             'FileIFE': null,
             'FileComprobante': null,
             'Terrenos': []

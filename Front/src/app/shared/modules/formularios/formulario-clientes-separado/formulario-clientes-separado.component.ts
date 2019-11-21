@@ -5,6 +5,7 @@ import { VentasService } from '../../../../shared/services/ventas.service';
 import {Observable} from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import {NgbActiveModal,NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import swal from 'sweetalert2';
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -19,8 +20,8 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     //Datos Basicos
     IdCotizacion;cotizaciones;nombre;numIfe;comprobante;fotoIfe;origen;telefono;correo;fComprobante;fIfe;direccion;fNacimiento;
     terrenos;IdTerreno; datosTerreno;celReferencia1;celReferencia2;celReferencia3;pdfPagare;
-    parcelas;lotes;etapas;clienteDatosTodos; pagina ;dataCli;
-    datosMantenimientos;MantenimientosPreCalculados;
+    parcelas;lotes;etapas;clienteDatosTodos; pagina ;dataCli;activeModal;
+    datosMantenimientos;MantenimientosPreCalculados;terrenoCotizacion;
     //Datos Referencias
     referencia1;referencia2;referencia3;
     //Datos Terreno
@@ -35,7 +36,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     fechaPrimerMantenimiento;contratoAgua;importeMantenimiento;fechaParaCobro;
     datosTodosTotales;otroClienteTerreno;
     filasMantenimiento;
-    constructor(private fb: FormBuilder,private catalogosService : CatalogosService, private ventasService: VentasService) {
+    constructor(private fb: FormBuilder,private catalogosService : CatalogosService, private ventasService: VentasService, private modalService: NgbModal) {
         this.IdCotizacion = 0;
         this.datosTodosClientes();
         this._obtenerCotizaciones();
@@ -78,12 +79,18 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             'Saldo_credito':  null,
             'Periodo_cobro': null,
             'Observaciones':null,
+            'ObservacionesDatos':null,
+            'ObservacionesMantenimiento':null,
             'FotoIfe': null,
             'Comprobante':null,
             'Terrenos': []
         });        
         this.clienteDatosTodos = false;
         //console.log('datosCliente',this.datosCliente);
+    }
+    abrirModal(content){
+        this.activeModal = this.modalService.open(content, {windowClass: 'modal-holder', size: 'lg'});
+//        this.modalService.open(content).result.then((result) => { }, (reason) => { });
     }
     cambiosArea(){
         let mantenimientosGenerados = [];
@@ -120,7 +127,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                     }
             }else if(rows[0]){
                 let cols = rows[0].split("\t");
-                // console.log('cols',cols);
+                // console.log('cols',cols); 
 //                let monto = 0;
                 let acumulado = 0;
                 let fech_final = (parseFloat(moment().format('MM')) > 6)?`${moment().format('YYYY')}-07-01`:`${moment().format('YYYY')}-01-01`;
@@ -210,8 +217,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         }else{
             // let monto = this.frmCliente.controls['Saldo_mantenimiento'].value;
             // let datosConsulta = {Monto: monto};
-
-            console.log('datosConsulta',datosForm);
+//            console.log('datosConsulta',datosForm);
             this.ventasService.obtenerMantenimientoCalculado(datosForm).then(res=>{
                 let result =JSON.parse(JSON.stringify(res));
                 console.log('res',result);
@@ -226,6 +232,18 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         }
     }
     formatter = (result: string) => result.toUpperCase();
+    asignarCotizacion(event){
+        if(event.Cotizacion){
+            if(event.Cotizacion.DatosCotizacion){
+                let cot = event.Cotizacion.DatosCotizacion;
+//                console.log('ter',this.terrenoCotizacion);
+                this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Mensualidad = cot.Mensualidad ;
+                this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Enganche_Actual = cot.Enganche ;
+                this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Num_pagos_originales = cot.Num_pagos ;
+                this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Num_pagos_Actual = cot.Num_pagos ;
+            }
+        }
+    }
     _obtenerCotizaciones(){
         this.catalogosService.obtenerCotizaciones().then(res=>{
             this.cotizaciones = res['Data'];
@@ -317,6 +335,8 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 'Saldo_credito': this.datosCliente.Saldo_credito,
                 'Periodo_cobro':(this.datosCliente.Periodo_cobro)?this.datosCliente.Periodo_cobro:6,
                 'Observaciones':this.datosCliente.Observaciones,
+                'ObservacionesDatos':null,
+                'ObservacionesMantenimiento':null,
                 'FotoIfe': null,
                 'Comprobante':null,
                 'Terrenos': this.terrenosCliente,
@@ -364,7 +384,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
             this.asignarTerrenosNombre();
             //this.frmCliente.controls['Pagina'].setValue( (!error)?2:1 );
         }else if(this.pagina == 2){
-            error =this._validarFormularioParte2();
+            error = this._validarFormularioParte2();
             if(!error){
                 console.log('terren',this.terrenosCliente);
                 this.frmCliente.controls['Terrenos'].setValue( (!error)?this.terrenosCliente:this.frmCliente.controls['Terrenos'].value );
@@ -442,11 +462,13 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 error = `etapa no puede estar vacio `;
             }
             if(t.Estado != 'CEDIDO' && t.Estado != 'POR CEDER'){
-                if(t.Cotizacion[0].Mensualidad == 0){
-                    error = `Debes espeficificar un monto de mensualidad para el terreno ${t.parcela}`;
-                }
-                if(t.Cotizacion[0].Num_pagos_Actual == 0){
-                    error = `Debes espeficicar un total de pagos actuales para el terreno ${t.parcela}`;
+                if(t.ContieneMensualidad){
+                    if(t.Cotizacion[0].Mensualidad == 0){
+                        error = `Debes espeficificar un monto de mensualidad para el terreno ${t.parcela}`;
+                    }
+                    if(t.Cotizacion[0].Num_pagos_Actual == 0){
+                        error = `Debes espeficicar un total de pagos actuales para el terreno ${t.parcela}`;
+                    }
                 }
             }
 /*            if(t.Cotizacion[0].Fecha_inicio){

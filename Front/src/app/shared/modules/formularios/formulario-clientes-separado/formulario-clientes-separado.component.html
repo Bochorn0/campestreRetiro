@@ -91,11 +91,8 @@
                     <div class="col-lg-4">
                         <div class="form-group">
                             <label class="label-form"> Referencia 1 </label>
-                            <input accept="text/plain" type="text" placeholder="Referencia 1"  formControlName="Ref1" class="form-control" required />
-                            <!--<input type="text" placeholder="Nombre:" [(ngModel)]="referencia1" class="form-control"/>-->
-                            <br>
+                            <input accept="text/plain" type="text" placeholder="Referencia 1"  formControlName="Ref1" class="form-control" required /><br>
                             <input accept="text/plain" type="text" placeholder="Telefono 1"  formControlName="TelRef_1" class="form-control" required />
-                            <!--<input type="text" placeholder="Telefono:" [(ngModel)]="celReferencia1" class="form-control"/>-->
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -103,8 +100,6 @@
                             <label class="label-form"> Referencia 2 </label>
                             <input accept="text/plain" type="text" placeholder="Referencia 2"  formControlName="Ref2" class="form-control" required /><br>
                             <input accept="text/plain" type="text" placeholder="Telefono 2"  formControlName="TelRef_2" class="form-control" required />
-<!--                            <input type="text" placeholder="Nombre:" [(ngModel)]="referencia2" class="form-control"/><br>
-                            <input type="text" placeholder="Telefono:" [(ngModel)]="celReferencia2" class="form-control"/>-->
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -112,36 +107,14 @@
                             <label class="label-form"> Referencia 3 </label>
                             <input accept="text/plain" type="text" placeholder="Referencia 3"  formControlName="Ref3" class="form-control" required /><br>
                             <input accept="text/plain" type="text" placeholder="Telefono 3"  formControlName="TelRef_3" class="form-control" required />
-<!--                            <input type="text" placeholder="Nombre:" [(ngModel)]="referencia3" class="form-control"/>
-                            <br>
-                            <input type="text" placeholder="Telefono:" [(ngModel)]="celReferencia3" class="form-control"/>-->
                         </div>
                     </div>
-                    <!-- <div class="class-lg-12"><hr></div>
-                    <div class="col-lg-3">
+                    <div class="col-lg-12">
                         <div class="form-group">
-                            <label class="label-form">  Monto Mantenimiento </label>
-                            <input type="number" placeholder="Monto Mantenimiento"  formControlName="Importe_mantenimiento" class="form-control" required />
+                            <label class="label-form"> Obsercaciones </label>
+                            <textarea  type="text" placeholder="Observaciones"  formControlName="ObservacionesDatos" class="form-control" ></textarea>
                         </div>
                     </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <label class="label-form">  Saldo Mantenimiento </label>
-                            <input type="number" placeholder="Saldo Mantenimiento"  formControlName="Saldo_mantenimiento" class="form-control" required />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <label class="label-form"> Fecha inicio Mantenimiento </label>
-                            <input type="date" placeholder="Fecha Inicio" formControlName="Fecha_mantenimiento" class="form-control" required />
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <div class="form-group">
-                            <label class="label-form"> Periodo de Cobro Mantenimiento </label>
-                            <input type="number" placeholder="Periodo Mantenimiento"  formControlName="Periodo_cobro" class="form-control" required />
-                        </div>
-                    </div>                     -->
                     <div class="col-lg-12">
                         <button class="btn btn-primary pull-right" (click)="validarFomulario();" >Siguiente <i class="fa fa-arrow-right"></i></button>
                     </div>
@@ -208,18 +181,17 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-2">   
+                                    <div class="col-lg-2">
                                         <div class="form-group">
-                                            <label class="label-form"> <br> </label><br>                                            
+                                            <label class="label-form"> <br> </label><br>
                                             <button class="btn btn-danger pull-right" (click)="borrarTerreno(t);"><i class="fa fa-times"></i> | Quitar</button>
-                                        </div>                                                                         
-
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="card-body row">
-                                    <div class="col-lg-12 text-center">
-                                        <b > - PROPIEDAD - </b>
+                                    <div class="col-lg-12 text-center alert alert-primary" role="alert">
+                                        <b> - PROPIEDAD - </b>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
@@ -250,108 +222,84 @@
                                         </div>
                                     </div> -->
                             </div>
-                            <div class="row" *ngIf="ter.ContieneMensualidad">
-                                    <div class="col-lg-12 text-center"><b > - SALDOS - </b><hr></div>
-                                    <div class="col-lg-3">
+                            <div class="col-lg-12">
+                                <div class="row" *ngIf="ter.ContieneMensualidad">
+                                    <div class="col-lg-12 text-center  alert alert-danger" role="alert">
+                                        <b > - DETALLES DE PAGO - </b>
+                                    </div>
+                                    <hr>
+                                    <div class="col-lg-2">
                                         <div class="form-group">
-                                            <b style="color: #C00;"> * </b>                                            
-                                            <label class="label-form">Enganche Restante</label>
+                                            <b style="color: #C00;"> * </b>
+                                            <label class="label-form">Enganche</label>
                                             <input type="number" placeholder="Enganche" [(ngModel)]="ter.Cotizacion[0].Enganche_Actual" class="form-control" required />
                                             <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-2">
                                         <div class="form-group">
-                                            <b style="color: #C00;"> * </b>                                            
+                                            <b style="color: #C00;"> * </b>
                                             <label class="label-form"> Mensualidad </label>
                                             <input type="number" placeholder="Mensualidad" [(ngModel)]="ter.Cotizacion[0].Mensualidad" class="form-control" required />
                                             <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-2">
                                         <div class="form-group">
-                                            <b style="color: #C00;"> * </b>                                            
-                                            <label class="label-form">Numero de pagos Restantes</label>
+                                            <label class="label-form">Pagos Originales</label>
+                                            <input type="number" placeholder="Numero Pagos" [(ngModel)]="ter.Cotizacion[0].Num_pagos_originales" class="form-control" required />
+                                            <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
+                                        </div>
+                                    </div>                                    
+                                    <div class="col-lg-2">
+                                        <div class="form-group">
+                                            <b style="color: #C00;"> * </b>
+                                            <label class="label-form">Pagos Restantes</label>
                                             <input type="number" placeholder="Numero Pagos" [(ngModel)]="ter.Cotizacion[0].Num_pagos_Actual" class="form-control" required />
                                             <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
                                         </div>
                                     </div>
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-2">
                                         <div class="form-group">
-                                            <b style="color: #C00;"> * </b>                                            
-                                            <label class="label-form"> Fecha Inicio Mensualidad </label>
+                                            <b style="color: #C00;"> * </b>
+                                            <label class="label-form"> Primer Pago </label>
                                             <input type="date" placeholder="Fecha Inicio" [(ngModel)]="ter.Cotizacion[0].Fecha_inicio" class="form-control" required />
-                                            <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
                                         </div>
-                                    </div>                    
-                                    <div class="col-lg-3">
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <div class="form-group">
+                                            <label class="label-form"> <br> </label><br>
+                                            <button class="btn btn-success" (click)="abrirModal(modalCotizacion); terrenoCotizacion = ter"><i class="fa fa-columns"></i> | Cotización  </button>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="label-form"> Anualidad </label>
                                             <input type="number" placeholder="Anualidad" [(ngModel)]="ter.Cotizacion[0].Anualidad" class="form-control" required />
-                                            <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="label-form">Numero de pagos Anualidad</label>
                                             <input type="number" placeholder="Numero Pagos Anualidad" [(ngModel)]="ter.Cotizacion[0].Num_pagos_anualidad_Actual" class="form-control" required />
-                                            <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
                                         </div>
                                     </div>
                                     <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="label-form"> Fecha Inicio Anualidad </label>
                                             <input type="date" placeholder="Fecha Inicio" [(ngModel)]="ter.Cotizacion[0].Fecha_inicio_anualidad" class="form-control" required />
-                                            <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
-                                        </div>
-                                    </div>                                                        
-                                    <!-- <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label class="label-form">Certificado </label>
-                                            <input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
-                                            <!-- <input type="number" placeholder="Certificado" [(ngModel)]="ter.Cotizacion[0].SaldoCertificado" class="form-control" required /> -->
-                                            <!--<input type="number" [(ngModel)]="contratoAgua" placeholder="400"class="form-control">-->
-                                        <!-- </div> -->
-                                    <!-- </div>                                      -->
-                                    <!-- <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label class="label-form">Mantenimiento mensual</label>
-                                            <input  type="number" placeholder="Cuota de Mantenimiento"  [(ngModel)]="ter.Cotizacion[0].ImporteMantenimiento" class="form-control" required />
                                         </div>
                                     </div> -->
-                                    <!-- <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label class="label-form"> Primer Mantenimiento </label>
-                                            <input  type="date" placeholder="Primer Mantenimiento"  [(ngModel)]="ter.Cotizacion[0].FechaMantenimiento" class="form-control" required />
-                                        </div>
-                                    </div> -->
-                                    <!-- <div class="col-lg-3">
-                                        <div class="form-group">
-                                            <label class="label-form"> Periodo de cobro </label>
-                                            <select [(ngModel)]="ter.Cotizacion[0].PeriodoCobro" class="form-control " required>
-                                                <option value="0">Selecciona cada cuantos meses </option>
-                                                <option value="1">1 Mes</option>
-                                                <option value="2">2 Meses</option>
-                                                <option value="3">3 Meses</option>
-                                                <option value="4">4 Meses</option>
-                                                <option value="5">5 Meses</option>
-                                                <option value="6">6 Meses</option>
-                                                <option value="7">7 Meses</option>
-                                                <option value="8">8 Meses</option>
-                                                <option value="9">9 Meses</option>
-                                                <option value="10">10 Meses</option>
-                                                <option value="11">11 Meses</option>
-                                                <option value="12">12 Meses</option>
-                                            </select>
-                                        </div>
-                                    </div> -->
-<!--                                    <div class="col-lg-12"><b>TERRENO</b><hr></div>-->
+                                </div>                                 
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <textarea  type="text" placeholder="Observaciones"  ([ngModel])="ter.Observaciones" class="form-control" ></textarea>
+                                    </div>
+                                    <div class="col-lg-12"><br><br></div>
+                                </div>                                
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-12"><br><br></div>
-                        </div>
-                    </div> 
+                    </div>
                     <div class="col-lg-12">
                         <button class="btn btn-primary pull-right" (click)="validarFomulario();" >Siguiente <i class="fa fa-arrow-right"></i></button>
                         <button class="btn btn-info pull-right" (click)="this.pagina =1 " >Regresar <i class="fa fa-arrow-left"></i></button>
@@ -364,7 +312,7 @@
                             <div class="alert alert-danger" role="alert">
                                 Introduce los mantenimientos segun la tabla de generacion 
                             </div>
-                        </div>                    
+                        </div>
                     <div class="col-lg-12">
                         <textarea placeholder=" ENE-JUN 2016	JUL-DIC 2016	ENE-JUN 2017	JUL-DIC 2017
 1,500.00 	 1,500.00 	 1,500.00 	 1,500.00" class="form-control" rows="4" style="resize: none;" [(ngModel)]="filasMantenimiento" (change)="cambiosArea();"></textarea>
@@ -434,7 +382,7 @@
                             </div>
                         </div>
                         <div class="col-lg-12">
-                                <textarea  type="text" placeholder="Observaciones"  formControlName="Observaciones" class="form-control" ></textarea>                            
+                            <textarea  type="text" placeholder="Observaciones"  formControlName="ObservacionesMantenimiento" class="form-control" ></textarea>
                         </div>
                         <div class="col-lg-12">
                             <app-datatables-general #datatableMantenimientos *ngIf="datosMantenimientos" [datosDatatable]="datosMantenimientos"  ></app-datatables-general>
@@ -519,8 +467,17 @@
                         </div>
                 </div>
 <!--            </form>-->
-
-<!--            </form>-->
         </div>
     </div>
+    <ng-template #modalCotizacion let-modal class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-header">
+            <h4 class="modal-title">Generar Pagos con Cotizacion</h4>
+            <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <app-cotizador [datosCotizacionInput]="terrenoCotizacion" (vista)="asignarCotizacion($event); activeModal.dismiss();"></app-cotizador>
+        </div>
+    </ng-template>            
 </div>

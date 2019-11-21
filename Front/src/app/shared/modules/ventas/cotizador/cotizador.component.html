@@ -41,7 +41,7 @@
                         </div>
                         <div class="col-lg-2">
                             <div class="form-group">
-                                <label class="label-form"> Num. Pagos </label>
+                                <label class="label-form"> # Pagos </label>
                                 <input type="number" [(ngModel)]="pagosMensuales" (change)="calcularAmortizacion();" placeholder="72" class="form-control">
                             </div>
                         </div>
@@ -98,7 +98,10 @@
                             </div>
                         </div>
                         <div class="col-lg-12"><br></div>
-                        <div class="col-lg-12"><br><button *ngIf="cotizacionMensualidades" class="btn btn-primary pull-right" (click)="guardarCotizacion();">Guardar cotización</button></div>
+                        <div class="col-lg-12"><br>
+                            <button *ngIf="cotizacionMensualidades" class="btn btn-primary pull-right" (click)="guardarCotizacion();">Guardar cotización</button> 
+                            <button *ngIf="cotizacionMensualidades" class="btn btn-warning pull-right" (click)="bajarCotizacion();"><i class="fa fa-arrow-down"></i> Agregar Cotización</button>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit , ViewChild, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit , ViewChild, Input, Output, EventEmitter} from '@angular/core';
 import { routerTransition } from '../../../../router.animations';
 import { VentasService } from '../../../../shared/services/ventas.service'
 import swal from 'sweetalert2';
@@ -13,7 +13,7 @@ import * as moment from 'moment';
 export class CotizadorComponent implements OnInit {
     @ViewChild('datatableMensualidades')datatableMensualidades;
     @ViewChild('datatableAnualidades')datatableAnualidades;
-    
+    @Input('datosCotizacionInput') datosCotizacionInput: any
     vistaCentro;
     //Nueva Cotizacion
     cotizacionNueva;montoCredito;interesAnual;pagosMensuales;totalMensual;costoTotal;superficie;
@@ -26,10 +26,20 @@ export class CotizadorComponent implements OnInit {
         this.precioMetro = 140;
         this.cotizacionMensualidades = this.numAnualidades = 0;
         this.totalFinal = this.acumuladoMen = this.totalAnualidad = this.montoAnualidad = this.superficie = this.costoTotal = 0;
-
-
     }
-    ngOnInit() {}
+    ngOnInit() {
+        if(this.datosCotizacionInput){
+            let cot = this.datosCotizacionInput.Cotizacion[0];
+            console.log('datosCot',this.datosCotizacionInput);
+            this.superficie = cot.Superficie;
+            this.precioMetro = 150;
+            this.fPrimeraMensualidad = (cot.Fecha_inicio)?cot.Fecha_inicio:this.fPrimeraMensualidad;
+            this.interesAnual  = 18;
+            this.enganche = cot.Enganche;
+            this.pagosMensuales = 72;
+            this.calcularAmortizacion(false);
+        }
+    }
     calcularAmortizacion(forzado){
         //Se calcula el costo total  y el monto del crédito
         let totalActual =  this.totalMensual;
@@ -111,7 +121,6 @@ export class CotizadorComponent implements OnInit {
             datos.push({ Fecha:fecha_pivote ,Pago: i,Mensualidad: this.totalMensual.toFixed(2), Abono: restanteMensual.toFixed(2) });
             if(i%12 == 0){
                 this.numAnualidades ++;
-
                 datos.push({ Fecha:fecha_pivote ,Pago: (i/12),Mensualidad: 'Total = ', Abono: totalAnual.toFixed(2) });
                 totalAnual = 0;
             }
@@ -142,9 +151,17 @@ export class CotizadorComponent implements OnInit {
                 console.log('res',res);
                 let tipo = res['Tipo'];
                 swal('Exito', `${res['Operacion']}`, tipo);
-                this.vista.emit({Activa : 'Contrato'});
+                this.vista.emit({Activa : 'Contrato', Cotizacion: { Mensualidades: this.cotizacionMensualidades, Anualidades: this.cotizacionAnualidades, DatosCotizacion: datosCotizacion}  });
             }).catch(err=>{console.log('err',err); });
-        });
+        }).catch(err=>{
+            console.log(err);
+        })
+    }
+    bajarCotizacion(){
+        let datosCotizacion = { Enganche: this.enganche, Credito:this.montoCredito, Tasa:this.interesAnual, Num_pagos:this.pagosMensuales,
+        Fecha_inicio:this.fPrimeraMensualidad, Superficie:this.superficie, Precio_metro:this.precioMetro, 
+        Costo_total:this.costoTotal, Mensualidad:this.totalMensual, Fecha_inicio_anualidad:this.fPrimeraAnualidad, Num_anualidades: this.numAnualidades,Anualidad:this.montoAnualidad};
+        this.vista.emit({Activa : 'Contrato', Cotizacion: { Mensualidades: this.cotizacionMensualidades, Anualidades: this.cotizacionAnualidades, DatosCotizacion: datosCotizacion}  });
     }
     _limpiarVistaYVariables(){
         this.vistaCentro = this.cotizacionNueva = false;
@@ -156,6 +173,9 @@ export class CotizadorComponent implements OnInit {
                 preConfirm: () => { },
                 allowOutsideClick: () => !swal.isLoading()
             }).then((result) => {
+                if(result.dismiss){
+                    return reject({error:result})
+                }
                 let nombre;
                 if (result.value) {
                     nombre = result.value;
