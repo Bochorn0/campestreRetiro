@@ -156,7 +156,7 @@
                                                     <input id="typeahead-format" title="Etapa #: " placeholder="Etapa:" type="text" class="form-control" [(ngModel)]="ter.etapa" [ngbTypeahead]="filtrarEtapas" (selectItem)="seleccionarEtapa($event)" [resultFormatter]="formatter" required/>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2">
+                                            <!-- <div class="col-lg-2">
                                                 <div class="form-group">
                                                     <b style="color: #C00;"> * </b>
                                                     <label class="label-form"> Superficie </label>
@@ -169,7 +169,6 @@
                                                     <input type="text"  title="Folio #: " placeholder="Folio:" [(ngModel)]="ter.folio" class="form-control" required/> 
                                                 </div>
                                             </div>                                    
-                                            <!-- <b> Parcela :  {{ter.parcela}} </b> -->
                                             <div class="col-lg-2">
                                                 <label class="label-form"> Estatus </label>
                                                 <select class="form-control" [(ngModel)]="ter.Estado">
@@ -178,7 +177,7 @@
                                                     <option value="POR CEDER"> POR CEDER </option>
                                                     <option value="CEDIDO"> CEDIDO </option>
                                                 </select> 
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
@@ -190,10 +189,28 @@
                                 </div>
                             </div>
                             <div class="card-body row">
-                                    <div class="col-lg-12 text-center alert alert-primary" role="alert">
-                                        <b> - PROPIEDAD - </b>
+                                <div class="col-lg-12 text-center alert alert-primary" role="alert">
+                                    <b> - PROPIEDAD - </b>
+                                </div>                                
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="label-form"> <br> </label><br>
+                                        <button class="btn btn-info" (click)="abrirModal(modalCotizacion); terrenoCotizacion = ter; modalDatos = {Tipo: 'DatosPropietario', Clase: 'bg-info', Titulo: 'Datos generales del terreno'} "><i class="fa fa-columns"></i> | Datos Generales  </button>
                                     </div>
-                                    <div class="col-lg-6">
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="label-form"> <br> </label><br>
+                                        <button class="btn btn-warning" (click)="abrirModal(modalCotizacion); terrenoCotizacion = ter;  modalDatos = {Tipo: 'Mensualidades', Clase: 'bg-warning', Titulo: 'Calculo mensualidades'} "><i class="fa fa-columns"></i> | Mensualidades  </button>
+                                    </div>
+                                </div>
+                                <!-- <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <label class="label-form"> <br> </label><br>
+                                        <button class="btn btn-success" (click)="abrirModal(modalCotizacion); terrenoCotizacion = ter"><i class="fa fa-columns"></i> | Cotización  </button>
+                                    </div>
+                                </div> -->
+                                    <!-- <div class="col-lg-6">
                                         <div class="form-group">
                                             <label class="label-form">Dueño actual </label>
                                             <input type="text" class="form-control" [(ngModel)]="ter.Pertenece" />
@@ -204,7 +221,7 @@
                                             <label class="label-form">Certificado </label>
                                             <input type="number" placeholder="Certificado" [(ngModel)]="ter.Cotizacion[0].SaldoCertificado" class="form-control" required />
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-lg-3 text-center">
                                             <label class="label-form"> Pago Activo </label><br>
                                             <label class="switch">
@@ -470,14 +487,81 @@
         </div>
     </div>
     <ng-template #modalCotizacion let-modal class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-header">
-            <h4 class="modal-title">Generar Pagos con Cotizacion</h4>
+        <div class="modal-header {{modalDatos.Clase?modalDatos.Clase:''}}">
+            <!-- Generar Pagos con Cotizacion -->
+            <h4 class="modal-title">{{modalDatos.Titulo}} </h4>
             <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss()">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
         <div class="modal-body">
-            <app-cotizador [datosCotizacionInput]="terrenoCotizacion" (vista)="asignarCotizacion($event); activeModal.dismiss();"></app-cotizador>
+            <div class="row" *ngIf="modalDatos.Tipo == 'DatosPropietario'">
+                <div class="col-lg-12">                    
+                </div>
+                <div class="col-lg-9">
+                    <div class="form-group">
+                        <label class="label-form">Dueño actual </label>
+                        <input type="text" class="form-control" [(ngModel)]="terrenoCotizacion.Pertenece" />
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="form-group">
+                        <label class="label-form">Certificado </label>
+                        <input type="number" placeholder="Certificado" [(ngModel)]="terrenoCotizacion.Cotizacion[0].SaldoCertificado" class="form-control" required />
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <b style="color: #C00;"> * </b>                                            
+                        <label class="label-form"> Parcela </label>
+                        <input type="hidden"[(ngModel)]="terrenoCotizacion.IdTerreno">
+                        <input id="typeahead-format" title="Parcela # y propietario: {{terrenoCotizacion.Pertenece}}" placeholder="Parcela:" type="text" class="form-control" [(ngModel)]="terrenoCotizacion.parcela" [ngbTypeahead]="filtrarTerrenos" (selectItem)="seleccionarParcela($event, t)" [resultFormatter]="formatter" required/>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <b style="color: #C00;"> * </b>                                            
+                        <label class="label-form"> Lote </label>                                        
+                        <input id="typeahead-format" title="Lote #: " placeholder="Lote:" type="text" class="form-control" [(ngModel)]="terrenoCotizacion.lote" [ngbTypeahead]="filtrarLotes" (selectItem)="seleccionarLote($event)" [resultFormatter]="formatter" required/>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <b style="color: #C00;"> * </b>                                            
+                        <label class="label-form"> Etapa </label>
+                        <input id="typeahead-format" title="Etapa #: " placeholder="Etapa:" type="text" class="form-control" [(ngModel)]="terrenoCotizacion.etapa" [ngbTypeahead]="filtrarEtapas" (selectItem)="seleccionarEtapa($event)" [resultFormatter]="formatter" required/>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <b style="color: #C00;"> * </b>
+                        <label class="label-form"> Superficie </label>
+                        <input type="text"  title="Extension en m2: " placeholder="Superficie:" [(ngModel)]="terrenoCotizacion.Superficie" class="form-control" required/> 
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="label-form"> Folio </label>                                            
+                        <input type="text"  title="Folio #: " placeholder="Folio:" [(ngModel)]="terrenoCotizacion.folio" class="form-control" required/> 
+                    </div>
+                </div>                                    
+                <!-- <b> Parcela :  {{ter.parcela}} </b> -->
+                <div class="col-lg-4">
+                    <label class="label-form"> Estatus </label>
+                    <select class="form-control" [(ngModel)]="terrenoCotizacion.Estado">
+                        <option value="SIN ESTADO">	SIN ESTADO</option>
+                        <option value="ACTIVO"> ACTIVO </option>
+                        <option value="POR CEDER"> POR CEDER </option>
+                        <option value="CEDIDO"> CEDIDO </option>
+                    </select> 
+                </div>
+            </div>
+            <app-cotizador *ngIf="modalDatos.Tipo == 'Mensualidades'" [datosCotizacionInput]="terrenoCotizacion" (vista)="asignarCotizacion($event); activeModal.dismiss();"></app-cotizador>
+            <div class="row">
+                <div class="col-lg-12">
+                    <button class="btn btn-primary pull-right" (click)="actualizarDatos();" > Guardar | <i class="fa fa-arrow-down"></i></button> 
+                </div>
+            </div>
         </div>
-    </ng-template>            
+    </ng-template>
 </div>
