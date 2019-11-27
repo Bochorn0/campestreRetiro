@@ -21,7 +21,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     IdCotizacion;cotizaciones;nombre;numIfe;comprobante;fotoIfe;origen;telefono;correo;fComprobante;fIfe;direccion;fNacimiento;
     terrenos;IdTerreno; datosTerreno;celReferencia1;celReferencia2;celReferencia3;pdfPagare;
     parcelas;lotes;etapas;clienteDatosTodos; pagina ;dataCli;activeModal;
-    datosMantenimientos;MantenimientosPreCalculados;terrenoCotizacion;
+    datosMantenimientos;MantenimientosPreCalculados;terrenoCotizacion;datosEspeciales;
     //Datos Referencias
     referencia1;referencia2;referencia3;
     //Datos Terreno
@@ -256,6 +256,9 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 let terr =  res['Data'].filter(ob=>ob.Asignado == 0);
                 //console.log('ter',terr);
                 this.terrenos = terr;
+                this.terrenos.forEach(t=>{
+                    t.DatoEspecial = `Parcela: ${t.parcela}, Lote : ${t.lote}, Etapa: ${t.etapa},`;
+                });
                 this.parcelas = this.terrenos.map((key)=>{
                     return key.parcela;
                 })
@@ -264,6 +267,9 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 })
                 this.etapas = this.terrenos.map((key)=>{
                     return key.etapa;
+                })
+                this.datosEspeciales = this.terrenos.map((key)=>{
+                    return key.DatoEspecial;
                 })
                 return resolve(this.terrenos);
             }).catch(err=>{console.log('err',err); return reject(err); })
@@ -612,6 +618,10 @@ export class FormularioClientesSeparadoComponent implements OnInit {
       text$.pipe( debounceTime(200), distinctUntilChanged(),
         map(term => term === ''?[]:this.parcelas.filter(ob => ob.toUpperCase().indexOf(term.toUpperCase()) > -1))
     );
+    filtrarTerrenosDatoEspecial = (text$: Observable<string>) =>
+    text$.pipe( debounceTime(200), distinctUntilChanged(),
+      map(term => term === ''?[]:this.datosEspeciales.filter(ob => ob.toUpperCase().indexOf(term.toUpperCase()) > -1))
+  );
     filtrarLotes = (text$: Observable<string>) =>
     text$.pipe( debounceTime(200), distinctUntilChanged(),
       map(term => term === ''?[]:this.lotes.filter(ob => ob.toUpperCase().indexOf(term.toUpperCase()) > -1))
@@ -627,14 +637,21 @@ export class FormularioClientesSeparadoComponent implements OnInit {
         console.log('etapa', sele);
     }
     seleccionarParcela(selected, indice){
-        let terrenoOtroCliente = this.datosTodosTotales.find(dt => dt['PARCELA'] == selected.item.toString());
-        console.log('terreno otro',terrenoOtroCliente);
-        console.log('terreno otro',this.frmCliente.getRawValue());
+        console.log('terrr',this.terrenosCliente);
+        let par =  selected.item.toString().split(',')[0].split(':')[1].trim();
+        console.log('par ',par);
+        console.log('datosTodosTotales ',this.datosTodosTotales);
+        let terrenoOtroCliente = this.datosTodosTotales.find(dt => `${dt['PARCELA']}`.trim() == par);
+        console.log('terreno otro cliente',terrenoOtroCliente);
+        console.log('frm cliente',this.frmCliente.getRawValue());
+//        let par =  selected.item.toString().split(',')[0].split(':')[1].trim();
         if(terrenoOtroCliente){
             let datosA = {Titulo: 'Advertencia',Contenido: `Estas seguro que deseas agregar este terreno, pertenece al siguiente cliente ${terrenoOtroCliente["NOMBRE DEL CLIENTE"].trim()}`,Confirm: 'Si Adelante' , Tipo: 'warning'}
             this._confirmarModal({},datosA).then(res=>{
-                this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == selected.item.toString())[0];
+//                this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == selected.item.toString())[0];
+                this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == par)[0];
                 if(!this.datosTerreno.Cotizacion){
+                    this.datosTerreno.Cotizacion =  terrenoOtroCliente.Co
                     this.datosTerreno.Cotizacion = [{IdCotizacion:0}]
                 }
                 let  existe = this.terrenosCliente.filter(ob => ob.IdTerreno == this.datosTerreno.IdTerreno);
@@ -650,7 +667,8 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 }
             })
         }else{
-            this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == selected.item.toString())[0];
+//            this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == selected.item.toString())[0];
+            this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == par)[0];
             if(!this.datosTerreno.Cotizacion){
                 this.datosTerreno.Cotizacion = [{IdCotizacion:0}]
             }

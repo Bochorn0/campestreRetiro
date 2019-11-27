@@ -7,6 +7,8 @@ import { DatatableModule} from './datatables-general/datatables-general.module';
 import { CatalogoClientesModule} from './catalogos/catalogo-clientes/catalogo-clientes.module';
 import { CatalogoTerrenosModule} from './catalogos/catalogos-terrenos/catalogos.module';
 import { VentasCotizadorModule} from './ventas/cotizador/cotizador.module';
+import { CotizadorMensualidadModule} from './ventas/cotizador-mensualidad/cotizador-mensualidad.module';
+import { CotizadorAnualidadModule} from './ventas/cotizador-anualidad/cotizador-anualidad.module';
 import { MantenimientoVentasModule} from './ventas/mantenimiento/mantenimiento.module';
 import { IngresosExtraModule} from './ventas/ingresos-extra/ingresos-extra.module';
 import { FinanciamientoVentasModule} from './ventas/venta/venta.module';
@@ -43,6 +45,8 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     CatalogoClientesModule,
     CatalogoTerrenosModule,
     VentasCotizadorModule,
+    CotizadorMensualidadModule,
+    CotizadorAnualidadModule,
     MantenimientoVentasModule,
     FinanciamientoVentasModule,
     IngresosExtraModule,
@@ -71,6 +75,8 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     CatalogoClientesModule,
     CatalogoTerrenosModule,
     VentasCotizadorModule,
+    CotizadorMensualidadModule,
+    CotizadorAnualidadModule,
     MantenimientoVentasModule,
     FinanciamientoVentasModule,
     IngresosExtraModule,
