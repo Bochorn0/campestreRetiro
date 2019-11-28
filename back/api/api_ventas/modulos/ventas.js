@@ -478,10 +478,8 @@ module.exports = class Catalogos {
                 return new Promise((resO, rejE)=>{
                     let cotizacionesGuardadas = [];
                     datos.Terrenos.forEach(dat=>{
-                        console.log('dat antes',dat);
-                        dat.Cotizacion = (datos.FuenteDatos)?this._modificarMensualidades(dat.Cotizacion):dat.Cotizacion;
-                        console.log('dat despues',dat);
-                        if(dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
+                        if(!dat.ContieneMensualidad && dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
+                            dat.Cotizacion = (datos.FuenteDatos)?this._modificarMensualidades(dat.Cotizacion):dat.Cotizacion;
                             cotizacionesGuardadas.push(Promise.resolve({}));
                         }else{
                             cotizacionesGuardadas.push(this._guardarAdeudosCliente(conexion,datos,dat));
@@ -498,7 +496,7 @@ module.exports = class Catalogos {
                 return new Promise((resO, rejE)=>{
                     let anualidadesGuardadas = [];
                     datos.Terrenos.forEach(dat=>{
-                        if(dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
+                        if(!dat.ContieneAnualidad &&  dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
                             anualidadesGuardadas.push(Promise.resolve({}));
                         }else{
                             anualidadesGuardadas.push(this._guardarAnualidadesCliente(conexion,datos,dat));
@@ -572,7 +570,15 @@ module.exports = class Catalogos {
             let Terreno =  datosTerreno;
             let Cotizacion =  datosTerreno.Cotizacion;
             let insert_anualidades = [];
-            if(Cotizacion[0].Num_pagos > 1){
+            // console.log('anualidades',Cotizacion[0].Anualidades);
+            if(Cotizacion[0].Anualidades){
+                Cotizacion[0].Anualidades.Datos.forEach(m=>{
+                    let campos = `IdCliente,IdTerreno,Num_pago,Importe,Fecha,Fecha_modificacion,Pagado`;
+                    let valores =  `${datos.ClienteCompleto.IdCliente},${Terreno.IdTerreno},${m.Pago},${m.Total},'${m.Fecha}','${moment().format('YYYY-MM-DD HH:mm:ss')}',${(m.Pagado)?1:0} `;
+                    // console.log('query',`INSERT INTO Adeudos_anualidades (${campos}) VALUES (${valores});`);
+                    insert_anualidades.push(this._ordenarQuery(conexion,`INSERT INTO Adeudos_anualidades (${campos}) VALUES (${valores});`));
+                });
+            }else if(!Cotizacion[0].Anualidades && Cotizacion[0].Num_pagos > 1){            
                 for(let i = 1; i <= Cotizacion[0].Num_anualidades; i++){
                     let campos = `IdCliente,IdTerreno,Num_pago,Importe,Fecha,Fecha_modificacion`;
                     let fecha_anualidad = (i==1)?moment(Cotizacion[0].Fecha_inicio_anualidad).format('YYYY-MM-DD'):moment(Cotizacion[0].Fecha_inicio_anualidad).add(i ,'Y').format('YYYY-MM-DD');
@@ -592,6 +598,7 @@ module.exports = class Catalogos {
                   })
                 })
               }, Promise.resolve([])).then(r => {
+                  console.log('resolve',r);
                   return resolve(r);
                 }).catch(err=>{ console.log('error',err); reject(err);})
         });
@@ -693,7 +700,16 @@ module.exports = class Catalogos {
             let Terreno =  datosTerreno;
             let Cotizacion =  datosTerreno.Cotizacion;
             let insert_cotizaciones = [];
-            if(Cotizacion[0].Num_pagos > 1){
+            // console.log('datosTerreno.Cotizacion',datosTerreno.Cotizacion);
+            if(Cotizacion[0].Mensualidades){
+                Cotizacion[0].Mensualidades.Datos.forEach(m=>{
+                    let campos = `IdCliente,IdTerreno,Num_pago,Importe,Fecha,Fecha_modificacion,Pagado`;
+                    let valores =  `${datos.ClienteCompleto.IdCliente},${Terreno.IdTerreno},${m.Pago},${m.Total},'${m.Fecha}','${moment().format('YYYY-MM-DD HH:mm:ss')}',${(m.Pagado)?1:0} `;
+                    // console.log('query',`INSERT INTO Adeudos_clientes (${campos}) VALUES (${valores});`);
+                    insert_cotizaciones.push(this._ordenarQuery(conexion,`INSERT INTO Adeudos_clientes (${campos}) VALUES (${valores});`));
+                });
+
+            }else if(!Cotizacion[0].Mensualidades && Cotizacion[0].Num_pagos > 1){
                 for(let i = 1; i <= Cotizacion[0].Num_pagos; i++){
                     let campos = `IdCliente,IdTerreno,Num_pago,Importe,Fecha,Fecha_modificacion`;
                     let fecha_mensualidad =  (i==1)?moment(Cotizacion[0].Fecha_inicio).format('YYYY-MM-DD'):moment(Cotizacion[0].Fecha_inicio).add(i ,'M').format('YYYY-MM-DD');
@@ -751,6 +767,7 @@ module.exports = class Catalogos {
 //            console.log('datos ACTUALI',datos);
 //            console.log('datos ACTUALI',Cliente);
             let today = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
+            datos.Fecha_nacimiento = (datos.Fecha_nacimiento && datos.Fecha_nacimiento != '-')?datos.Fecha_nacimiento:`${moment().format('YYYY-MM-DD')}`;
             let valores = `Nombre = '${datos.Nombre}'`;
             valores += `,Correo = '${datos.Correo}'`;
             valores += (datos.Direccion)?`,Direccion = '${datos.Direccion}'`:'';
@@ -795,8 +812,8 @@ module.exports = class Catalogos {
                 return new Promise((resO, rejE)=>{
                     let cotizacionesGuardadas = [];
                     datos.Terrenos.forEach(dat=>{
-                        dat.Cotizacion = this._modificarCotizacon(dat.Cotizacion);
-                        if(dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
+                        if(!dat.ContieneMensualidad && dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
+                            dat.Cotizacion = this._modificarCotizacon(dat.Cotizacion);
                             cotizacionesGuardadas.push(Promise.resolve({}));
                         }else{
     //                        dat.Cotizacion = (datos.FuenteDatos)?this._modificarMensualidades(dat.Cotizacion):dat.Cotizacion;
@@ -815,7 +832,7 @@ module.exports = class Catalogos {
                 return new Promise((resO, rejE)=>{
                     let anualidadesGuardadas = [];
                     datos.Terrenos.forEach(dat=>{
-                        if(dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
+                        if(!dat.ContieneAnualidad  && dat.Estado != 'CEDIDO' && dat.Estado != 'POR CEDER'){
                             anualidadesGuardadas.push(Promise.resolve({}));
                         }else{
                             anualidadesGuardadas.push(this._guardarAnualidadesCliente(conexion,datos,dat));

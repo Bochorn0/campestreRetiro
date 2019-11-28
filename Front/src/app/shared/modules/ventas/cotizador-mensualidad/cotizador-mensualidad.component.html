@@ -26,7 +26,7 @@
             <div class="col-lg-3">
                 <div class="form-group">
                     <label class="label-form"> Enganche </label>
-                    <input type="number" [(ngModel)]="enganche" (change)="calcularAmortizacion();" placeholder="10000" class="form-control">
+                    <input type="number" [(ngModel)]="enganche" (change)="calcularAmortizacion(true);" placeholder="10000" class="form-control">
                 </div>
             </div>
             <div class="col-lg-2">
@@ -90,7 +90,7 @@
                     </div>
                     <div class="card-body " id='IdCotizacion'>
                         <table class="table table-stripped" *ngIf="cotizacionMensualidades">
-                            <tr class="text-center">
+                            <tr>
                                 <th> <input type="checkbox" [(ngModel)]='todosChkMensualidades' (change)="cambiarTodosChk();" />  # Pago </th>
                                 <th> Fecha </th>
                                 <th> Interes </th>
@@ -99,13 +99,13 @@
                                 <th> Saldo </th>
                             </tr>
                             <tr *ngFor="let p of cotizacionMensualidades.Datos  | paginate: { itemsPerPage: paginadoDatos,currentPage: page_promociones, id: 'IdCotizacion' };" [ngClass]="{'bg-gray':p.Pagado }">
-                                <td> <input type="checkbox" [(ngModel)]="p.Pagado" /> {{p.Pago}}</td>
+                                <td> <input type="checkbox" (change)="cambioChk();" [(ngModel)]="p.Pagado" /> {{p.Pago}}</td>
                                 <td> {{p.Fecha}}</td>
                                 <td> {{p.Interes}}</td>
                                 <td>$ {{p.Capital | number}}</td>
                                 <td *ngIf="totalMensual == p.Total">$ {{ p.Total | number}}</td>
                                 <td *ngIf="totalMensual < p.Total">$ {{ totalMensual | number}} <b  class="text-danger"> + ($ {{ (p.Total-totalMensual)  | number}})</b> </td>
-                                <td>$ {{p.Saldo | number}}</td>
+                                <td>$ {{p.Saldo | number}}</td> s
                             </tr>
                         </table>
                         <!-- <app-datatables-general #datatableMensualidades *ngIf="this.cotizacionMensualidades" [datosDatatable]="this.cotizacionMensualidades" ></app-datatables-general> -->

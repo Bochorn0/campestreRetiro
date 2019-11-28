@@ -37,9 +37,9 @@ export class CotizadorMensualidadComponent implements OnInit {
             this.superficie = cot.Superficie;
             this.precioMetro = 150;
             this.fPrimeraMensualidad = (cot.Fecha_inicio)?cot.Fecha_inicio:this.fPrimeraMensualidad;
-            this.interesAnual  = 16;
+            this.interesAnual  = 8;
             this.enganche = cot.Enganche;
-            this.pagosMensuales = 72;
+            this.pagosMensuales = 120;
             this.numPagosPagados = cot.Num_pagos_pagados;
             this.calcularAmortizacion(false);
         }
@@ -93,6 +93,11 @@ export class CotizadorMensualidadComponent implements OnInit {
                 } 
             })
         }
+        let Num_pagos_pagados = this.cotizacionMensualidades.Datos.filter(cm=>cm.Pagado == true).length;
+        let DatosCotizacion = { Enganche: this.enganche, Credito:this.montoCredito, Tasa:this.interesAnual, Num_pagos:this.pagosMensuales,
+            Fecha_inicio:this.fPrimeraMensualidad, Superficie:this.superficie, Precio_metro:this.precioMetro, Num_pagos_pagados,
+            Costo_total:this.costoTotal, Mensualidad:this.totalMensual, Fecha_inicio_anualidad:this.fPrimeraAnualidad, Num_anualidades: this.numAnualidades,Anualidad:this.montoAnualidad};
+        this.vista.emit({ Cotizacion: { Mensualidades: this.cotizacionMensualidades, Anualidades: this.cotizacionAnualidades, DatosCotizacion}  });
     }
     _cotizacionMensualidades(montoMen){
         let datos = [];
@@ -108,7 +113,7 @@ export class CotizadorMensualidadComponent implements OnInit {
             capital =  montoMen - interes;
             total_restante = (i ==  this.pagosMensuales)?0:total_restante - capital;
 
-            datos.push({ Fecha:fecha_pivote ,Pago: i,Interes :(interes).toFixed(2),Capital :(capital).toFixed(2), Total: montoMen, Saldo: (total_restante).toFixed(2) });
+            datos.push({ Fecha:fecha_pivote ,Pagado:false, Pago: i,Interes :(interes).toFixed(2),Capital :(capital).toFixed(2), Total: montoMen, Saldo: (total_restante).toFixed(2) });
             fecha_pivote = moment(fecha_pivote).add('1','month').format('YYYY-MM-DD');
         }
         return datos;
@@ -149,6 +154,13 @@ export class CotizadorMensualidadComponent implements OnInit {
             this.cotizacionNueva = true;
             this.vistaCentro = true; 
         });
+    }
+    cambioChk(){
+        let Num_pagos_pagados = this.cotizacionMensualidades.Datos.filter(cm=>cm.Pagado == true).length;
+        let DatosCotizacion = { Enganche: this.enganche, Credito:this.montoCredito, Tasa:this.interesAnual, Num_pagos:this.pagosMensuales,
+            Fecha_inicio:this.fPrimeraMensualidad, Superficie:this.superficie, Precio_metro:this.precioMetro, Num_pagos_pagados,
+            Costo_total:this.costoTotal, Mensualidad:this.totalMensual, Fecha_inicio_anualidad:this.fPrimeraAnualidad, Num_anualidades: this.numAnualidades,Anualidad:this.montoAnualidad};
+        this.vista.emit({ Cotizacion: { Mensualidades: this.cotizacionMensualidades, Anualidades: this.cotizacionAnualidades, DatosCotizacion}  });
     }
     cambiarTodosChk(){
         this.cotizacionMensualidades.Datos.map(c=>c.Pagado = this.todosChkMensualidades);

@@ -21,7 +21,7 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     IdCotizacion;cotizaciones;nombre;numIfe;comprobante;fotoIfe;origen;telefono;correo;fComprobante;fIfe;direccion;fNacimiento;
     terrenos;IdTerreno; datosTerreno;celReferencia1;celReferencia2;celReferencia3;pdfPagare;
     parcelas;lotes;etapas;clienteDatosTodos; pagina ;dataCli;activeModal;
-    datosMantenimientos;MantenimientosPreCalculados;terrenoCotizacion;datosEspeciales;
+    datosMantenimientos;MantenimientosPreCalculados;terrenoCotizacion;datosEspeciales; datosCotizacionGenerados;datosCotizacionAnualidad;
     //Datos Referencias
     referencia1;referencia2;referencia3;
     //Datos Terreno
@@ -234,15 +234,35 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     formatter = (result: string) => result.toUpperCase();
     asignarCotizacion(event){
         if(event.Cotizacion){
-            if(event.Cotizacion.DatosCotizacion){
-                let cot = event.Cotizacion.DatosCotizacion;
-//                console.log('ter',this.terrenoCotizacion);
-                this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Mensualidad = cot.Mensualidad ;
-                this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Enganche_Actual = cot.Enganche ;
-                this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Num_pagos_originales = cot.Num_pagos ;
-                this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Num_pagos_Actual = cot.Num_pagos ;
-            }
+            this.datosCotizacionGenerados = event.Cotizacion;
         }
+    }
+    asignarCotizacionAnualidad(event){
+        if(event.Cotizacion){
+            this.datosCotizacionAnualidad = event.Cotizacion;
+        }
+    }
+    actualizarDatos(){
+        if(this.datosCotizacionGenerados){
+            console.log('datosCotizacionGenerados',this.datosCotizacionGenerados);
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Mensualidad = this.datosCotizacionGenerados.DatosCotizacion.Mensualidad ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Enganche_Actual = this.datosCotizacionGenerados.DatosCotizacion.Enganche ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Num_pagos_originales = this.datosCotizacionGenerados.DatosCotizacion.Num_pagos ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Fecha_inicio = this.datosCotizacionGenerados.DatosCotizacion.Fecha_inicio ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Num_pagos_pagados = this.datosCotizacionGenerados.DatosCotizacion.Num_pagos_pagados ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Num_pagos_Actual = (this.datosCotizacionGenerados.DatosCotizacion.Num_pagos-this.datosCotizacionGenerados.DatosCotizacion.Num_pagos_pagados) ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Mensualidades = this.datosCotizacionGenerados.Mensualidades ;
+            this.datosCotizacionGenerados = false;
+        }else if(this.datosCotizacionAnualidad){
+            console.log('datosCotizacionAnualidad',this.datosCotizacionAnualidad);
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Anualidad = this.datosCotizacionAnualidad.DatosCotizacion.Anualidad ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Num_anualidades = this.datosCotizacionAnualidad.DatosCotizacion.Num_anualidades ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Fecha_inicio_anualidad = this.datosCotizacionAnualidad.DatosCotizacion.Fecha_inicio_anualidad ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Num_anualidades_pagadas = this.datosCotizacionAnualidad.DatosCotizacion.Num_anualidades_pagadas ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Num_pagos_anualidad_Actual = (this.datosCotizacionAnualidad.DatosCotizacion.Num_anualidades - this.datosCotizacionAnualidad.DatosCotizacion.Num_anualidades_pagadas) ;
+            this.terrenosCliente.find(t=>t.IdTerreno == this.terrenoCotizacion.IdTerreno).Cotizacion[0].Anualidades = this.datosCotizacionAnualidad.Anualidades ;
+            this.datosCotizacionAnualidad = false;
+        }        
     }
     _obtenerCotizaciones(){
         this.catalogosService.obtenerCotizaciones().then(res=>{
@@ -372,7 +392,8 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 if(!this.datosCliente.IdCliente){
                     tc.Pertenece =  this.frmCliente.controls['Nombre'].value;
                 }
-                tc.ContieneMensualidad = false
+                tc.ContieneMensualidad = false;
+                tc.ContieneAnualidad = false;
             });
         }
     }
@@ -639,14 +660,14 @@ export class FormularioClientesSeparadoComponent implements OnInit {
     seleccionarParcela(selected, indice){
         console.log('terrr',this.terrenosCliente);
         let par =  selected.item.toString().split(',')[0].split(':')[1].trim();
-        console.log('par ',par);
-        console.log('datosTodosTotales ',this.datosTodosTotales);
+        // console.log('par ',par);
+        // console.log('datosTodosTotales ',this.datosTodosTotales);
         let terrenoOtroCliente = this.datosTodosTotales.find(dt => `${dt['PARCELA']}`.trim() == par);
-        console.log('terreno otro cliente',terrenoOtroCliente);
-        console.log('frm cliente',this.frmCliente.getRawValue());
+        // console.log('terreno otro cliente',terrenoOtroCliente);
+        // console.log('frm cliente',this.frmCliente.getRawValue());
 //        let par =  selected.item.toString().split(',')[0].split(':')[1].trim();
         if(terrenoOtroCliente){
-            let datosA = {Titulo: 'Advertencia',Contenido: `Estas seguro que deseas agregar este terreno, pertenece al siguiente cliente ${terrenoOtroCliente["NOMBRE DEL CLIENTE"].trim()}`,Confirm: 'Si Adelante' , Tipo: 'warning'}
+            let datosA = {Titulo: 'Advertencia',Contenido: `Estas seguro que deseas agregar este terreno, pertenece al siguiente cliente <b>${terrenoOtroCliente["NOMBRE DEL CLIENTE"].trim()} </b>`,Confirm: 'Si Adelante' , Tipo: 'warning'}
             this._confirmarModal({},datosA).then(res=>{
 //                this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == selected.item.toString())[0];
                 this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == par)[0];
@@ -656,14 +677,14 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                         Enganche: this._datoNumerico(terrenoOtroCliente['ENGANCHE']),
                         EnganchePagado: this._datoNumerico(terrenoOtroCliente['CANTIDAD DEL ENGANCHE PAGADO']),
                         Credito: this._datoNumerico(terrenoOtroCliente['SALDO DEL CREDITO']),
-                        Tasa: this._datoNumerico(this.datosTerreno['INTERES']),
+                        Tasa: this._datoNumerico(terrenoOtroCliente['INTERES']),
                         Num_pagos: this._datoNumerico(terrenoOtroCliente['NUMERO MENSUALIDADES']),
                         Num_pagos_pagados: this._datoNumerico(terrenoOtroCliente['CANTIDAD DE MENSUALIDADES PAGADAS']),
-                        Fecha_inicio: (terrenoOtroCliente['FECHA PRIMERA MENSUALIDAD']!= 0 && moment(terrenoOtroCliente['FECHA PRIMERA MENSUALIDAD']).isValid())?`${moment(terrenoOtroCliente['FECHA PRIMERA MENSUALIDAD'])}`:'-',
+                        Fecha_inicio: (terrenoOtroCliente['FECHA PRIMERA MENSUALIDAD']!= 0 && moment(terrenoOtroCliente['FECHA PRIMERA MENSUALIDAD']).isValid())?`${moment(terrenoOtroCliente['FECHA PRIMERA MENSUALIDAD'])}`:`${moment().add('1','month').format('YYYY-MM-DD')}`,
                         Superficie: this._datoNumerico(terrenoOtroCliente['SUPERFICIE']),
-                        Precio_metro: this._datoNumerico(this.datosTerreno['COSTO DEL M2 EN VENTA']),
-                        Costo_total: this._datoNumerico(this.datosTerreno['SALDO DEL CREDITO']),
-                        Mensualidad: this._datoNumerico(this.datosTerreno['CANTIDAD DE MENSUALID']), 
+                        Precio_metro: this._datoNumerico(terrenoOtroCliente['COSTO DEL M2 EN VENTA']),
+                        Costo_total: this._datoNumerico(terrenoOtroCliente['SALDO DEL CREDITO']),
+                        Mensualidad: this._datoNumerico(terrenoOtroCliente['CANTIDAD DE MENSUALID']), 
                         Fecha_inicio_anualidad: (terrenoOtroCliente['FECHA PRIMERA ANUALIDAD']!= 0 && moment(terrenoOtroCliente['FECHA PRIMERA ANUALIDAD']).isValid())?`${moment(terrenoOtroCliente['FECHA PRIMERA ANUALIDAD']).format('YYYY-MM-DD')}`:``, 
                         Num_anualidades: this._datoNumerico(terrenoOtroCliente['NUMERO DE ANUALIDADES']),
                         Num_anualidades_pagadas: this._datoNumerico(terrenoOtroCliente['CANTIDAD DE ANUALIDADES PAGADAS']),
@@ -695,7 +716,33 @@ export class FormularioClientesSeparadoComponent implements OnInit {
 //            this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == selected.item.toString())[0];
             this.datosTerreno =  this.terrenos.filter(ob=>ob.parcela == par)[0];
             if(!this.datosTerreno.Cotizacion){
-                this.datosTerreno.Cotizacion = [{IdCotizacion:0}]
+                this.datosTerreno.Cotizacion = [{IdCotizacion:0,
+                    Nombre: `Sistema_auto_${this.datosTerreno['PARCELA']}`,
+                    Enganche: this._datoNumerico(this.datosTerreno['ENGANCHE']),
+                    EnganchePagado: this._datoNumerico(this.datosTerreno['CANTIDAD DEL ENGANCHE PAGADO']),
+                    Credito: this._datoNumerico(this.datosTerreno['SALDO DEL CREDITO']),
+                    Tasa: this._datoNumerico(this.datosTerreno['INTERES']),
+                    Num_pagos: this._datoNumerico(this.datosTerreno['NUMERO MENSUALIDADES']),
+                    Num_pagos_pagados: this._datoNumerico(this.datosTerreno['CANTIDAD DE MENSUALIDADES PAGADAS']),
+                    Fecha_inicio: (this.datosTerreno['FECHA PRIMERA MENSUALIDAD']!= 0 && moment(this.datosTerreno['FECHA PRIMERA MENSUALIDAD']).isValid())?`${moment(this.datosTerreno['FECHA PRIMERA MENSUALIDAD'])}`:`${moment().add('1','month').format('YYYY-MM-DD')}`,
+                    Superficie: this._datoNumerico(this.datosTerreno['SUPERFICIE']),
+                    Precio_metro: this._datoNumerico(this.datosTerreno['COSTO DEL M2 EN VENTA']),
+                    Costo_total: this._datoNumerico(this.datosTerreno['SALDO DEL CREDITO']),
+                    Mensualidad: this._datoNumerico(this.datosTerreno['CANTIDAD DE MENSUALID']), 
+                    Fecha_inicio_anualidad: (this.datosTerreno['FECHA PRIMERA ANUALIDAD']!= 0 && moment(this.datosTerreno['FECHA PRIMERA ANUALIDAD']).isValid())?`${moment(this.datosTerreno['FECHA PRIMERA ANUALIDAD']).format('YYYY-MM-DD')}`:``, 
+                    Num_anualidades: this._datoNumerico(this.datosTerreno['NUMERO DE ANUALIDADES']),
+                    Num_anualidades_pagadas: this._datoNumerico(this.datosTerreno['CANTIDAD DE ANUALIDADES PAGADAS']),
+                    Anualidad: this._datoNumerico(this.datosTerreno['CANTIDAD ANUALIDADES']),
+                    Fecha_cotizacion: `${moment().format('YYYY-MM-DD')}`,
+                    //Extras
+                    Saldo_agua : (this._datoNumerico(this.datosTerreno['CONTRATO DEL AGUA']) - this._datoNumerico(this.datosTerreno['CANTIDAD ABONADA A CONTRATO AGUA'])),
+                    ImporteMantenimiento : this._datoNumerico(this.datosTerreno['CUOTA MANTENIMIENTO']),
+                    FechaMantenimiento:(this.datosTerreno['FECHA DE COBRO PRIMER MANTENIMIENTO'] && this.datosTerreno['FECHA DE COBRO PRIMER MANTENIMIENTO'] != '-')?(moment(this.datosTerreno['FECHA DE COBRO PRIMER MANTENIMIENTO']).isValid())?`${moment(this.datosTerreno['FECHA DE COBRO PRIMER MANTENIMIENTO']).format('YYYY-MM-DD')}`:'':'',
+//                            FechaAdeudoMantenimiento:(t['TIEMPO DE DEUDA MANTENIMIENTO'] && t['TIEMPO DE DEUDA MANTENIMIENTO'] != '-')?(moment(t['TIEMPO DE DEUDA MANTENIMIENTO']).isValid())?`${moment(t['TIEMPO DE DEUDA MANTENIMIENTO']).format('YYYY-MM-DD')}`:'':'',
+//                            FechaAdeudoMantenimiento:(t['TIEMPO DE DEUDA MANTENIMIENTO'] && t['TIEMPO DE DEUDA MANTENIMIENTO'] != '-')?`${t['TIEMPO DE DEUDA MANTENIMIENTO']}`:'',
+                    SaldoCertificado : (this._datoNumerico(this.datosTerreno['DEUDA CERTIFICADO']) - this._datoNumerico(this.datosTerreno['CANTIDAD ABONADA A CERTIFICADP'])),
+                    Estado: `${this.datosTerreno['ESTADO']}`,                
+                }]
             }
             let  existe = this.terrenosCliente.filter(ob => ob.IdTerreno == this.datosTerreno.IdTerreno);
             if(this.datosTerreno && !existe[0]){
@@ -709,7 +756,8 @@ export class FormularioClientesSeparadoComponent implements OnInit {
                 this.terrenosCliente[indice] = {}; 
             }            
         }
-
+        
+        console.log('datosTerreno',this.datosTerreno);
         console.log('ter',this.terrenosCliente);
     }
     _datoNumerico(dat){
