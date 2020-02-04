@@ -104,6 +104,7 @@ var LoginComponent = /** @class */ (function () {
         this.password = '';
         /*        this.correo = 'luisfernandocordova.24@gmail.com';
         this.password = 'bocho24*';*/
+        this.datosUsuario = JSON.parse(localStorage.getItem('Datos'));
     }
     LoginComponent.prototype.ngOnInit = function () { };
     LoginComponent.prototype.onLoggedin = function () {
@@ -114,7 +115,12 @@ var LoginComponent = /** @class */ (function () {
             console.log('datos', sesion);
             if (sesion['Data']) {
                 localStorage.setItem('Datos', JSON.stringify(sesion['Data'][0]));
-                _this.router.navigate(['/Inicio/']);
+                if (_this.datosUsuario.Perfil == 'Vendedor') {
+                    _this.router.navigate(['/Ventas/']);
+                }
+                else {
+                    _this.router.navigate(['/Inicio/']);
+                }
             }
         }).catch(function (err) {
             sweetalert2__WEBPACK_IMPORTED_MODULE_4___default()('Error', "" + err.message, 'error');

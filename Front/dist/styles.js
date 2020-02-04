@@ -662,10 +662,10 @@ if(false) {}
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /Users/bocho/Documents/Proyectos/Activos/ElRetiroApp/Front/node_modules/font-awesome/css/font-awesome.css */"./node_modules/font-awesome/css/font-awesome.css");
-__webpack_require__(/*! /Users/bocho/Documents/Proyectos/Activos/ElRetiroApp/Front/src/styles/app.scss */"./src/styles/app.scss");
-__webpack_require__(/*! /Users/bocho/Documents/Proyectos/Activos/ElRetiroApp/Front/node_modules/froala-editor/css/froala_editor.pkgd.min.css */"./node_modules/froala-editor/css/froala_editor.pkgd.min.css");
-module.exports = __webpack_require__(/*! /Users/bocho/Documents/Proyectos/Activos/ElRetiroApp/Front/node_modules/froala-editor/css/froala_style.min.css */"./node_modules/froala-editor/css/froala_style.min.css");
+__webpack_require__(/*! /Users/bocho/Documents/Proyectos/Activos/AdminElRetiro/Front/node_modules/font-awesome/css/font-awesome.css */"./node_modules/font-awesome/css/font-awesome.css");
+__webpack_require__(/*! /Users/bocho/Documents/Proyectos/Activos/AdminElRetiro/Front/src/styles/app.scss */"./src/styles/app.scss");
+__webpack_require__(/*! /Users/bocho/Documents/Proyectos/Activos/AdminElRetiro/Front/node_modules/froala-editor/css/froala_editor.pkgd.min.css */"./node_modules/froala-editor/css/froala_editor.pkgd.min.css");
+module.exports = __webpack_require__(/*! /Users/bocho/Documents/Proyectos/Activos/AdminElRetiro/Front/node_modules/froala-editor/css/froala_style.min.css */"./node_modules/froala-editor/css/froala_style.min.css");
 
 
 /***/ })

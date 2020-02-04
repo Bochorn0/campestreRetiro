@@ -77,7 +77,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "InicioComponent", function() { return InicioComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _router_animations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../router.animations */ "./src/app/router.animations.ts");
-/* harmony import */ var _shared_services_estadisticas_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../shared/services/estadisticas.service */ "./src/app/shared/services/estadisticas.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _shared_services_estadisticas_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../shared/services/estadisticas.service */ "./src/app/shared/services/estadisticas.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -90,11 +91,17 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var InicioComponent = /** @class */ (function () {
-    function InicioComponent(estadisticasService) {
+    function InicioComponent(router, estadisticasService) {
+        this.router = router;
         this.estadisticasService = estadisticasService;
         this.alerts = [];
         this.ingresosChart = this.gastosChart = this.carteraChart = this.clientesChart = false;
+        this.datosUsuario = JSON.parse(localStorage.getItem('Datos'));
+        if (this.datosUsuario.Perfil == 'Vendedor') {
+            this.router.navigate(['/Ventas/']);
+        }
     }
     InicioComponent.prototype.ngOnInit = function () { };
     //Reporte de Ingresos 
@@ -291,9 +298,9 @@ var InicioComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./inicio.component.html */ "./src/app/layout/inicio/inicio.component.html"),
             styles: [__webpack_require__(/*! ./inicio.component.scss */ "./src/app/layout/inicio/inicio.component.scss")],
             animations: [Object(_router_animations__WEBPACK_IMPORTED_MODULE_1__["routerTransition"])()],
-            providers: [_shared_services_estadisticas_service__WEBPACK_IMPORTED_MODULE_2__["EstadisticasService"]]
+            providers: [_shared_services_estadisticas_service__WEBPACK_IMPORTED_MODULE_3__["EstadisticasService"]]
         }),
-        __metadata("design:paramtypes", [_shared_services_estadisticas_service__WEBPACK_IMPORTED_MODULE_2__["EstadisticasService"]])
+        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"], _shared_services_estadisticas_service__WEBPACK_IMPORTED_MODULE_3__["EstadisticasService"]])
     ], InicioComponent);
     return InicioComponent;
 }());

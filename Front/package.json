@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "build2": "ng build",
     "build": "ng build --prod",
     "gitbuild": "ng build --prod --base-href",
     "test": "ng test",
