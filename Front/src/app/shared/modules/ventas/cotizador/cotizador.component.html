@@ -82,7 +82,7 @@
                                 <div class="card-header bg-info">
                                     1 Opcion con Mensualidades <b class="pull-right">Total: {{acumuladoMen | number}}</b>
                                 </div>
-                                <div class="card-body ">
+                                <div class="card-body " style="overflow: auto;">
                                     <app-datatables-general #datatableMensualidades *ngIf="this.cotizacionMensualidades" [datosDatatable]="this.cotizacionMensualidades" ></app-datatables-general>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
                                 <div class="card-header bg-info">
                                     2 Opcion con Anualidades
                                 </div>
-                                <div class="card-body ">
+                                <div class="card-body " style="overflow: auto;">
                                     <app-datatables-general #datatableAnualidades *ngIf="this.cotizacionAnualidades" [datosDatatable]="this.cotizacionAnualidades" ></app-datatables-general>
                                 </div>
                             </div>

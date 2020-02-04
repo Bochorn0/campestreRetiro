@@ -44,8 +44,8 @@
                         <div class="form-group">
                             <label class="label-form"> Comprobante domicilio </label>
                             <div class="input-group">
-                                <label class="input-group-btn" style="margin:0;">
-                                    <span class="btn btn-success">
+                                <label class="input-group-btn" style="margin:0;width: 100%;">
+                                    <span class="btn btn-success " style="width: 100%;"> 
                                         <i class="fa fa-upload"> </i> Cargar comprobante
                                         <input accept="image/*" style="display: none;" type="file"
                                             formControlName="Comprobante" class="form-control" required />
@@ -59,8 +59,8 @@
                         <div class="form-group">
                             <label class="label-form"> Foto IFE </label>
                             <div class="input-group">
-                                <label class="input-group-btn" style="margin:0;">
-                                    <span class="btn btn-success">
+                                <label class="input-group-btn" style="margin:0;width: 100%;">
+                                    <span class="btn btn-success" style="width: 100%;">
                                         <i class="fa fa-upload"> </i> Cargar foto IFE
                                         <!--                                        <input type="file" style="display: none;" accept="image/*" (change)="nombreArchivo($event,'Ife');"  formControlName="FileIFE" required/>-->
                                         <input accept="image/*" style="display: none;" type="file"
@@ -213,7 +213,7 @@
                                     <div class="col-lg-3">
                                         <div class="form-group">
                                             <label class="label-form"> <br> </label><br>
-                                            <button class="btn btn-info"
+                                            <button class="btn btn-info" style="width: 100%;"
                                                 (click)="abrirModal(modalCotizacion); terrenoCotizacion = ter; modalDatos = {Tipo: 'DatosPropietario', Clase: 'bg-info', Titulo: 'Datos generales del terreno'} "><i
                                                     class="fa fa-caret-square-o-up"></i> | General </button>
                                         </div>
@@ -221,7 +221,7 @@
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label class="label-form"> <br> </label><br>
-                                            <button class="btn btn-warning"
+                                            <button class="btn btn-warning" style="width: 100%;"
                                                 (click)="abrirModal(modalCotizacion); terrenoCotizacion = ter; modalDatos = {Tipo: 'Mensualidades', Clase: 'bg-warning', Titulo: 'Calculo mensualidades'} "><i
                                                     class="fa fa-caret-square-o-up"></i> | Mensualidades </button>
                                         </div>
@@ -229,7 +229,7 @@
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label class="label-form"> <br> </label><br>
-                                            <button class="btn btn-secondary"
+                                            <button class="btn btn-secondary" style="width: 100%;"
                                                 (click)="abrirModal(modalCotizacion); terrenoCotizacion = ter; modalDatos = {Tipo: 'Anualidades', Clase: 'bg-secondary', Titulo: 'Calculo Anualidades'} "><i
                                                     class="fa fa-caret-square-o-up"></i> | Anualidades </button>
                                         </div>
@@ -237,9 +237,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12">
+                        <div class="col-sm-12 col-lg-12">
                             <div class="row" *ngIf="ter.ContieneMensualidad  && ter.Cotizacion[0].Mensualidad > 0">
-                                <div class="col-lg-12 text-center  alert alert-danger" role="alert">
+                                <div class="col-sm-12 col-lg-12 text-center  alert alert-danger" role="alert">
                                     <b> - DETALLES DE PAGO - </b>
                                 </div>
                                 <hr>
@@ -632,7 +632,7 @@
                     <span class="slider round"></span>
                 </label>
             </div>
-            <div class="col-lg-12" *ngIf="terrenoCotizacion.ContieneMensualidad">
+            <div class="col-lg-12" *ngIf="terrenoCotizacion.ContieneMensualidad" style="overflow:auto;">
                 <app-cotizador-mensualidad *ngIf="modalDatos.Tipo == 'Mensualidades'"
                     [datosCotizacionInput]="terrenoCotizacion"
                     (vista)="asignarCotizacion($event);"></app-cotizador-mensualidad>
@@ -644,7 +644,7 @@
                     <span class="slider round"></span>
                 </label>
             </div>
-            <div class="col-lg-12" *ngIf="terrenoCotizacion.ContieneAnualidad">
+            <div class="col-lg-12" *ngIf="terrenoCotizacion.ContieneAnualidad" style="overflow:auto;">
                 <app-cotizador-anualidad *ngIf="modalDatos.Tipo == 'Anualidades'"
                     [datosCotizacionInput]="terrenoCotizacion"
                     (vista)="asignarCotizacionAnualidad($event);"></app-cotizador-anualidad>
