@@ -11,12 +11,13 @@ import swal from 'sweetalert2';
     providers: [UsuariosService]
 })
 export class LoginComponent implements OnInit {
-    correo;password;
+    correo;password;datosUsuario;
     constructor(public router: Router,  private usuariosService: UsuariosService) {
         this.correo = '';
         this.password = '';
         /*        this.correo = 'luisfernandocordova.24@gmail.com';
         this.password = 'bocho24*';*/
+        this.datosUsuario = JSON.parse(localStorage.getItem('Datos'));
     }
 
     ngOnInit() {}
@@ -28,10 +29,15 @@ export class LoginComponent implements OnInit {
             console.log('datos',sesion);
             if(sesion['Data']){
                 localStorage.setItem('Datos', JSON.stringify(sesion['Data'][0]));
-                this.router.navigate(['/Inicio/']);
+                if(this.datosUsuario.Perfil == 'Vendedor' ){
+                    this.router.navigate(['/Ventas/']);            
+                }else{
+                    this.router.navigate(['/Inicio/']);
+                }
             }
-        }).catch(err=>{
-            swal('Error','Datos Incorrectos por favor verifique','error');
+        }).catch(err=>{ 
+            swal('Error',`${err.message}`,'error');
+//            swal('Error','Datos Incorrectos por favor verifique','error');
             console.log('err',err);
         });
 

@@ -30,7 +30,7 @@ module.exports = class Usuarios {
     _generarToken(datos, token){
         return new Promise((resolve, reject)=>{
             mysql.ejecutar(`UPDATE Usuarios SET Token = '${token}' WHERE IdUsuario = ${datos.IdUsuario}`).then((res)=>{
-                return resolve([{Datos: { IdUsuario: datos.IdUsuario, IdEmpleado: datos.IdEmpleado, Nombre: datos.Nombre},
+                return resolve([{Datos: { IdUsuario: datos.IdUsuario, IdEmpleado: datos.IdEmpleado, Nombre: datos.Nombre, Perfil:datos.Nombre_perfil },
                     Perfil: datos.Nombre_perfil,
                     Token : token,
                     Modulos: this._obtenerPermisosModulos(datos)

@@ -12,6 +12,7 @@ const routes: Routes = [
             //{ path: 'Ingresos', loadChildren: './ingresos/ingresos.module#IngresosModule' },
             { path: 'Cobranza', loadChildren: './cobranza/cobranza.module#CobranzaModule' },
             { path: 'Ventas', loadChildren: './ventas/ventas.module#VentasModule' },
+            { path: 'ModuloVentas', loadChildren: './Modulo_venta/Modulo_ventas.module#ModuloVentasModule' },
             { path: 'Finanzas', loadChildren: './finanzas/finanzas.module#FinanzasModule' },
             { path: 'Cotizaciones', loadChildren: './cotizaciones/cotizaciones.module#CotizacionesModule' },
             { path: 'Egresos', loadChildren: './egresos/egresos.module#EgresosModule' },

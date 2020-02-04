@@ -36,7 +36,7 @@ export class ApiService {
   post(path: string, body = {}){
     swal({ title: 'Por favor espere...', allowOutsideClick: false, allowEscapeKey: false, allowEnterKey: false, showCancelButton: false, showConfirmButton: false});
     swal.showLoading();
-    return this.http.post(`${environment.apiUrl}${path}`,body ).toPromise().then(response => {
+      return this.http.post(`${environment.apiUrl}${path}`,body ).toPromise().then(response => {
       swal.close();
       return Promise.resolve(response);
     }).catch(err => { swal.close(); return Promise.reject(err); });

@@ -1,7 +1,10 @@
 <nav class="sidebar" [ngClass]="{sidebarPushRight: isActive}">
     <div class="list-group">
-        <a routerLink="/Inicio" [routerLinkActive]="['router-link-active']" class="list-group-item">
+        <a *ngIf="datosUsuario.Perfil != 'Vendedor' " routerLink="/Inicio" [routerLinkActive]="['router-link-active']" class="list-group-item">
             <i class="fa fa-fw fa-dashboard"></i>&nbsp;{{ 'Inicio' | translate }}
+        </a>
+        <a *ngIf="datosUsuario.Perfil == 'Vendedor' " routerLink="/ModuloVentas" [routerLinkActive]="['router-link-active']" class="list-group-item">
+            <i class="fa fa-fw fa-bar-chart"></i>&nbsp;{{ 'Modulo Ventas' | translate }}
         </a>
         <a *ngIf="datosUsuario.Modulos.Ventas" [routerLink]="['/Ventas']" [routerLinkActive]="['router-link-active']" class="list-group-item">
             <i class="fa fa-fw fa-bar-chart-o"></i>&nbsp;{{ 'Ventas' | translate }}

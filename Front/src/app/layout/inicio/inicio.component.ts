@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { routerTransition } from '../../router.animations';
+import { Router } from '@angular/router';
 import { EstadisticasService } from '../../shared/services/estadisticas.service';
 @Component({
     selector: 'app-inicio',
@@ -12,14 +13,18 @@ import { EstadisticasService } from '../../shared/services/estadisticas.service'
 export class InicioComponent implements OnInit {
     public alerts: Array<any> = [];
     reporteActivo;reportesIngresos;reportesGastos;reportesCartera;reportesClientes;
-    ingresosChart;gastosChart;carteraChart;clientesChart;
+    ingresosChart;gastosChart;carteraChart;clientesChart;datosUsuario;
     @ViewChild('datatableClientes')datatableClientes;
     @ViewChild('datatableCartera')datatableCartera;
     @ViewChild('datatableGastos')datatableGastos;
     @ViewChild('datatableIngresos')datatableIngresos;
     
-    constructor(private estadisticasService:EstadisticasService) {
+    constructor(public router: Router,private estadisticasService:EstadisticasService) {
         this.ingresosChart =this.gastosChart = this.carteraChart =  this.clientesChart =  false;
+        this.datosUsuario = JSON.parse(localStorage.getItem('Datos'));
+        if(this.datosUsuario.Perfil == 'Vendedor'){
+            this.router.navigate(['/Ventas/']);            
+        }
     }
     ngOnInit() {}
     
