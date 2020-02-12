@@ -5,6 +5,7 @@ import { CatalogosService } from '../../shared/services/catalogos.service';
 import { VentasService } from '../../shared/services/ventas.service';
 import { Router } from '@angular/router';
 import * as moment  from 'moment';
+import swal  from 'sweetalert2';
 import * as _ from 'lodash';
 @Component({
     selector: 'app-modulo-ventas',
@@ -21,17 +22,59 @@ export class ModuloVentasComponent implements OnInit {
     mostrarPrincipal;panelVisualizar;textoBuscar;terrenosTodos;terrenosBuscar;terrenosClientes = [];
     clienteDetalles;mantenimientosTodos;datosDetalle;contenidoContrato;
     clientesTodosVista;detallesClienteVista;mensualidadesVista;anualidadesVista;mantenimientoVista;
-    IdTerrenoContrato;terrenoDatos;
+    IdTerrenoContrato;terrenoDatos;Prospectos = [];nombreProspecto;descripcionProspecto;nuevoProspecto;
     constructor(public router: Router,private catalogosService : CatalogosService, private ventasService: VentasService) {
         this.mostrarPrincipal = true;
         this.clienteDetalles = {};
-        this.totales = {Clientes:0, Terrenos:0, Lotes:0, Prospectos:5};
+        this.totales = {Clientes:0, Terrenos:0, Lotes:0, Prospectos:0};
         //this.nuevoMantenimiento();
         this.datosContrato = false;
        this._obtenerTerrenos();
         this.obtenerClientesActivos();
+        this._obtenerProspectos();
     }
     ngOnInit() {}
+    _obtenerProspectos(){
+        let dat_usr = JSON.parse(localStorage.getItem('Datos'));
+        this.catalogosService.obtenerProspectosVendedor({IdUsuario: dat_usr.Datos.IdUsuario }).then(res=>{
+            console.log('res',res);
+            if(res['Data']){
+                this.Prospectos = res['Data'];
+                if(this.Prospectos[0]){
+                    this.Prospectos.forEach(p=>{
+                        p.Lapso = this._diferenciaDiasFechas(moment(p.Fecha_modificacion),moment());
+                    })
+                }
+
+            }
+            let dif =  this._diferenciaDiasFechas(moment().subtract('1','days'),moment());
+            this.totales.Prospectos = this.Prospectos.length
+        }).catch(err=>{console.log('err',err);})
+
+        // this.Prospectos.push({Nombre_prospecto: 'Luis Aguilar',Descripcion: 'Marco para agendar cita de pago ',Fecha: moment() , Lapso:dif});
+        // this.Prospectos.push({Nombre_prospecto: 'Lisa conor',Descripcion: 'Marco para agendar cita de pago ',Fecha: moment() , Lapso:dif});
+        // this.Prospectos.push({Nombre_prospecto: 'Luis Aguilar',Descripcion: 'Marco para agendar cita de pago ',Fecha: moment() , Lapso:dif});
+        // this.Prospectos.push({Nombre_prospecto: 'Luis Aguilar',Descripcion: 'Marco para agendar cita de pago ',Fecha: moment() , Lapso:dif});
+    }
+    mostarAlerta(){
+        swal('Información','Este apartado aun esta en desarrollo','info');
+    }
+    guardarNuevoProspecto(){
+        let dat_usr = JSON.parse(localStorage.getItem('Datos'));
+        console.log('dat_usr',dat_usr);
+        let datosProspecto = {Nombre_prospecto: this.nombreProspecto, Descripcion: this.descripcionProspecto, IdUsuario: dat_usr.Datos.IdUsuario};
+        console.log('datos',datosProspecto);
+        this.catalogosService.guardarProspectoVendedor(datosProspecto).then(res=>{
+            this.nombreProspecto = this.descripcionProspecto = '';
+            this.nuevoProspecto = false;
+            this._obtenerProspectos();
+        }).catch(err=>{console.log('err',err);})
+    }
+    _diferenciaDiasFechas(fecha1, fecha2){
+        let fch1 = moment(fecha1); 
+        let fch2 = moment(fecha2);
+       return fch2.diff(fch1, 'hours');
+    }
     _obtenerTerrenos(){
         this.catalogosService.obtenerTerrenos().then(res=>{
             let datos = res['Data'].filter(ob=>ob.Asignado == 0);

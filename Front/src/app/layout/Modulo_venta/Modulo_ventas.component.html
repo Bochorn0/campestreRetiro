@@ -12,7 +12,7 @@
     </div> -->
     <div class="row" style="min-height: 75px;">
         <div class="navbar-top">
-            <button class="btn btn-outline-secondary" style="color: #333;" (click)="mostrarPrincipal = true; panelVisualizar = '' "> <i class="fa fa-bars"></i> Indicadores</button>
+            <button class="btn btn-outline-secondary" style="color: #333;" (click)="mostrarPrincipal = true; panelVisualizar = '' "> <i class="fa fa-bars"></i> Menu </button>
             <!-- <a href="#news"><i class="fa fa-map text-danger"></i> Terrenos</a> -->
             <!-- <button class="btn btn-primary"> <i class="fa fa-save"></i> Guardar</button> -->
         </div> 
@@ -153,7 +153,7 @@
         </div>
     </div>
     <!-- EDITAR CLIENTE -->
-    <div class="col-xs-12" *ngIf="clienteDetalles.IdCliente || datosDetalle">
+    <div class="col-xs-12" *ngIf=" clienteDetalles.IdCliente || datosDetalle">
         <ngb-tabset>
             <ngb-tab>
                 <ng-template ngbTabTitle ><b>Datos Cliente</b> </ng-template>
@@ -166,7 +166,7 @@
                             <div class="card-body">
                                 <div class="row" *ngIf="clienteDetalles.IdCliente">
                                     <div class="col-lg-12">
-                                        <button class="btn btn-warning pull-right" (click)="EditarCliente();"><i class="fa fa-pencil"></i> | Editar Cliente</button>
+                                        <button class="btn btn-warning pull-right" (click)="panelVisualizar = ''; mostrarPrincipal = false; EditarCliente();"><i class="fa fa-pencil"></i> | Editar Cliente</button>
                                         <br><br>
                                     </div>
                                     <div class="col-lg-6">
@@ -537,100 +537,54 @@
     <div class="row" *ngIf="panelVisualizar == 'Prospectos' ">
         <div class="col-sm-12">
             <!-- Team messages-->
-            <div class="card b">
-                <div class="card-header">
-                    <div class="px-2 float-right badge badge-danger">5</div>
-                    <div class="px-2 mr-2 float-right badge badge-success">12</div>
-                    <div class="card-title">Prospectos</div>
+            <!-- <div class="card b">
+                <div class="card-title"></div>
+            </div> -->
+                <div class="card-header bg-transparent">
+                    <h3>
+                        <div class="px-2 float-right badge" style="margin-top:-5px;">
+                            <button class="btn button-default" (click)="nuevoProspecto = !nuevoProspecto"><i class="fa fa-2x fa-{{(!nuevoProspecto)?'plus-circle text-success':'minus-circle text-danger'}}"></i></button>
+                        </div>
+                        Prospectos
+                        <div class="px-2 mr-2 badge badge-danger">0</div>
+                        <div class="px-2 mr-2  badge badge-success">{{totales.Prospectos}}</div>
+                    </h3>
+                    <div class="col-xs-12"  *ngIf="nuevoProspecto" >
+                        <div class="form-group">
+                            <input type="text" class="form-control" [(ngModel)]="nombreProspecto" placeholder="Nombre del prospecto" />
+                        </div>
+                        <div class="form-group">
+                            <textarea  class="form-control" [(ngModel)]="descripcionProspecto" placeholder="Descripción leve de las necesidades del cliente"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <button class="btn btn-primary form-control" (click)="guardarNuevoProspecto();"><i class="fa fa-save"></i> Guardar</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body" style=" max-height: 350px; overflow:auto;">
+                <div class="card-body" style=" max-height: 500px; overflow:auto;" *ngIf="Prospectos[0]"> 
+                    <hr>
                     <div class="list-group" >
-                        <div class="list-group-item list-group-item-action">
-                            <div class="media">
-                                <img class="align-self-start mx-2 circle thumb32" src="http://themicon.co/theme/angle/v4.3/angular/assets/img/user/02.jpg" alt="Image">
+                        <div class="list-group-item list-group-item-action" *ngFor="let p of Prospectos">
+                            <div class="media" (click)="mostarAlerta();">
+                                <div class="align-self-start mx-2 circle thumb55" >
+                                    <i class="fa fa-user fa-3x" style="margin-left:8px;"></i> 
+                                </div>
+                                
+                                <!-- <img class="align-self-start mx-2 circle thumb32" src="http://themicon.co/theme/angle/v4.3/angular/assets/img/user/02.jpg" alt="Image"> -->
                                 <div class="media-body text-truncate">
                                     <p class="mb-1">
                                         <strong class="text-primary">
                                             <span class="circle bg-success circle-lg text-left"></span>
-                                            <span>Marco Antonio Rios</span>
+                                            <span>{{p.Nombre_prospecto}}</span>
                                         </strong>
                                     </p>
-                                    <p class="mb-1 text-sm">Intersada en comprar un terreno cerca del lote III ...</p>
+                                    <p class="mb-1 text-sm">{{p.Descripcion}}</p>
                                 </div>
                                 <div class="ml-auto">
-                                    <small class="text-muted ml-2">2h</small>
+                                    <small class="text-muted ml-2">{{p.Lapso}}h</small>
                                 </div>
                             </div>
                         </div>
-                        <div class="list-group-item list-group-item-action">
-                            <div class="media">
-                                <img class="align-self-start mx-2 circle thumb32" src="http://themicon.co/theme/angle/v4.3/angular/assets/img/user/03.jpg" alt="Image">
-                                <div class="media-body text-truncate">
-                                    <p class="mb-1">
-                                        <strong class="text-primary">
-                                            <span class="circle bg-success circle-lg text-left"></span>
-                                            <span>Jesus Arce</span>
-                                        </strong>
-                                    </p>
-                                    <p class="mb-1 text-sm">Solicito una cotización ...</p>
-                                </div>
-                                <div class="ml-auto">
-                                    <small class="text-muted ml-2">3h</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item list-group-item-action">
-                            <div class="media">
-                                <img class="align-self-start mx-2 circle thumb32" src="http://themicon.co/theme/angle/v4.3/angular/assets/img/user/09.jpg" alt="Image">
-                                <div class="media-body text-truncate">
-                                    <p class="mb-1">
-                                        <strong class="text-primary">
-                                            <span class="circle bg-danger circle-lg text-left"></span>
-                                            <span>Yuliana Contreras</span>
-                                        </strong>
-                                    </p>
-                                    <p class="mb-1 text-sm">Marco para agendar cita de pago ...</p>
-                                </div>
-                                <div class="ml-auto">
-                                    <small class="text-muted ml-2">4h</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item list-group-item-action">
-                            <div class="media">
-                                <img class="align-self-start mx-2 circle thumb32" src="http://themicon.co/theme/angle/v4.3/angular/assets/img/user/12.jpg" alt="Image">
-                                <div class="media-body text-truncate">
-                                    <p class="mb-1">
-                                        <strong class="text-primary">
-                                            <span class="circle bg-danger circle-lg text-left"></span>
-                                            <span>Rosa Morales</span>
-                                        </strong>
-                                    </p>
-                                    <p class="mb-1 text-sm">Intersada en comprar un terreno cerca de la tercera etapa ...</p>
-                                </div>
-                                <div class="ml-auto">
-                                    <small class="text-muted ml-2">1d</small>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="list-group-item list-group-item-action">
-                            <div class="media">
-                                <img class="align-self-start mx-2 circle thumb32" src="http://themicon.co/theme/angle/v4.3/angular/assets/img/user/10.jpg" alt="Image">
-                                <div class="media-body text-truncate">
-                                    <p class="mb-1">
-                                        <strong class="text-primary">
-                                            <span class="circle bg-danger circle-lg text-left"></span>
-                                            <span>Jorge Castro</span>
-                                        </strong>
-                                    </p>
-                                    <p class="mb-1 text-sm">Quería ayuda con su portal de entrada</p>
-                                </div>
-                                <div class="ml-auto">
-                                    <small class="text-muted ml-2">2d</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                    
                 </div>
             </div>
         </div>

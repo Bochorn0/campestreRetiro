@@ -195,6 +195,7 @@ module.exports = class Catalogos {
             }).catch(err=>{ console.log('error',err); reject(err);})
         })
     }
+    
     Catalogo_cotizaciones(solicitud){
         return new Promise((resolve, reject)=>{
             mysql.ejecutar('SELECT * FROM Cotizaciones;').then((res)=>{
@@ -208,6 +209,45 @@ module.exports = class Catalogos {
                 return resolve({Data: res, error: false});
             }).catch(err=>{ console.log('error',err); reject(err);})
         })
+    }
+    obtener_prospectos_ventas(datos){
+        return new Promise((resolve, reject)=>{
+            let condiciones = ` IdUsuario = ${datos.IdUsuario} `;
+            mysql.ejecutar(`SELECT * FROM Prospectos_ventas WHERE ${condiciones}; `).then((res)=>{
+                return resolve({Data: res, error: false});
+            }).catch(err=>{ console.log('error',err); reject(err);})
+        })
+    }
+    actualizar_prospectos_ventas(datos){
+        return new Promise((resolve, reject)=>{
+            let update = ` Fecha_modificacion = '${moment().format('YYYY-MM-DD HH:mm:ss')}' `;
+            update += (datos.Comentarios)?` Comentarios = '${datos.Comentarios}',`:``;
+            update += (datos.Resolucion)?` Resolucion = ${datos.Resolucion},`:``;
+            update += (datos.Activo)?` Activo = ${datos.Activo},`:``;
+            update = update.slice(0,-1);
+            mysql.ejecutar(`UPDATE Prospectos_ventas SET ${update} WHERE IdProspecto = ${datos.IdProspecto} ; `).then((res)=>{
+                return resolve({Procesado: true, Operacion: 'La solicitud del prospecto fue actualizada exitosamente ', Tipo: 'success'});
+            }).catch(err => { console.log('err',err); return reject({Data: false, err })});
+        });        
+    }
+    guardar_prospectos_ventas(datos){
+        console.log('datos',datos);
+        return new Promise((resolve, reject)=>{
+            let today = moment().format('YYYY-MM-DD HH:mm:ss');
+            let campos = `IdUsuario, Nombre_prospecto, Descripcion, Fecha, Fecha_modificacion`;
+            let valores = `${datos.IdUsuario},'${datos.Nombre_prospecto}','${datos.Descripcion}','${today}','${today}'`;
+            mysql.ejecutar(`INSERT INTO Prospectos_ventas (${campos}) VALUES (${valores})`).then((res)=>{
+                return resolve({Data: res, error: false});
+            }).catch(err=>{ console.log('error',err); reject(err);})
+        })
+    }
+    borrar_prospectos_ventas(datos){
+        return new Promise((resolve, reject)=>{
+            console.log('datos',datos);
+            mysql.ejecutar(`DELETE FROM Prospectos_ventas WHERE IdProspecto = ${datos.IdProspecto}`).then((res)=>{
+                return resolve({Procesado: true, Operacion: 'El prospecto fue eliminada correctamente', Tipo: 'success'});
+            }).catch(err => { console.log('err',err); return reject({Data: false, err })});
+        });
     }
     Guardar_nueva_cuenta_especial(datosCuenta){
         console.log('datos',datosCuenta);

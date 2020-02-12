@@ -23,7 +23,7 @@ export class InicioComponent implements OnInit {
         this.ingresosChart =this.gastosChart = this.carteraChart =  this.clientesChart =  false;
         this.datosUsuario = JSON.parse(localStorage.getItem('Datos'));
         if(this.datosUsuario.Perfil == 'Vendedor'){
-            this.router.navigate(['/Ventas/']);            
+            this.router.navigate(['/ModuloVentas/']);            
         }
     }
     ngOnInit() {}

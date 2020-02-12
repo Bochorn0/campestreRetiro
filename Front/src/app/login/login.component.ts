@@ -29,8 +29,9 @@ export class LoginComponent implements OnInit {
             console.log('datos',sesion);
             if(sesion['Data']){
                 localStorage.setItem('Datos', JSON.stringify(sesion['Data'][0]));
-                if(this.datosUsuario.Perfil == 'Vendedor' ){
-                    this.router.navigate(['/Ventas/']);            
+                
+                if(sesion['Data'][0].Perfil == 'Vendedor' ){
+                    this.router.navigate(['/ModuloVentas/']);            
                 }else{
                     this.router.navigate(['/Inicio/']);
                 }

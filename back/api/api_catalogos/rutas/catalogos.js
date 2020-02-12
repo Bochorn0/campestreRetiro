@@ -353,6 +353,36 @@ router.post('/borrarRegistroDatosTodos', (req, res) => {
         res.status(400).send(error);
     })
 });
-
-
+router.post('/obtenerProspectosVentas', (req, res) => {
+    let objCatalogos = new Catalogos();
+    objCatalogos.obtener_prospectos_ventas(req.body).then((result) => {
+        res.status(200).send(result);
+    }).catch((error) => {
+        res.status(400).send(error);
+    })
+});
+router.post('/guardarProspectosVentas', (req, res) => {
+    let objCatalogos = new Catalogos();
+    objCatalogos.guardar_prospectos_ventas(req.body).then((result) => {
+        res.status(200).send(result);
+    }).catch((error) => {
+        res.status(400).send(error);
+    })
+});
+router.post('/actualizarProspectosVentas', (req, res) => {
+    let objCatalogos = new Catalogos();
+    objCatalogos.actualizar_prospectos_ventas(req.body).then((result) => {
+        res.status(200).send(result);
+    }).catch((error) => {
+        res.status(400).send(error);
+    })
+});
+router.post('/borrarProspectosVentas', (req, res) => {
+    let objCatalogos = new Catalogos();
+    objCatalogos.borrar_prospectos_ventas(req.body).then((result) => {
+        res.status(200).send(result);
+    }).catch((error) => {
+        res.status(400).send(error);
+    })
+});
 module.exports = router;

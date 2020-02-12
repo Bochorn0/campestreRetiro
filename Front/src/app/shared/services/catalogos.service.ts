@@ -202,4 +202,14 @@ export class CatalogosService {
       return Promise.resolve(response);
     }).catch(err => { return Promise.reject(err); });
   }
+  obtenerProspectosVendedor(datos){
+    return this.api.post(`/catalogos/obtenerProspectosVentas`, datos).then(response => {
+      return Promise.resolve(response);
+    }).catch(err => { return Promise.reject(err); });
+  }
+  guardarProspectoVendedor(datos){
+    return this.api.post(`/catalogos/guardarProspectosVentas`, datos).then(response => {
+      return Promise.resolve(response);
+    }).catch(err => { return Promise.reject(err); });
+  }
 }
