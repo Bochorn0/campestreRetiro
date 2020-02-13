@@ -115,8 +115,8 @@ var LoginComponent = /** @class */ (function () {
             console.log('datos', sesion);
             if (sesion['Data']) {
                 localStorage.setItem('Datos', JSON.stringify(sesion['Data'][0]));
-                if (_this.datosUsuario.Perfil == 'Vendedor') {
-                    _this.router.navigate(['/Ventas/']);
+                if (sesion['Data'][0].Perfil == 'Vendedor') {
+                    _this.router.navigate(['/ModuloVentas/']);
                 }
                 else {
                     _this.router.navigate(['/Inicio/']);

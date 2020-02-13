@@ -220,10 +220,11 @@ module.exports = class Catalogos {
     }
     actualizar_prospectos_ventas(datos){
         return new Promise((resolve, reject)=>{
+            console.log('datos',datos);
             let update = ` Fecha_modificacion = '${moment().format('YYYY-MM-DD HH:mm:ss')}' `;
             update += (datos.Comentarios)?` Comentarios = '${datos.Comentarios}',`:``;
             update += (datos.Resolucion)?` Resolucion = ${datos.Resolucion},`:``;
-            update += (datos.Activo)?` Activo = ${datos.Activo},`:``;
+            update += (datos.Activo || datos.Activo == 0)?` Activo = ${datos.Activo},`:``;
             update = update.slice(0,-1);
             mysql.ejecutar(`UPDATE Prospectos_ventas SET ${update} WHERE IdProspecto = ${datos.IdProspecto} ; `).then((res)=>{
                 return resolve({Procesado: true, Operacion: 'La solicitud del prospecto fue actualizada exitosamente ', Tipo: 'success'});
@@ -234,8 +235,8 @@ module.exports = class Catalogos {
         console.log('datos',datos);
         return new Promise((resolve, reject)=>{
             let today = moment().format('YYYY-MM-DD HH:mm:ss');
-            let campos = `IdUsuario, Nombre_prospecto, Descripcion, Fecha, Fecha_modificacion`;
-            let valores = `${datos.IdUsuario},'${datos.Nombre_prospecto}','${datos.Descripcion}','${today}','${today}'`;
+            let campos = `IdUsuario, Nombre_prospecto, Descripcion, Telefono,Correo, Fecha, Fecha_modificacion`;
+            let valores = `${datos.IdUsuario},'${datos.Nombre_prospecto}','${datos.Descripcion}','${datos.Telefono}','${datos.Correo}','${today}','${today}'`;
             mysql.ejecutar(`INSERT INTO Prospectos_ventas (${campos}) VALUES (${valores})`).then((res)=>{
                 return resolve({Data: res, error: false});
             }).catch(err=>{ console.log('error',err); reject(err);})

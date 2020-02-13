@@ -212,4 +212,9 @@ export class CatalogosService {
       return Promise.resolve(response);
     }).catch(err => { return Promise.reject(err); });
   }
+  actualizarProspectoVendedor(datos){
+    return this.api.post(`/catalogos/actualizarProspectosVentas`, datos).then(response => {
+      return Promise.resolve(response);
+    }).catch(err => { return Promise.reject(err); });
+  }
 }

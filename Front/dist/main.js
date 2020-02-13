@@ -7036,6 +7036,21 @@ var CatalogosService = /** @class */ (function () {
             return Promise.resolve(response);
         }).catch(function (err) { return Promise.reject(err); });
     };
+    CatalogosService.prototype.obtenerProspectosVendedor = function (datos) {
+        return this.api.post("/catalogos/obtenerProspectosVentas", datos).then(function (response) {
+            return Promise.resolve(response);
+        }).catch(function (err) { return Promise.reject(err); });
+    };
+    CatalogosService.prototype.guardarProspectoVendedor = function (datos) {
+        return this.api.post("/catalogos/guardarProspectosVentas", datos).then(function (response) {
+            return Promise.resolve(response);
+        }).catch(function (err) { return Promise.reject(err); });
+    };
+    CatalogosService.prototype.actualizarProspectoVendedor = function (datos) {
+        return this.api.post("/catalogos/actualizarProspectosVentas", datos).then(function (response) {
+            return Promise.resolve(response);
+        }).catch(function (err) { return Promise.reject(err); });
+    };
     CatalogosService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({ providedIn: "root", }),
         __metadata("design:paramtypes", [_API_service__WEBPACK_IMPORTED_MODULE_1__["ApiService"]])
@@ -7214,7 +7229,7 @@ __webpack_require__.r(__webpack_exports__);
 var environment = {
     //  apiUrl: 'http://134.209.238.227:3000',
     apiUrl: 'http://134.209.238.227:3000',
-    //apiUrl: 'http://localhost:3000', 
+    // apiUrl: 'http://localhost:3000', 
     debugMode: true
 };
 

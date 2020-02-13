@@ -3,6 +3,8 @@ import { routerTransition } from '../../router.animations';
 import { EstadisticasService } from '../../shared/services/estadisticas.service';
 import { CatalogosService } from '../../shared/services/catalogos.service';
 import { VentasService } from '../../shared/services/ventas.service';
+import {NgbActiveModal,NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Router } from '@angular/router';
 import * as moment  from 'moment';
 import swal  from 'sweetalert2';
@@ -11,7 +13,19 @@ import * as _ from 'lodash';
     selector: 'app-modulo-ventas',
     templateUrl: './Modulo_ventas.component.html',
     styleUrls: ['./Modulo_ventas.component.scss'],
-    animations: [routerTransition()],
+    animations: [
+        routerTransition(),
+        trigger('flyInOut', [
+          state('in', style({ transform: 'translateX(0)' })),
+          transition('void => *', [
+            style({ transform: 'translateX(-100%)' }),
+            animate(100)
+          ]),
+          transition('* => void', [
+            animate(100, style({ transform: 'translateX(100%)' }))
+          ])
+        ])
+      ],
     providers: [EstadisticasService]
 })
 
@@ -22,16 +36,18 @@ export class ModuloVentasComponent implements OnInit {
     mostrarPrincipal;panelVisualizar;textoBuscar;terrenosTodos;terrenosBuscar;terrenosClientes = [];
     clienteDetalles;mantenimientosTodos;datosDetalle;contenidoContrato;
     clientesTodosVista;detallesClienteVista;mensualidadesVista;anualidadesVista;mantenimientoVista;
-    IdTerrenoContrato;terrenoDatos;Prospectos = [];nombreProspecto;descripcionProspecto;nuevoProspecto;
-    constructor(public router: Router,private catalogosService : CatalogosService, private ventasService: VentasService) {
+    IdTerrenoContrato;terrenoDatos;Prospectos = [];nombreProspecto;descripcionProspecto;nuevoProspecto;telefonoProspecto;
+    correoProspecto;xStart;xEnd; datosNuevoCliente
+    constructor(public router: Router,private catalogosService : CatalogosService, private ventasService: VentasService, private modalService: NgbModal) {
         this.mostrarPrincipal = true;
         this.clienteDetalles = {};
-        this.totales = {Clientes:0, Terrenos:0, Lotes:0, Prospectos:0};
+        this.totales = {Clientes:0, Terrenos:0, Lotes:0, Prospectos:0,Pros_activos:0,Pros_alerta:0};
         //this.nuevoMantenimiento();
         this.datosContrato = false;
        this._obtenerTerrenos();
         this.obtenerClientesActivos();
         this._obtenerProspectos();
+        this.datosNuevoCliente = {Terrenos:[{Id:0,Cotizacion:[{IdCotizacion:0}]}]};
     }
     ngOnInit() {}
     _obtenerProspectos(){
@@ -45,10 +61,10 @@ export class ModuloVentasComponent implements OnInit {
                         p.Lapso = this._diferenciaDiasFechas(moment(p.Fecha_modificacion),moment());
                     })
                 }
-
             }
-            let dif =  this._diferenciaDiasFechas(moment().subtract('1','days'),moment());
             this.totales.Prospectos = this.Prospectos.length
+            this.totales.Pros_activos = this.Prospectos.filter(p=>p.Lapso < 24).length;
+            this.totales.Pros_alerta = this.Prospectos.filter(p=>p.Lapso >= 24).length;
         }).catch(err=>{console.log('err',err);})
 
         // this.Prospectos.push({Nombre_prospecto: 'Luis Aguilar',Descripcion: 'Marco para agendar cita de pago ',Fecha: moment() , Lapso:dif});
@@ -62,13 +78,37 @@ export class ModuloVentasComponent implements OnInit {
     guardarNuevoProspecto(){
         let dat_usr = JSON.parse(localStorage.getItem('Datos'));
         console.log('dat_usr',dat_usr);
-        let datosProspecto = {Nombre_prospecto: this.nombreProspecto, Descripcion: this.descripcionProspecto, IdUsuario: dat_usr.Datos.IdUsuario};
+        let datosProspecto = {
+            Nombre_prospecto: (this.nombreProspecto)?this.nombreProspecto:'',
+            Correo:(this.correoProspecto)?this.correoProspecto:'',
+            Descripcion: (this.descripcionProspecto)?this.descripcionProspecto:'',
+            Telefono:(this.telefonoProspecto)?this.telefonoProspecto:'',
+            IdUsuario: dat_usr.Datos.IdUsuario
+        };
         console.log('datos',datosProspecto);
         this.catalogosService.guardarProspectoVendedor(datosProspecto).then(res=>{
-            this.nombreProspecto = this.descripcionProspecto = '';
+            this.correoProspecto = this.telefonoProspecto = this.nombreProspecto = this.descripcionProspecto = '';
             this.nuevoProspecto = false;
             this._obtenerProspectos();
         }).catch(err=>{console.log('err',err);})
+    }
+    agendarCita(){
+        swal('Información','Este apartado aun esta en desarrollo','info');
+//        swal('Agendar Cita','Detalles de la cita','info' );
+//        this.modalService.open('modalCita', {windowClass: 'modal-holder', size: 'lg'});
+    }
+    marcarLateral(event){
+        this.xStart = event.touches[0].clientX;
+    }
+    menuLateral(event,p){    
+        this.xEnd = event.touches[0].clientX;
+        if((this.xEnd - this.xStart) > 100){
+            p.Lateral = true;
+        }
+        if((this.xEnd - this.xStart) < -100){
+            p.Lateral = false;
+        }        
+
     }
     _diferenciaDiasFechas(fecha1, fecha2){
         let fch1 = moment(fecha1); 
@@ -357,9 +397,46 @@ export class ModuloVentasComponent implements OnInit {
             this.datosContrato = event;
         });
     }
+    confirmarEliminarUsuario(p){
+        let datosModal = {Titulo:'Advertencia',Contenido: 'Estas a punto de poner borrar este prospecto, deseas continuar ? ',Tipo:'warning',Confirm:'Si Eliminar'}
+        
+        this._confirmarModal(datosModal).then(res=>{
+            console.log('datos',p);
+            p.Activo = 0;
+            this.catalogosService.actualizarProspectoVendedor(p).then(res=>{
+                this.nuevoProspecto = false;
+                this._obtenerProspectos();
+            }).catch(err=>{console.log('err',err);})
+        }).catch(err=>{
+            console.log('err',err);
+        })
+        this.Prospectos =  this.Prospectos.filter(pr=>pr != p)
+    }
+    apartarTerreno(p){
+        this.panelVisualizar = 'NuevoCliente'
+        this.datosNuevoCliente = { Nombre:p.Nombre_prospecto, Correo:p.Correo,Telefono:p.Telefono,Terrenos:[{Id:0,Cotizacion:[{IdCotizacion:0}]}]}
+    }
     _limpiarVistaYVariables(){
         this.vistaCentro = this.clientesCatalogos = this.datosContrato = this.clienteNuevo = this.cotizacionNueva  = false;
     }
+    _confirmarModal(datosAlert){
+        return new Promise ((resolve,reject)=>{
+          swal({ title: datosAlert.Titulo,
+            html: `<p class="">${datosAlert.Contenido}</p>`,
+            type: datosAlert.Tipo,
+            showCancelButton: true,
+            cancelButtonColor:'#D33',
+            confirmButtonText: `<b style="font-size: 18px;">${datosAlert.Confirm}</b>`,
+            cancelButtonText: `<b style="font-size: 18px;">Cancelar</b>`
+          }).then((result)=>{
+            if(result.value){
+              return resolve(true);
+            }
+          }).catch((err)=>{
+            return reject(false);
+          });
+        });
+      }
     _delay(ms){
         return new Promise( resolve => setTimeout(resolve, ms) );
     }

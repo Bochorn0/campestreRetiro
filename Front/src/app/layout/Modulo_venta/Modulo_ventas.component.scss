@@ -151,3 +151,19 @@ border-bottom: 1px solid #ddd;
     vertical-align: baseline;
     border: 2px solid transparent;
 }
+.danger-element{
+    z-index: 10;
+    width: 69px;
+    background-color:#dc3545 ;
+    color: #fff;
+    float: left;
+    border-radius: .25rem !important;
+}
+.active {
+    background-color: #cfd8dc;
+    transform: scale(1.1);
+  }
+  .inactive {
+    background-color: #eee;
+    transform: scale(1);
+  }
