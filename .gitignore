@@ -1,10 +1,9 @@
-Publicar.sh
 back/node_modules
 back/shared/uploads
 back/shared/config/*
-Front/mobile
+Front/src/environments/*
 Front/node_modules
 Front/dist
-Front/src/environments
+Publicar.sh
 Respaldos
 .htaccess
