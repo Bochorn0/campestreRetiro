@@ -299,7 +299,7 @@ module.exports = class Catalogos {
                 let cambiosConceptos = [];
                 datos.DatosMantenimiento.ConceptosPagados.forEach(con=>{
                     cambiosConceptos.push(this._actualizacionesPorTipoMantenimiento(datos,con).then(result=>{
-                        console.log('result',result);
+                        //console.log('result',result);
                         return {Concepto: con, Resuelto: true};
                     }).catch(err=>{
                         return {Concepto: con, Resuelto: false};
@@ -749,7 +749,7 @@ module.exports = class Catalogos {
                     let ifeNombre =  `Ife_${datos.Nombre}.${ifeExt}`;
                     return this._subirArchivo(ifePath,ifeNombre,ifeCont,2097152);
                 }).then(result=>{
-                    console.log('res',result);
+                    //console.log('res',result);
                     archivos.IdIfe = (result && !result.err)?result:0;
                     return resolve(archivos);
                 }).catch(err=>{console.log('err',err); return resolve({Error:err}) });
@@ -890,7 +890,7 @@ module.exports = class Catalogos {
                     return Promise.resolve({});
                 }
             }).then(res=>{
-                console.log('res');
+                //console.log('res');
                 let condiciones =  ` IdCliente =  ${datos.ClienteCompleto.IdCliente} AND Pagado = 0 AND Pendiente = 0`;
                 return this._ordenarQuery(conexion,`SELECT * FROM Adeudos_anualidades WHERE ${condiciones} ;`);
             }).then(anu=>{
@@ -1046,7 +1046,9 @@ module.exports = class Catalogos {
                 if(res[0]){
                     res.forEach(r=>{
                         if(r.Pendiente > 0){
+                            r.ImportePagado =  r.Importe-r.Pendiente;
                             r.Importe =  r.Pendiente;
+
                         }
                     });
                 }
@@ -1520,7 +1522,7 @@ module.exports = class Catalogos {
                     return Promise.resolve({Procesado:false,Dat:0})
                 }
             }).then(res=>{
-                console.log('res termina todo',res);
+                //console.log('res termina todo',res);
                 return resolve({Procesado: true, Operacion: 'Datos afectados Correctamente', Tipo: 'success'});
             }).catch(err=>{ console.log('err',err);return reject({Error:err});});
         });

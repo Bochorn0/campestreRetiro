@@ -15,9 +15,11 @@ export class ApiService {
     headers.append('x-auth', localStorage.getItem('x-auth'));
     return headers;
   }
-  get(path: string,params = {}) {
-    swal({ title: 'Por favor espere...', allowOutsideClick: false, allowEscapeKey: false, allowEnterKey: false, showCancelButton: false, showConfirmButton: false});
-  swal.showLoading();
+  get(path: string,params = {},noLoad =false) {
+    if(!noLoad){
+      swal({ title: 'Por favor espere...', allowOutsideClick: false, allowEscapeKey: false, allowEnterKey: false, showCancelButton: false, showConfirmButton: false});
+      swal.showLoading();
+    }
     return this.http.get(`${environment.apiUrl}${path}`,params).toPromise().then(response => {
       swal.close();
       return Promise.resolve(response);
@@ -33,9 +35,11 @@ export class ApiService {
     }).catch(err => { swal.close(); return Promise.reject(err); });
   }
 
-  post(path: string, body = {}){
-    swal({ title: 'Por favor espere...', allowOutsideClick: false, allowEscapeKey: false, allowEnterKey: false, showCancelButton: false, showConfirmButton: false});
-    swal.showLoading();
+  post(path: string, body = {},noLoad = false){
+      if(!noLoad){
+        swal({ title: 'Por favor espere...', allowOutsideClick: false, allowEscapeKey: false, allowEnterKey: false, showCancelButton: false, showConfirmButton: false});
+        swal.showLoading();
+      }
       return this.http.post(`${environment.apiUrl}${path}`,body ).toPromise().then(response => {
       swal.close();
       return Promise.resolve(response);

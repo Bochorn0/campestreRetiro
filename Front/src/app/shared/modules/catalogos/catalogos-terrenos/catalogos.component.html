@@ -20,7 +20,7 @@
                         <div class="row" *ngIf="!detalleTerrenos">
                             <div class="col-lg-3">
                                 <h4> Parcela </h4>
-                                <input id="typeahead-format" (keyup)="filtrarTerrenos();"   placeholder="Parcela:" type="text" class="form-control" [(ngModel)]="parcelaFiltro" [ngbTypeahead]="filtrarParcelas" (selectItem)="parcelaFiltro = $event.item; filtrarTerrenos();" [resultFormatter]="formatter" />
+                                <input  (keyup)="filtrarTerrenos();"   placeholder="Parcela:" type="text" class="form-control" [(ngModel)]="parcelaFiltro" [ngbTypeahead]="filtrarParcelas" (selectItem)="parcelaFiltro = $event.item; filtrarTerrenos();" [resultFormatter]="formatter" />
                                 <!-- <select  class="form-control" [(ngModel)]="parcelaFiltro" (change)="filtrarTerrenos();" >
                                     <option value="0">Todas</option>
                                     <option  *ngFor="let e of parcelas;" value="{{e.parcela}}">{{e.parcela}}</option>
@@ -28,7 +28,7 @@
                             </div>
                             <div class="col-lg-3">
                                 <h4> Lote </h4>
-                                <input id="typeahead-format" (keyup)="filtrarTerrenos();"  placeholder="Lote:" type="text" class="form-control" [(ngModel)]="loteFiltro" [ngbTypeahead]="filtrarLotes" (selectItem)="loteFiltro = $event.item; filtrarTerrenos();"  [resultFormatter]="formatter" />
+                                <input  (keyup)="filtrarTerrenos();"  placeholder="Lote:" type="text" class="form-control" [(ngModel)]="loteFiltro" [ngbTypeahead]="filtrarLotes" (selectItem)="loteFiltro = $event.item; filtrarTerrenos();"  [resultFormatter]="formatter" />
                                 <!-- <select  class="form-control" [(ngModel)]="loteFiltro" (change)="filtrarTerrenos();" >
                                     <option value="0">Todos</option>
                                     <option  *ngFor="let e of lotes;" value="{{e.lote}}">{{e.lote}}</option>
@@ -36,7 +36,7 @@
                             </div>
                             <div class="col-lg-3"> 
                                 <h4> Estapa </h4>
-                                <input id="typeahead-format" (keyup)="filtrarTerrenos();"  placeholder="Etapa:" type="text" class="form-control" [(ngModel)]="etapaFiltro" [ngbTypeahead]="filtrarEtapas" (selectItem)="etapaFiltro = $event.item; filtrarTerrenos();" [resultFormatter]="formatter" />
+                                <input  (keyup)="filtrarTerrenos();"  placeholder="Etapa:" type="text" class="form-control" [(ngModel)]="etapaFiltro" [ngbTypeahead]="filtrarEtapas" (selectItem)="etapaFiltro = $event.item; filtrarTerrenos();" [resultFormatter]="formatter" />
                                 <!-- <select  class="form-control" [(ngModel)]="etapaFiltro" (change)="filtrarTerrenos();" >
                                     <option value="0">Todas</option>
                                     <option  *ngFor="let e of etapas;" value="{{e.etapa}}">{{e.etapa}}</option>
@@ -52,7 +52,7 @@
                             <div class="col-lg-12">
                                 <br>
                                 <div class="form-group"> 
-                                    <input id="typeahead-format" (keyup)="filtrarTerrenos();"  placeholder="Buscar en Terrenos:" type="text" class="form-control" [(ngModel)]="textoTerreno" />
+                                    <input (keyup)="filtrarTerrenos();"  placeholder="Buscar en Terrenos:" type="text" class="form-control" [(ngModel)]="textoTerreno" />
                                 </div>
                                 <br>
                             </div>

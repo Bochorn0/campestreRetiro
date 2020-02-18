@@ -171,17 +171,17 @@
                             <div class="col-lg-2">
                                 <div class="form-group">
                                     <input type="hidden"[(ngModel)]="ter.IdTerreno">
-                                    <input id="typeahead-format" title="Parcela # y propietario: {{ter.Pertenece}}" placeholder="Parcela:" type="text" class="form-control" [(ngModel)]="ter.parcela" [ngbTypeahead]="filtrarTerrenos" (selectItem)="seleccionarParcela($event, t)" [resultFormatter]="formatter" required/>
+                                    <input  title="Parcela # y propietario: {{ter.Pertenece}}" placeholder="Parcela:" type="text" class="form-control" [(ngModel)]="ter.parcela" [ngbTypeahead]="filtrarTerrenos" (selectItem)="seleccionarParcela($event, t)" [resultFormatter]="formatter" required/>
                                 </div>
                             </div>
                             <div class="col-lg-1">
                                 <div class="form-group">
-                                    <input id="typeahead-format" title="Lote #: " placeholder="Lote:" type="text" class="form-control" [(ngModel)]="ter.lote" [ngbTypeahead]="filtrarLotes" (selectItem)="seleccionarLote($event)" [resultFormatter]="formatter" required/>
+                                    <input title="Lote #: " placeholder="Lote:" type="text" class="form-control" [(ngModel)]="ter.lote" [ngbTypeahead]="filtrarLotes" (selectItem)="seleccionarLote($event)" [resultFormatter]="formatter" required/>
                                 </div>                            
                             </div>
                             <div class="col-lg-1">
                                 <div class="form-group">
-                                    <input id="typeahead-format" title="Etapa #: " placeholder="Etapa:" type="text" class="form-control" [(ngModel)]="ter.etapa" [ngbTypeahead]="filtrarEtapas" (selectItem)="seleccionarEtapa($event)" [resultFormatter]="formatter" required/>
+                                    <input title="Etapa #: " placeholder="Etapa:" type="text" class="form-control" [(ngModel)]="ter.etapa" [ngbTypeahead]="filtrarEtapas" (selectItem)="seleccionarEtapa($event)" [resultFormatter]="formatter" required/>
                                 </div>
                             </div>
                             <div class="col-lg-2">

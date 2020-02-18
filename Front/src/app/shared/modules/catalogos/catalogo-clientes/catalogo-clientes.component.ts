@@ -19,7 +19,7 @@ export class CatalogoClientesComponent implements OnInit {
     clientesTodosVista;nombreCliente;mensualidadesVista;contenidoContrato;anualidadesVista;
     diaMantenimiento;importeMantenimiento;IdTerrenoMantenimiento;IdTerrenoContrato;mantenimientosTodos;
     idTerrenoMensualidad;datosDetalle;terrenoDatos;
-    parcelaFiltro;loteFiltro;etapaFiltro;estatusFiltro;textoCliente;
+    parcelaFiltro;loteFiltro;etapaFiltro;estatusFiltro;textoCliente;mantenimientosPagados;
     @Output() public nuevaOperacion = new EventEmitter();
     constructor(private catalogosService : CatalogosService, private ventasService: VentasService) {
         this.obtenerClientesActivos();
@@ -136,6 +136,17 @@ export class CatalogoClientesComponent implements OnInit {
         if(this.nombreCliente == ''){
             this.clienteDetalles = {};
             this.obtenerClientesActivos();
+        }
+    }
+    filtrarMantenimientos(){
+        if(this.clienteDetalles){
+            console.log('mantenimientos',this.clienteDetalles.Mantenimientos);
+            if(this.mantenimientosPagados){
+                this.clienteDetalles.Mantenimientos = this.clienteDetalles.Mantenimientos_todos.filter(m=>m.Pagado == 1);
+            }else{
+                this.clienteDetalles.Mantenimientos = this.clienteDetalles.Mantenimientos_todos.filter(m=>m.Pagado != 1);
+            }
+
         }
     }
     obtenerClientesActivos(){
@@ -296,7 +307,7 @@ export class CatalogoClientesComponent implements OnInit {
         datos.forEach(da=>{
             let pagado =  (da.Pagado ==1)?'Si':'No';
             pagado =  (da.Pendiente == 0)?pagado:'Abonado';
-            datosOrdenados.push({Fecha: da.Fecha, Fecha_ultimo_abono: da.Fecha_modificacion, Importe:da.Importe,Pagado : pagado, Restante: da.Pendiente, ObjCompleto: da});
+            datosOrdenados.push({Fecha: moment(da.Fecha).format('LL'), Fecha_ultimo_abono: da.Fecha_modificacion, Importe:da.Importe, Abonado: (da.ImportePagado)?da.ImportePagado:0 ,Pagado : pagado, Restante: da.Pendiente, ObjCompleto: da});
         });
         return datosOrdenados;
     }
@@ -305,9 +316,11 @@ export class CatalogoClientesComponent implements OnInit {
         //this._limpiarPantallas();
         if(cliente.IdCliente){
             this.ventasService.obtenerMantenimientosCliente(cliente).then(man=>{
-                if(man['Data']){
-                    this.mantenimientosTodos = {Datos: this._ordenarDatosMensualidad(man['Data'])};
-                    this.clienteDetalles.Mantenimientos = man['Data'];
+                let mant = this._ordenarDatosMensualidad(man['Data']);
+                if(mant[0]){
+//                    this.mantenimientosTodos = {Datos: this._ordenarDatosMensualidad(ma)};
+                    this.clienteDetalles.Mantenimientos = mant.filter(m=>m != 1);
+                    this.clienteDetalles.Mantenimientos_todos = mant;
                     this.mantenimientoVista = true;
                 }
             })

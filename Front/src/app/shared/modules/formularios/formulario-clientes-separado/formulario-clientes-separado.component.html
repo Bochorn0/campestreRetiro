@@ -163,7 +163,7 @@
                                 <div class="form-group">
                                     <label class="label-form"> Cambiar Terreno </label>
                                     <input type="hidden" [(ngModel)]="ter.IdTerreno">
-                                    <input id="typeahead-format"
+                                    <input 
                                     title="Remplazar Terreno"
                                     placeholder="Buscar #parcela , #lote, #etapa" type="text" class="form-control" 
                                     [ngbTypeahead]="filtrarTerrenosDatoEspecial"
@@ -571,7 +571,7 @@
                         <b style="color: #C00;"> * </b>
                         <label class="label-form"> Parcela </label>
                         <input type="hidden" [(ngModel)]="terrenoCotizacion.IdTerreno">
-                        <input id="typeahead-format" title="Parcela # y propietario: {{terrenoCotizacion.Pertenece}}"
+                        <input  title="Parcela # y propietario: {{terrenoCotizacion.Pertenece}}"
                             placeholder="Parcela:" type="text" class="form-control"
                             [(ngModel)]="terrenoCotizacion.parcela" [ngbTypeahead]="filtrarTerrenos"
                             (selectItem)="seleccionarParcela($event, t)" [resultFormatter]="formatter" required />
@@ -581,7 +581,7 @@
                     <div class="form-group">
                         <b style="color: #C00;"> * </b>
                         <label class="label-form"> Lote </label>
-                        <input id="typeahead-format" title="Lote #: " placeholder="Lote:" type="text"
+                        <input  title="Lote #: " placeholder="Lote:" type="text"
                             class="form-control" [(ngModel)]="terrenoCotizacion.lote" [ngbTypeahead]="filtrarLotes"
                             (selectItem)="seleccionarLote($event)" [resultFormatter]="formatter" required />
                     </div>
@@ -590,7 +590,7 @@
                     <div class="form-group">
                         <b style="color: #C00;"> * </b>
                         <label class="label-form"> Etapa </label>
-                        <input id="typeahead-format" title="Etapa #: " placeholder="Etapa:" type="text"
+                        <input  title="Etapa #: " placeholder="Etapa:" type="text"
                             class="form-control" [(ngModel)]="terrenoCotizacion.etapa" [ngbTypeahead]="filtrarEtapas"
                             (selectItem)="seleccionarEtapa($event)" [resultFormatter]="formatter" required />
                     </div>

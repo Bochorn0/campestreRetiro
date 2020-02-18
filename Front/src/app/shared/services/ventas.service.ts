@@ -7,7 +7,7 @@ import { ApiService } from './API_service';
 export class VentasService {
   constructor(private api : ApiService) {}
   guardarNuevoIngreso(datos){
-    return this.api.post(`/ingresos/guardarNuevoIngreso`, datos).then(response => {
+    return this.api.post(`/ingresos/guardarNuevoIngreso`, datos,true).then(response => {
       return Promise.resolve(response);
     }).catch(err => { return Promise.reject(err); });
   }
@@ -32,7 +32,7 @@ export class VentasService {
     }).catch(err => { return Promise.reject(err); });
   }
   obtenerFolioVenta(){
-    return this.api.get(`/ingresos/obtenerFolioVenta`).then(response => {
+    return this.api.get(`/ingresos/obtenerFolioVenta`,{},true).then(response => {
       return Promise.resolve(response);
     }).catch(err => { return Promise.reject(err); });
   }
@@ -97,7 +97,7 @@ export class VentasService {
     }).catch(err => { return Promise.reject(err); });
   }
   obtenerPdfRecibo(datos){
-    return this.api.post(`/ingresos/reciboPDF`,datos).then(response => {
+    return this.api.post(`/ingresos/reciboPDF`,datos,true).then(response => {
       return Promise.resolve(response);
     }).catch(err => { return Promise.reject(err); });
   }

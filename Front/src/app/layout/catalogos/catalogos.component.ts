@@ -131,7 +131,11 @@ export class CatalogosComponent implements OnInit {
     }
     verCatalogoClientes(event){
         this._limpiarVistas();
-        this.catalogoCliente = true;
+        this.catalogosService.obtenerDatosTodos().then(res=>{
+            this.catalogoCliente = true;
+        }).catch(err=>{
+            console.log('err',err);
+        });
     }
     verDatosTodos(){
         this._limpiarVistas();
@@ -378,6 +382,8 @@ export class CatalogosComponent implements OnInit {
         }
     }
     _limpiarVistas(){
+        // this.datosTodosTotales  = [];
+        // this.datosTodos  =  { Datos: [], Ordenes : {Saldo_credito:'',Saldo_certificado: '', Saldo_mantenimiento: '', Saldo_agua: ''}};
         this.datosTodos = this.detalleCliente =  this.datosDetalle =  this.ingresoNuevo = this.mantenimientoNuevo = this.datosMantenimiento = this.catalogoTerrenos = this.catalogoCliente = false;
     }
 }
