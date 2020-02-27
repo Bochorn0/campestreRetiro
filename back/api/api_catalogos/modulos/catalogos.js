@@ -669,7 +669,7 @@ module.exports = class Catalogos {
             if(`${datos.Correo}`.indexOf('@') > -1 && datos.Nombre != ''  && datos.Mensaje != ''){
                 const nodemailer = require('nodemailer');
                 let usr = 'contacto.campestreelretiro@gmail.com';
-                let pas = `retiro87`;
+                let pas = `Retiro87`;
                 let Contenido = `Contacto desde el sitio web  De ${datos.Nombre} con el Correo: ${datos.Correo} <br> Mensaje: <br>${datos.Mensaje}`;
                 nodemailer.createTestAccount((err, account) => {
                     var transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: usr, pass: pas} });
