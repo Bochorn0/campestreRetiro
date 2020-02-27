@@ -670,11 +670,11 @@ module.exports = class Catalogos {
                 const nodemailer = require('nodemailer');
                 let usr = 'contacto.campestreelretiro@gmail.com';
                 let pas = `Retiro87`;
-                let Contenido = `Contacto desde el sitio web  De ${datos.Nombre} con el Correo: ${datos.Correo} <br> Mensaje: <br>${datos.Mensaje}`;
+                let Contenido = `Contacto desde el sitio web <br> <b>De:</b> ${datos.Nombre} <br><b>Correo:</b> ${datos.Correo} <br> <b>Mensaje:</b> <br>${datos.Mensaje}`;
                 nodemailer.createTestAccount((err, account) => {
                     var transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: usr, pass: pas} });
                     //`campestreretiro@gmail.com, bocho_sup@hotmail.com`
-                    let mailOptions = { from: usr ,to: `luisfernandocordova.24@gmail.com`, subject: `Contacto Web`, html: `${Contenido}` };
+                    let mailOptions = { from: usr ,to: `campestreretiro@gmail.com,luisfernandocordova.24@gmail.com`, subject: `Contacto Web`, html: `${Contenido}` };
                     transporter.sendMail(mailOptions, (error, info) => {
                         let respuesta = {Procesado: false, Operacion: 'Fallo el envio de correo', Tipo: 'error',Error: error};
                         if (error) { return reject(respuesta); }
