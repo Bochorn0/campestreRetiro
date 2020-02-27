@@ -385,4 +385,12 @@ router.post('/borrarProspectosVentas', (req, res) => {
         res.status(400).send(error);
     })
 });
+router.post('/envio_correo', (req, res) => {
+    let objCatalogos = new Catalogos();
+    objCatalogos.envio_correo_contacto(req.body).then((result) => {
+        res.status(200).send(result);
+    }).catch((error) => {
+        res.status(400).send(error);
+    })
+});
 module.exports = router;

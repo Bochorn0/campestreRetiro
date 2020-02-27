@@ -663,6 +663,9 @@ module.exports = class Catalogos {
             return error;
         });
     }
+    envio_correo_contacto(datos){
+        console.log('datos',datos);
+     }
     _contenidoContratoGenerico(datosContrato){
         return  `<div class="row" style="padding:20px;">
         <div class="col-lg-12">

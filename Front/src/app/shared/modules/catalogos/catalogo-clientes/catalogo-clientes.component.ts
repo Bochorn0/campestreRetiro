@@ -142,9 +142,9 @@ export class CatalogoClientesComponent implements OnInit {
         if(this.clienteDetalles){
             console.log('mantenimientos',this.clienteDetalles.Mantenimientos);
             if(this.mantenimientosPagados){
-                this.clienteDetalles.Mantenimientos = this.clienteDetalles.Mantenimientos_todos.filter(m=>m.Pagado == 1);
+                this.clienteDetalles.Mantenimientos = this.clienteDetalles.Mantenimientos_todos.filter(m=>m.Pagado == 'Si');
             }else{
-                this.clienteDetalles.Mantenimientos = this.clienteDetalles.Mantenimientos_todos.filter(m=>m.Pagado != 1);
+                this.clienteDetalles.Mantenimientos = this.clienteDetalles.Mantenimientos_todos.filter(m=>m.Pagado != 'Si');
             }
 
         }
@@ -271,7 +271,7 @@ export class CatalogoClientesComponent implements OnInit {
                     }
                     console.log('mensu',te.Mensualidades);
                 })
-                    this.clienteDetalles.Mensualidades = men['Data'];
+                    this.clienteDetalles.Mensualidades = men['Data'].filter(m=>m.Pagado != 'Si');
                     //console.log('clientes',this.clienteDetalles);
                     this.mensualidadesVista = true;
                 }
@@ -319,7 +319,7 @@ export class CatalogoClientesComponent implements OnInit {
                 let mant = this._ordenarDatosMensualidad(man['Data']);
                 if(mant[0]){
 //                    this.mantenimientosTodos = {Datos: this._ordenarDatosMensualidad(ma)};
-                    this.clienteDetalles.Mantenimientos = mant.filter(m=>m != 1);
+                    this.clienteDetalles.Mantenimientos = mant.filter(m=>m.Pagado != 'Si');
                     this.clienteDetalles.Mantenimientos_todos = mant;
                     this.mantenimientoVista = true;
                 }
@@ -458,8 +458,19 @@ export class CatalogoClientesComponent implements OnInit {
         this.clienteDetalles.ImporteMantenimiento = this.clienteDetalles.Monto_mantenimiento;
         this.clienteDetalles.Fecha_mantenimiento = this.clienteDetalles.Fecha_primer_mantenimiento;
         this.clienteDetalles.Periodo_cobro = this.clienteDetalles.Periodo_mantenimiento;
-        
+        if(this.clienteDetalles.IdCliente){
+            this.ventasService.obtenerMantenimientosCliente(this.clienteDetalles).then(man=>{
+                let mant = this._ordenarDatosMensualidad(man['Data']);
+                if(mant[0]){
+//                    this.mantenimientosTodos = {Datos: this._ordenarDatosMensualidad(ma)};
+                    this.clienteDetalles.Mantenimientos = mant.filter(m=>m != 1);
+                    this.clienteDetalles.Mantenimientos_todos = mant;
+                }
+            })
+        }
+
         this.datosDetalle =  this.clienteDetalles;
+        
     }
     enviarContratoCorreo(){
         return new Promise ((resolve,reject)=>{
