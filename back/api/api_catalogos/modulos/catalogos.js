@@ -664,7 +664,26 @@ module.exports = class Catalogos {
         });
     }
     envio_correo_contacto(datos){
-        console.log('datos',datos);
+        console.log('Datos',datos);
+        return new Promise((resolve, reject) => {
+            if(`${datos.Correo}`.indexOf('@') > -1 && datos.Nombre != ''  && datos.Mensaje != ''){
+                const nodemailer = require('nodemailer');
+                let usr = 'contacto.campestreelretiro@gmail.com';
+                let pas = `retiro87`;
+                let Contenido = `Contacto desde el sitio web  De ${datos.Nombre} con el Correo: ${datos.Correo} <br> Mensaje: <br>${datos.Mensaje}`;
+                nodemailer.createTestAccount((err, account) => {
+                    var transporter = nodemailer.createTransport({ service: 'gmail', auth: { user: usr, pass: pas} });
+                    //`campestreretiro@gmail.com, bocho_sup@hotmail.com`
+                    let mailOptions = { from: usr ,to: `luisfernandocordova.24@gmail.com`, subject: `Contacto Web`, html: `${Contenido}` };
+                    transporter.sendMail(mailOptions, (error, info) => {
+                        let respuesta = {Procesado: false, Operacion: 'Fallo el envio de correo', Tipo: 'error',Error: error};
+                        if (error) { return reject(respuesta); }
+                        return resolve({Procesado: true, Operacion: 'Correo Enviado Correctamente', Tipo: 'success'});
+                        //console.log('Message sent: %s', info.messageId); console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
+                    });
+                });
+            }
+        });
      }
     _contenidoContratoGenerico(datosContrato){
         return  `<div class="row" style="padding:20px;">
