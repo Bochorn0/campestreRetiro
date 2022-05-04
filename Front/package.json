@@ -30,7 +30,7 @@
     "@ngx-translate/core": "^10.0.1",
     "@ngx-translate/http-loader": "^3.0.1",
     "@types/node": "^9.6.18",
-    "angular": "^1.7.9",
+    "angular": "^1.8.3",
     "angular-6-datatable": "^0.8.0",
     "angular-froala-wysiwyg": "^2.8.4-1",
     "angular-print": "^0.3.8",
