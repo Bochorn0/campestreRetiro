@@ -14,7 +14,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular-devkit/build-angular": "^0.803.19",
+    "@angular-devkit/build-angular": "^15.0.4",
     "@angular/animations": "^6.0.1",
     "@angular/cdk": "^6.1.0",
     "@angular/common": "^6.0.0",
@@ -55,7 +55,7 @@
     "numeral": "^2.0.6",
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.5.2",
-    "sass-loader": "^7.1.0",
+    "sass-loader": "^13.2.0",
     "sweetalert2": "^7.20.7",
     "typeahead": "^0.2.2",
     "yarn": "^1.6.0",
